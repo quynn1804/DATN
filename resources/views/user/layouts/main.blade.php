@@ -8,6 +8,7 @@
 </head>
 <body>
     @include('user.layouts.header');
+    @include('user.layouts.menu');
 
 
     <div class="container">
