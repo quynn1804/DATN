@@ -4,6 +4,7 @@ namespace App\Http\Controllers\user;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Product;
 
 class UserController extends Controller
 {
@@ -42,4 +43,5 @@ class UserController extends Controller
     public function singleProduct(){
         return view('user.singleProduct');
     }
+ 
 }

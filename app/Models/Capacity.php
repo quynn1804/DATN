@@ -11,6 +11,6 @@ class Capacity extends Model
     protected $fillable = ['name'];
 
     public function products() {
-        return $this->hasMany(ProductVariant::class, 'capacity_id');
+        return $this->hasMany(ProductVariationCombination::class, 'capacity_id');
     }
 }
