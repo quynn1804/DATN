@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\admin\AdminController;
 use App\Http\Controllers\user\UserController;
 use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
@@ -24,6 +25,10 @@ Route::get( '/myAccount',  [UserController::class, 'myAccount']);
 Route::get( '/shopLeftSidebar',  [UserController::class, 'shopLeftSidebar']);
 
 Route::get( '/singleProduct',  [UserController::class, 'singleProduct']);
+
+
+
+Route::resource('/admin', AdminController::class);
 
 
 
