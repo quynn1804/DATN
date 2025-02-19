@@ -1,10 +1,6 @@
 <?php
-
-<<<<<<< Updated upstream
-=======
 use App\Http\Controllers\admin\AccountController;
 use App\Http\Controllers\admin\AdminController;
->>>>>>> Stashed changes
 use App\Http\Controllers\user\UserController;
 use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
@@ -32,14 +28,12 @@ Route::get( '/singleProduct',  [UserController::class, 'singleProduct']);
 
 
 
-<<<<<<< Updated upstream
-=======
+
 Route::resource('/admin', AdminController::class);
 Route::resource('/account',  AccountController::class);
 
 
 
->>>>>>> Stashed changes
 
 
 

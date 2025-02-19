@@ -78,14 +78,13 @@
                                             <td>
                                                 <img src="{{ asset('assets/images/' . $item->image) }}" width="100px"
                                                     alt="Ảnh tài khoản">
-
                                             </td>
                                             <td>{{ $item->status }}</td>
                                             <td class="text-nowrap ">
                                                 <a style="margin-right: 5px" class="btn btn-warning"
                                                     href="{{ route('account.edit', $item->id) }}">Sửa</a>
-                                                <form action="{{ route('account.destroy', $item->id) }}"
-                                                    method="POST" style="display:inline-block;">
+                                                <form action="{{ route('account.destroy', $item->id) }}" method="POST"
+                                                    style="display:inline-block;">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger"
