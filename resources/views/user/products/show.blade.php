@@ -15,14 +15,14 @@
 
     <label for="color">Chọn màu:</label>
     <select id="color">
-        @foreach ($product->variants->pluck('color')->unique() as $color)
+        @foreach ($product->variations->pluck('color')->unique() as $color)
             <option value="{{ $color->id }}">{{ $color->name }}</option>
         @endforeach
     </select>
 
     <label for="capacity">Chọn dung lượng:</label>
     <select id="capacity">
-        @foreach ($product->variants->pluck('capacity')->unique() as $capacity)
+        @foreach ($product->variations->pluck('capacity')->unique() as $capacity)
             <option value="{{ $capacity->id }}">{{ $capacity->value }}</option>
         @endforeach
     </select>
