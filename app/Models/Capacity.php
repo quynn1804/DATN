@@ -8,9 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Capacity extends Model
 {
     use HasFactory;
+
     protected $fillable = ['name'];
 
-    public function products() {
-        return $this->hasMany(ProductVariant::class, 'capacity_id');
+    public function productVariants()
+    {
+        return $this->hasMany(ProductVariant::class);
     }
 }
+

@@ -8,9 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Color extends Model
 {
     use HasFactory;
+
     protected $fillable = ['name'];
 
-    public function products() {
-        return $this->hasMany(ProductVariant::class, 'color_id');
-}
+    public function productVariants()
+    {
+        return $this->hasMany(ProductVariant::class);
+    }
 }

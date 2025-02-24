@@ -14,7 +14,7 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-  
+
 </head>
 <body>
     @include('admin.layouts.header')
@@ -37,20 +37,21 @@
             </div><!-- /.row -->
           </div><!-- /.container-fluid -->
         </div>
+        @yield('content')
         <!-- /.content-header -->
-      
+
         <!-- Main content -->
-        <section class="content">
+        {{-- <section class="content">
           <div class="container-fluid">
             <div class="row mb-4">
               <div class="col-12 text-center">
                 <h2 class="text-uppercase font-weight-bold">BẢNG THỐNG KÊ THÁNG <?= date('m') ?></h2>
                 <p class="text-muted">Tổng quan hoạt động trong tháng</p>
               </div>
-            </div>
-           
+            </div> --}}
+
             <!-- Info boxes -->
-            <div class="row d-flex justify-content-between">
+            {{-- <div class="row d-flex justify-content-between">
               <!-- Sản phẩm bán chạy -->
               <div class="col-12 col-sm-6 col-md-4 mb-4">
                 <div class="info-box">
@@ -87,7 +88,7 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> --}}
         </section>
         <!-- /.content -->
       </div>
@@ -114,7 +115,7 @@
           box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
           transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
         }
-      
+
         /* Đặt màu nền của các icon */
         .info-box .info-box-icon {
           border-radius: 10px 0 0 10px;
@@ -124,26 +125,26 @@
           width: 60px;
           height: 60px;
         }
-      
+
         /* Nội dung trong các ô */
         .info-box .info-box-content {
           padding: 15px;
         }
-      
+
         /* Phần chữ mô tả */
         .info-box .info-box-text {
           font-size: 1rem;
           font-weight: bold;
           color: #444;
         }
-      
+
         /* Số liệu trong ô */
         .info-box .info-box-number {
           font-size: 1.5rem;
           font-weight: bold;
           color: #000;
         }
-      
+
         /* Thêm hiệu ứng hover cho các ô */
         .info-box:hover {
           transform: translateY(-5px);
@@ -155,19 +156,19 @@
           cursor: pointer;
           /* Thêm con trỏ tay */
         }
-      
+
         /* Hiệu ứng cho các icon */
         .info-box-icon:hover {
           background-color: #e0e0e0;
           /* Chỉnh màu nền của icon khi hover */
         }
-      
+
         /* Cấu trúc cho các ô trong một hàng */
         .row {
           margin-left: 0;
           margin-right: 0;
         }
-      
+
         @media (max-width: 767px) {
           .info-box {
             margin-bottom: 15px;

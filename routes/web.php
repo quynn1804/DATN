@@ -29,7 +29,7 @@ Route::get( '/singleProduct',  [UserController::class, 'singleProduct']);
 
 
 
-Route::resource('/admin', AdminController::class);
+// Route::resource('/admin', AdminController::class);
 
 
 
@@ -55,4 +55,13 @@ Route::middleware('auth')->group(function () {
 });
 
 
+
+
+
+use App\Http\Controllers\Admin\ProductController;
+
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::resource('products', ProductController::class);
+});
+Route::delete('/admin/products/variant/{id}', [ProductController::class, 'destroyVariant'])->name('admin.products.variant.destroy');
 
