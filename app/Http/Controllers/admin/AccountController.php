@@ -32,6 +32,7 @@ class AccountController extends Controller
      */
     public function store(Request $request)
     {
+
         // Xác thực dữ liệu đầu vào
         $validated = $request->validate([
             'name' => 'required|string|max:255',
@@ -61,6 +62,7 @@ class AccountController extends Controller
         ]);
 
         return redirect()->route('account.index')->with('success', 'Người dùng đã được thêm thành công.');
+
     }
 
     /**
@@ -76,8 +78,12 @@ class AccountController extends Controller
      */
     public function edit(string $id)
     {
+
         $account = User::findOrFail($id);
         return view('admin.account.edit', compact('account'));
+    }
+        return view('admin.account.edit');
+
     }
 
 
@@ -86,6 +92,7 @@ class AccountController extends Controller
      */
     public function update(Request $request, string $id)
     {
+
         $account = User::findOrFail($id);
 
         // Validate dữ liệu đầu vào
@@ -127,11 +134,15 @@ class AccountController extends Controller
     }
 
 
+
+
+
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
+
         $account = User::findOrFail($id);
 
         // Xóa ảnh nếu có
@@ -145,4 +156,7 @@ class AccountController extends Controller
         return redirect()->route('account.index')->with('success', 'Người dùng đã được xóa!');
     }
 
+
+        
+    }
 }

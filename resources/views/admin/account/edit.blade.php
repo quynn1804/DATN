@@ -5,7 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
     <title>Account</title>
+
+    <title>Document</title>
+
     <!-- Thêm các link tài nguyên nội bộ vào Laravel -->
     <link rel="stylesheet" href="{{ asset('assets/css/styles.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/plugins/fontawesome-free/css/all.min.css') }}">
@@ -44,6 +48,7 @@
         <!-- Main content -->
         <section class="content">
             <h1 class="text-center">Thêm mới người dùng</h1>
+
             <div class="container mt-4">
                 <h2 class="mb-4">Chỉnh sửa tài khoản</h2>
 
@@ -116,6 +121,85 @@
                     <a href="{{ route('account.index') }}" class="btn btn-secondary">Quay lại</a>
                 </form>
             </div>
+
+            <form action="#" method="POST">
+                @csrf
+                <div class="row">
+                    <div class="col-12">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Tên</label>
+                            <input type="text" class="form-control" value="{{ old('name') }}" id="name"
+                                name="name" required>
+                        </div>
+                    </div><!--end col-->
+                    <div class="col-12">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Mật khẩu</label>
+                            <input type="text" class="form-control" value="{{ old('password') }}" id="password"
+                                name="password" required>
+                        </div>
+                    </div><!--end col-->
+                    <div class="col-12">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Giới tính</label>
+                            <select id="type" name="type" class="form-control" required>
+                                <option value="2" selected>Nam</option>
+                                <option value="1">Nữ</option>
+                            </select>
+                        </div>
+                    </div><!--end col-->
+                    <div class="col-12">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Số điện thoại</label>
+                            <input type="text" class="form-control" value="{{ old('phone') }}" id="phone"
+                                name="phone" required>
+                        </div>
+                    </div><!--end col-->
+                    <div class="col-12">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Ảnh</label>
+                            <input type="file" class="form-control" value="{{ old('image') }}" id="image"
+                                name="password" required>
+                        </div>
+                    </div><!--end col-->
+                    <div class="col-12">
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Status</label>
+                            <input type="email" class="form-control" value="{{ old('email') }}" id="email"
+                                name="email" required>
+                        </div>
+                    </div><!--end col-->
+                    <div class="col-6">
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Mật khẩu</label>
+                            <input type="password" class="form-control" value="{{ old('password') }}" id="password"
+                                name="password" required>
+                        </div>
+                    </div><!--end col-->
+                    <div class="col-6">
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Xác nhận mật khẩu</label>
+                            <input type="password" class="form-control" value="{{ old('password') }}"
+                                id="password_confirmation" name="password_confirmation" required>
+                        </div>
+                    </div><!--end col-->
+                    <div class="col-12">
+                        <div class="mb-3">
+                            <label for="phonenumberInput" class="form-label">Loại Người Dùng</label>
+                            <select id="type" name="type" class="form-control" required>
+                                <option value="2" selected>Member</option>
+                                <option value="1">Admin</option>
+                            </select>
+                        </div>
+                    </div><!--end col-->
+                    <div class="col-lg-6">
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-primary">Thêm mới</button>
+                        </div>
+                    </div><!--end col-->
+                </div><!--end row-->
+            </form>
+
         </section>
         <!-- /.content -->
     </div>

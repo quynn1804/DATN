@@ -5,7 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
     <title>Account</title>
+
+    <title>Document</title>
+
     <!-- Thêm các link tài nguyên nội bộ vào Laravel -->
     <link rel="stylesheet" href="{{ asset('assets/css/styles.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/plugins/fontawesome-free/css/all.min.css') }}">
@@ -50,8 +54,12 @@
                             <h5 class="card-title mb-0">Danh sách tài khoản</h5><br>
                         </div>
                         <div class="card-body">
+<
                             <a class="btn btn-success" style="margin-bottom: 20px;"
                                 href="{{ route('account.create') }}">Thêm mới tài khoản</a><br>
+
+                            <a class="btn btn-success" style="margin-bottom: 20px;" href="{{route('account.create')}}">Thêm mới tài khoản</a><br>
+
                             <table id="example"
                                 class="table table-bordered dt-responsive nowrap table-striped align-middle"
                                 style="width:100%">
@@ -69,6 +77,7 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($data as $item)
+
                                         <tr>
                                             <td>{{ $item->id }}</td>
                                             <td>{{ $item->name }}</td>
@@ -92,6 +101,29 @@
                                                 </form>
                                             </td>
                                         </tr>
+
+                                    <tr>
+                                        <td>{{ $item->id }}</td>
+                                        <td>{{ $item->name }}</td>
+                                        <td>{{ $item->password }}</td>
+                                        <td>{{ $item->gender }}</td>
+                                        <td>{{ $item->phone }}</td>
+                                        <td>
+                                            <img src="{{asset('assets/images/product/1-1.jpg')}}" width="100px" alt="">
+                                        </td>
+                                        <td>{{ $item->status }}</td>
+                                        <td class="text-nowrap d-flex">
+                                            <a style="margin-right: 5px" class="btn btn-warning" href="#">Sửa</a>
+                                            <form action="#" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button
+                                                    onclick="return confirm('Bạn có chắc chắn muốn thực hiện hành động này?')"
+                                                    type="submit" class="btn btn-danger">Xóa</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+
                                     @endforeach
                                 </tbody>
                             </table>
