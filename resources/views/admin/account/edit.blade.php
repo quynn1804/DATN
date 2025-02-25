@@ -5,7 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>Account</title>
+
     <title>Document</title>
+
     <!-- Thêm các link tài nguyên nội bộ vào Laravel -->
     <link rel="stylesheet" href="{{ asset('assets/css/styles.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/plugins/fontawesome-free/css/all.min.css') }}">
@@ -44,6 +48,80 @@
         <!-- Main content -->
         <section class="content">
             <h1 class="text-center">Thêm mới người dùng</h1>
+
+            <div class="container mt-4">
+                <h2 class="mb-4">Chỉnh sửa tài khoản</h2>
+
+                @if (session('success'))
+                    <div class="alert alert-success">{{ session('success') }}</div>
+                @endif
+
+                <form action="{{ route('account.update', $account->id) }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
+
+                    <!-- Tên -->
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Tên người dùng</label>
+                        <input type="text" class="form-control" id="name" name="name"
+                            value="{{ old('name', $account->name) }}" required>
+                    </div>
+
+                    <!-- Mật khẩu -->
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Mật khẩu (để trống nếu không muốn thay đổi)</label>
+                        <input type="password" class="form-control" id="password" name="password">
+                    </div>
+
+                    <!-- Giới tính -->
+                    <div class="mb-3">
+                        <label for="gender" class="form-label">Giới tính</label>
+                        <select id="gender" name="gender" class="form-control" required>
+                            <option value="Nam" {{ old('gender', $account->gender) == 'Nam' ? 'selected' : '' }}>Nam
+                            </option>
+                            <option value="Nu" {{ old('gender', $account->gender) == 'Nu' ? 'selected' : '' }}>Nữ
+                            </option>
+                            <option value="Khac" {{ old('gender', $account->gender) == 'Khac' ? 'selected' : '' }}>
+                                Khác</option>
+                        </select>
+                    </div>
+
+                    <!-- Số điện thoại -->
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Số điện thoại</label>
+                        <input type="text" class="form-control" id="phone" name="phone"
+                            value="{{ old('phone', $account->phone) }}" required>
+                    </div>
+
+                    <!-- Ảnh đại diện -->
+                    <div class="mb-3">
+                        <label class="form-label">Ảnh đại diện</label>
+                        @if ($account->image)
+                            <div>
+                                <img src="{{ asset('assets/images/' . $account->image) }}" width="120px"
+                                    class="mb-2">
+                            </div>
+                        @endif
+                        <input type="file" class="form-control" name="image">
+                    </div>
+
+                    <!-- Trạng thái -->
+                    <div class="mb-3">
+                        <label for="status" class="form-label">Trạng thái</label>
+                        <select id="status" name="status" class="form-control" required>
+                            <option value="1" {{ old('status', $account->status) == 1 ? 'selected' : '' }}>Hoạt
+                                động</option>
+                            <option value="0" {{ old('status', $account->status) == 0 ? 'selected' : '' }}>Khóa
+                            </option>
+                        </select>
+                    </div>
+
+                    <!-- Nút lưu -->
+                    <button type="submit" class="btn btn-primary">Cập nhật</button>
+                    <a href="{{ route('account.index') }}" class="btn btn-secondary">Quay lại</a>
+                </form>
+            </div>
+
             <form action="#" method="POST">
                 @csrf
                 <div class="row">
@@ -121,6 +199,7 @@
                     </div><!--end col-->
                 </div><!--end row-->
             </form>
+
         </section>
         <!-- /.content -->
     </div>

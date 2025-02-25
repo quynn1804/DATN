@@ -4,7 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>ADMIN</title>
+
     <title>Document</title>
+
     <!-- Thêm các link tài nguyên nội bộ vào Laravel -->
     <link rel="stylesheet" href="{{ asset('assets/css/styles.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/plugins/fontawesome-free/css/all.min.css') }}">
@@ -13,6 +17,8 @@
     {{-- /// --}}
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+
 
 
 </head>
@@ -37,21 +43,35 @@
             </div><!-- /.row -->
           </div><!-- /.container-fluid -->
         </div>
+
+        <!-- /.content-header -->
+      
+        <!-- Main content -->
+        <section class="content">
+
         @yield('content')
         <!-- /.content-header -->
 
         <!-- Main content -->
         {{-- <section class="content">
+
           <div class="container-fluid">
             <div class="row mb-4">
               <div class="col-12 text-center">
                 <h2 class="text-uppercase font-weight-bold">BẢNG THỐNG KÊ THÁNG <?= date('m') ?></h2>
                 <p class="text-muted">Tổng quan hoạt động trong tháng</p>
               </div>
+
+            </div>
+           
+            <!-- Info boxes -->
+            <div class="row d-flex justify-content-between">
+
             </div> --}}
 
             <!-- Info boxes -->
             {{-- <div class="row d-flex justify-content-between">
+
               <!-- Sản phẩm bán chạy -->
               <div class="col-12 col-sm-6 col-md-4 mb-4">
                 <div class="info-box">
@@ -88,7 +108,11 @@
                 </div>
               </div>
             </div>
+
+          </div>
+
           </div> --}}
+
         </section>
         <!-- /.content -->
       </div>
@@ -115,6 +139,8 @@
           box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
           transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
         }
+
+
 
         /* Đặt màu nền của các icon */
         .info-box .info-box-icon {
