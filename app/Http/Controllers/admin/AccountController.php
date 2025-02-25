@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Request;
 
 class AccountController extends Controller
@@ -82,9 +82,6 @@ class AccountController extends Controller
         $account = User::findOrFail($id);
         return view('admin.account.edit', compact('account'));
     }
-        return view('admin.account.edit');
-
-    }
 
 
     /**
@@ -159,4 +156,4 @@ class AccountController extends Controller
 
         
     }
-}
+
