@@ -82,9 +82,7 @@ class AccountController extends Controller
         $account = User::findOrFail($id);
         return view('admin.account.edit', compact('account'));
     }
-        return view('admin.account.edit');
 
-    }
 
 
     /**
@@ -159,4 +157,3 @@ class AccountController extends Controller
 
         
     }
-}
