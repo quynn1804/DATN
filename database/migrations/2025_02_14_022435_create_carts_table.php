@@ -11,10 +11,9 @@ class CreateCartsTable extends Migration
         Schema::create('carts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
+            $table->foreignId('product_variant_id')->constrained('product_variants')->onDelete('cascade');
             $table->integer('quantity');
-            $table->decimal('subtotal', 10, 2);
-            $table->decimal('total_price', 10, 2);
+            $table->decimal('price_at_time', 10, 2); // Lưu giá sản phẩm khi thêm vào giỏ hàng
             $table->timestamps();
         });
     }

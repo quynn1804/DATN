@@ -3,7 +3,7 @@
 use App\Http\Controllers\admin\AccountController;
 
 
-
+use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\admin\AdminController;
 use App\Http\Controllers\admin\CategoryController;
 use App\Http\Controllers\user\UserController;
@@ -36,7 +36,7 @@ Route::get( '/singleProduct',  [UserController::class, 'singleProduct']);
 
 
 // Route::resource('/admin', AdminController::class);
-Route::resource('/account',  AccountController::class);
+
 
 
 
@@ -66,7 +66,9 @@ Route::middleware('auth')->group(function () {
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('', [AdminController::class, 'index']);
+    Route::resource('/account',  AccountController::class);
     Route::resource('products', ProductController::class);
     Route::resource('categories', CategoryController::class);
+    Route::resource('orders', OrderController::class);
 });
 Route::delete('/admin/products/variant/{id}', [ProductController::class, 'destroyVariant'])->name('admin.products.variant.destroy');

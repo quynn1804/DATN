@@ -56,9 +56,9 @@
                         <div class="card-body">
 <
                             <a class="btn btn-success" style="margin-bottom: 20px;"
-                                href="{{ route('account.create') }}">Thêm mới tài khoản</a><br>
+                                href="{{ route('admin.account.create') }}">Thêm mới tài khoản</a><br>
 
-                            <a class="btn btn-success" style="margin-bottom: 20px;" href="{{route('account.create')}}">Thêm mới tài khoản</a><br>
+                            <a class="btn btn-success" style="margin-bottom: 20px;" href="{{route('admin.account.create')}}">Thêm mới tài khoản</a><br>
 
                             <table id="example"
                                 class="table table-bordered dt-responsive nowrap table-striped align-middle"

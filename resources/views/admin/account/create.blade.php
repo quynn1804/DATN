@@ -37,7 +37,7 @@
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
 
-                            <li class="breadcrumb-item"><a href="{{ route('admin.index') }}">Home</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('admin.account.index') }}">Home</a></li>
 
                             <li class="breadcrumb-item"><a href="#">Home</a></li>
 
@@ -53,7 +53,7 @@
         <section class="content">
             <h1 class="text-center">Thêm mới người dùng</h1>
 
-            <form action="{{ route('account.store') }}" enctype="multipart/form-data" method="POST">
+            <form action="{{ route('admin.account.store') }}" enctype="multipart/form-data" method="POST">
 
             <form action="#" method="POST">
 
@@ -111,51 +111,7 @@
                         </div>
                     </div>
 
-                    </div><!--end col-->
-                    <div class="col-12">
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Mật khẩu</label>
-                            <input type="text" class="form-control" value="{{ old('password') }}" id="password"
-                                name="password" required>
-                        </div>
-                    </div><!--end col-->
-                    <div class="col-12">
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Giới tính</label>
-                            <select id="type" name="type" class="form-control" required>
-                                <option value="2" selected>Nam</option>
-                                <option value="1">Nữ</option>
-                            </select>
-                        </div>
-                    </div><!--end col-->
-                    <div class="col-12">
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Số điện thoại</label>
-                            <input type="text" class="form-control" value="{{ old('phone') }}" id="phone"
-                                name="phone" required>
-                        </div>
-                    </div><!--end col-->
-                    <div class="col-12">
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Ảnh</label>
-                            <input type="file" class="form-control" value="{{ old('image') }}" id="image"
-                                name="password" required>
-                        </div>
-                    </div><!--end col-->
-                    <div class="col-12">
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Status</label>
-                            <input type="email" class="form-control" value="{{ old('email') }}" id="email"
-                                name="email" required>
-                        </div>
-                    </div><!--end col-->
-                    <div class="col-6">
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Mật khẩu</label>
-                            <input type="password" class="form-control" value="{{ old('password') }}" id="password"
-                                name="password" required>
-                        </div>
-                    </div><!--end col-->
+
                     <div class="col-6">
                         <div class="mb-3">
                             <label for="password" class="form-label">Xác nhận mật khẩu</label>
