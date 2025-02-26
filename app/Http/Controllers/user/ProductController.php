@@ -10,7 +10,7 @@ class ProductController extends Controller
 {
     public function show($id)
     {
-        $product = Product::with(['variants.color', 'variants.capacity'])->findOrFail($id);
+        $product = Product::with(['variations.color', 'variations.capacity'])->findOrFail($id);
         return view('products.show', compact('product'));
     }
 
@@ -20,14 +20,14 @@ class ProductController extends Controller
         $color_id = $request->color_id;
         $capacity_id = $request->capacity_id;
 
-        $variant = ProductVariation::where('product_id', $product_id)
+        $variation = ProductVariation::where('product_id', $product_id)
             ->where('color_id', $color_id)
             ->where('capacity_id', $capacity_id)
             ->first();
 
         return response()->json([
-            'price' => $variant ? number_format($variant->price, 0, ',', '.') . " VND" : "Không có giá",
-            'stock' => $variant ? $variant->stock : 0
+            'price' => $variation ? number_format($variation->price, 0, ',', '.') . " VND" : "Không có giá",
+            'stock' => $variation ? $variation->stock : 0
         ]);
     }
 }
