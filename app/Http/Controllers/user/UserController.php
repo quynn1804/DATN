@@ -3,16 +3,19 @@
 namespace App\Http\Controllers\user;
 
 use App\Http\Controllers\Controller;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
     public function index(){
-        return view('user.home');
+        $products = Product::all();
+        return view('user.home', compact('products'));
     }
 
     public function pageCategory(){
-        return view('user.pageCategory');
+        $products = Product::all();
+        return view('user.pageCategory', compact('products'));
     }
 
     public function login(){

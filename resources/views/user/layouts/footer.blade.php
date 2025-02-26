@@ -7,7 +7,7 @@
                         <div class="newsletter-area">
                             <div class="newsletter-logo">
                                 <a href="#">
-                                    <img src="assets/images/footer/logo/1.png" alt="Logo">
+                                    <img src="assets/images/footer/logo/2.png"  alt="Logo">
                                 </a>
                             </div>
                             <p class="short-desc">Subscribe to our newsleter, Enter your emil address</p>

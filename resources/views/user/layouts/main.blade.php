@@ -7,14 +7,14 @@
     <title>@yield('title')</title>
 </head>
 <body>
-    @include('user.layouts.header');
-    @include('user.layouts.menu');
+    @include('user.layouts.header')
+    @include('user.layouts.menu')
 
 
     <div class="container">
-    @yield('content');
+    @yield('content')
     </div>
 
-    @include('user.layouts.footer');
+    @include('user.layouts.footer')
 </body>
 </html>
