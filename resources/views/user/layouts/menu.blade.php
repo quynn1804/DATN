@@ -47,7 +47,7 @@
                             </div>
                             <div class="header-logo_area">
                                 <a href="#">
-                                    <img src="{{ asset('assets/images/menu/logo/1.png') }}" alt="Header Logo">
+                                    <img src="{{ asset('assets/images/menu/logo/2.png') }}" height="300px" alt="Header Logo">
                                 </a>
                             </div>
                             <div class="header-right_area d-none d-lg-block">
@@ -76,7 +76,7 @@
                                     <div class="main-menu_area position-relative">
                                         <nav class="main-nav d-flex justify-content-center">
                                             <ul>
-                                                <li class="dropdown-holder"><a href="#">Trang chủ</a>
+                                                <li class="dropdown-holder"><a href="">Trang chủ</a>
 
                                                 </li>
                                                 <li class="megamenu-holder position-static"><a href="#">Sản phẩm <i class="ion-chevron-down"></i></a>
