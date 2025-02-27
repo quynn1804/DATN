@@ -14,7 +14,7 @@ class ProductSeeder extends Seeder
             'description' => 'iPhone 15 Pro với chip A17 Bionic mới nhất.',
             'price' => 30000000,
             'quantity' => 50,
-            'image' => 'products/iphone15pro.jpg', // Đảm bảo ảnh có sẵn trong storage/app/public/products
+            'image' => 'product/iphone15pro.jpg', // Đảm bảo ảnh có sẵn trong storage/app/public/products
             'status' => true,
         ]);
 
@@ -23,7 +23,7 @@ class ProductSeeder extends Seeder
             'description' => 'Samsung Galaxy S23 mạnh mẽ và thiết kế đẳng cấp.',
             'price' => 25000000,
             'quantity' => 40,
-            'image' => 'products/galaxys23.jpg',
+            'image' => 'product/galaxys23.jpg',
             'status' => true,
         ]);
     }

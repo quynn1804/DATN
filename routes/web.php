@@ -14,22 +14,20 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/',  [UserController::class, 'index']);
+Route::get('/',  [UserController::class, 'index'])->name('home');
 
-Route::get('/pageCategory',  [UserController::class, 'pageCategory']);
+Route::get('/pageCategory',  [UserController::class, 'pageCategory'])->name('pageCategory');
 
 
 Route::get('/login',  [UserController::class, 'login']);
 
-Route::get('/cart',  [UserController::class, 'cart']);
+Route::get('/cart',  [UserController::class, 'cart'])->name('cart');
 
-Route::get( '/about',  [UserController::class, 'about']);
+Route::get( '/about',  [UserController::class, 'about'])->name('about');
 
-Route::get( '/contact',  [UserController::class, 'contact']);
+Route::get( '/contact',  [UserController::class, 'contact'])->name('contact');
 
 Route::get( '/myAccount',  [UserController::class, 'myAccount']);
-
-Route::get( '/shopLeftSidebar',  [UserController::class, 'shopLeftSidebar']);
 
 Route::get( '/singleProduct',  [UserController::class, 'singleProduct']);
 

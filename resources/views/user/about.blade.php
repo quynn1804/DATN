@@ -4,10 +4,10 @@
             <div class="breadcrumb-area">
                 <div class="container">
                     <div class="breadcrumb-content">
-                        <h2>Other</h2>
+                        <h2>Khác</h2>
                         <ul>
-                            <li><a href="index.html">Home</a></li>
-                            <li class="active">About Us</li>
+                            <li><a href="{{route('home')}}">Trang Chủ</a></li>
+                            <li class="active">Về Chúng Tôi</li>
                         </ul>
                     </div>
                 </div>

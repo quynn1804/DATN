@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\admin;
 
+use App\Models\User;
 use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Request;
 
 class AccountController extends Controller
@@ -32,38 +32,38 @@ class AccountController extends Controller
      */
     public function store(Request $request)
     {
-
-        // Xác thực dữ liệu đầu vào
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:6',
-            'gender' => 'required|in:Nam,Nu,Khac',
-            'phone' => 'required|numeric|digits_between:10,15',
+            'gender' => 'required|in:Nam,Nữ,Khác',
+            'phone' => 'nullable|numeric|digits_between:10,15',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'status' => 'required|boolean',
+            'role_id' => 'required|exists:roles,id',
         ]);
 
-        // Xử lý ảnh nếu có tải lên
         if ($request->hasFile('image')) {
             $imageName = time() . '.' . $request->image->extension();
             $request->image->move(public_path('assets/images'), $imageName);
         } else {
-            $imageName = null; // Nếu không có ảnh, đặt giá trị null
+            $imageName = null;
         }
 
-        // Lưu dữ liệu vào database
         User::create([
             'name' => $validated['name'],
-            'password' => $validated['password'],
+            'email' => $validated['email'],
+            'password' => bcrypt($validated['password']),
             'gender' => $validated['gender'],
             'phone' => $validated['phone'],
             'image' => $imageName,
             'status' => $validated['status'],
+            'role_id' => $validated['role_id'] ?? 1,
         ]);
 
         return redirect()->route('account.index')->with('success', 'Người dùng đã được thêm thành công.');
-
     }
+
 
     /**
      * Display the specified resource.
@@ -90,27 +90,30 @@ class AccountController extends Controller
      */
     public function update(Request $request, string $id)
     {
-
         $account = User::findOrFail($id);
 
         // Validate dữ liệu đầu vào
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email,' . $id,
             'password' => 'nullable|string|min:6',
-            'gender' => 'required|in:Nam,Nu,Khac',
+            'gender' => 'required|in:Nam,Nữ,Khác',
             'phone' => 'required|numeric|digits_between:10,15',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'status' => 'required|boolean',
+            'role_id' => 'required|integer|in:1,2', // Thêm rule kiểm tra role_id
         ]);
 
         // Cập nhật thông tin người dùng
         $account->name = $validated['name'];
+        $account->email = $validated['email'];
         if ($request->filled('password')) {
             $account->password = bcrypt($validated['password']);
         }
         $account->gender = $validated['gender'];
         $account->phone = $validated['phone'];
         $account->status = $validated['status'];
+        $account->role_id = $validated['role_id']; // Thêm cập nhật role_id
 
         // Xử lý ảnh mới (nếu có)
         if ($request->hasFile('image')) {
@@ -130,9 +133,6 @@ class AccountController extends Controller
 
         return redirect()->route('account.index')->with('success', 'Cập nhật tài khoản thành công!');
     }
-
-
-
 
 
     /**
@@ -155,6 +155,6 @@ class AccountController extends Controller
     }
 
 
-        
-    }
+
+}
 

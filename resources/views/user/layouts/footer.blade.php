@@ -10,12 +10,12 @@
                                     <img src="assets/images/footer/logo/2.png"  alt="Logo">
                                 </a>
                             </div>
-                            <p class="short-desc">Subscribe to our newsleter, Enter your emil address</p>
+                            <p class="short-desc">Đăng ký nhận bản tin của chúng tôi, Nhập địa chỉ email của bạn</p>
                             <div class="newsletter-form_wrap">
                                 <form action="https://devitems.us11.list-manage.com/subscribe/post?u=6bbb9b6f5827bd842d9640c82&amp;id=05d85f18ef" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="newsletters-form validate" target="_blank" novalidate>
                                     <div id="mc_embed_signup_scroll">
                                         <div id="mc-form" class="mc-form subscribe-form">
-                                            <input id="mc-email" class="newsletter-input" type="email" autocomplete="off" placeholder="Enter email address" />
+                                            <input id="mc-email" class="newsletter-input" type="email" autocomplete="off" placeholder="Nhập địa chỉ email" />
                                             <button class="newsletter-btn" id="mc-submit"><i
                                             class="ion-android-mail"></i></button>
                                         </div>
@@ -28,40 +28,40 @@
                         <div class="row footer-widgets_wrap">
                             <div class="col-lg-4 col-md-4 col-sm-4">
                                 <div class="footer-widgets_title">
-                                    <h4>Shopping</h4>
+                                    <h4>Mua Sắm</h4>
                                 </div>
                                 <div class="footer-widgets">
                                     <ul>
-                                        <li><a href="#">Product</a></li>
-                                        <li><a href="#">My Cart</a></li>
-                                        <li><a href="#">Wishlist</a></li>
-                                        <li><a href="#">Cart</a></li>
+                                        <li><a href="#">Sản Phẩm</a></li>
+                                        <li><a href="#">Giỏ hàng của tôi</a></li>
+                                        <li><a href="#">Danh sách mong muốn</a></li>
+                                        <li><a href="#">Giỏ hàng</a></li>
                                     </ul>
                                 </div>
                             </div>
                             <div class="col-lg-4 col-md-4 col-sm-4">
                                 <div class="footer-widgets_title">
-                                    <h4>Account</h4>
+                                    <h4>Tài Khoản</h4>
                                 </div>
                                 <div class="footer-widgets">
                                     <ul>
-                                        <li><a href="#">Login</a></li>
-                                        <li><a href="#">Register</a></li>
-                                        <li><a href="#">Help</a></li>
-                                        <li><a href="#">Support</a></li>
+                                        <li><a href="#">Đăng Nhập</a></li>
+                                        <li><a href="#">Đăng kí</a></li>
+                                        <li><a href="#">Giúp đỡ</a></li>
+                                        <li><a href="#">Ủng hộ</a></li>
                                     </ul>
                                 </div>
                             </div>
                             <div class="col-lg-4 col-md-4 col-sm-4">
                                 <div class="footer-widgets_title">
-                                    <h4>Categories</h4>
+                                    <h4>Danh mục sản phẩm</h4>
                                 </div>
                                 <div class="footer-widgets">
                                     <ul>
-                                        <li><a href="#">Men</a></li>
-                                        <li><a href="#">Women</a></li>
-                                        <li><a href="#">Jeans</a></li>
-                                        <li><a href="#">Shoes</a></li>
+                                        <li><a href="#">IPHONE</a></li>
+                                        <li><a href="#">OPPO</a></li>
+                                        <li><a href="#">SAMSUNG</a></li>
+                                        <li><a href="#">HUAWEI</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -75,12 +75,12 @@
                 <div class="row align-items-center">
                     <div class="col-md-6">
                         <div class="copyright">
-                            <span>Copyright &copy; 2023 <a href="#">Kenne.</a> All rights reserved.</span>
+                            <span>Copyright &copy; 2025 <a href="#">WD73.</a> All rights reserved.</span>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="payment">
-                            <img src="assets/images/footer/payment/1.png" alt="Sneaker Store">
+                            <img src="assets/images/footer/payment/1.png" alt="Pina Store">
                         </div>
                     </div>
                 </div>

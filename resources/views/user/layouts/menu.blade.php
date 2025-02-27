@@ -53,7 +53,7 @@
                             <div class="header-right_area d-none d-lg-block">
                                 <ul>
                                     <li class="minicart-wrap">
-                                        <a href="#" class="minicart-btn ">
+                                        <a href="{{ route('cart') }}" class="minicart-btn ">
                                             <div class="minicart-count_area">
                                                 <span class="item-count">
                                                     {{-- tổng sản phẩm --}}
@@ -76,10 +76,10 @@
                                     <div class="main-menu_area position-relative">
                                         <nav class="main-nav d-flex justify-content-center">
                                             <ul>
-                                                <li class="dropdown-holder"><a href="">Trang chủ</a>
+                                                <li class="dropdown-holder"><a href="{{ route('home') }}">Trang chủ</a>
 
                                                 </li>
-                                                <li class="megamenu-holder position-static"><a href="#">Sản phẩm <i class="ion-chevron-down"></i></a>
+                                                <li class="megamenu-holder position-static"><a href="{{route('pageCategory')}}">Sản phẩm <i class="ion-chevron-down"></i></a>
                                                     <ul class="kenne-dropdown">
                                                         <li>IPHONE</li>
                                                         <li>SAMSUNG</li>
@@ -89,9 +89,9 @@
                                                 </li>
 
                                                 </li>
-                                                <li><a href="#">Liên hệ</a></li>
+                                                <li><a href="{{route('contact')}}">Liên hệ</a></li>
 
-                                                <li><a href="#">Giới thiệu</a></li>
+                                                <li><a href="{{ route('about') }}">Giới thiệu</a></li>
                                             </ul>
                                         </nav>
                                     </div>

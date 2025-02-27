@@ -8,8 +8,6 @@
 
     <title>Account</title>
 
-    <title>Document</title>
-
     <!-- Thêm các link tài nguyên nội bộ vào Laravel -->
     <link rel="stylesheet" href="{{ asset('assets/css/styles.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/plugins/fontawesome-free/css/all.min.css') }}">
@@ -37,9 +35,13 @@
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
 
+
+                            <li class="breadcrumb-item"><a href="{{ route('admin.index') }}">Home</a></li>
+
                             <li class="breadcrumb-item"><a href="{{ route('admin.account.index') }}">Home</a></li>
 
                             <li class="breadcrumb-item"><a href="#">Home</a></li>
+
 
                             <li class="breadcrumb-item active">Quản lí tài khoản</li>
                         </ol>
@@ -53,9 +55,13 @@
         <section class="content">
             <h1 class="text-center">Thêm mới người dùng</h1>
 
+
+            <form action="{{ route('account.store') }}" enctype="multipart/form-data" method="POST">
+
             <form action="{{ route('admin.account.store') }}" enctype="multipart/form-data" method="POST">
 
             <form action="#" method="POST">
+
 
                 @csrf
                 <div class="row">
@@ -65,8 +71,18 @@
                             <input type="text" class="form-control" value="{{ old('name') }}" id="name"
                                 name="name" required>
                         </div>
-
                     </div>
+
+                    <div class="col-12">
+                        <div class="mb-3">
+                            <label for="role_id" class="form-label">Vai trò</label>
+                            <select id="role_id" name="role_id" class="form-control" required>
+                                <option value="1">User</option>
+                                <option value="2">Admin</option>
+                            </select>
+                        </div>
+                    </div>
+
 
                     <div class="col-12">
                         <div class="mb-3">
@@ -77,11 +93,20 @@
 
                     <div class="col-12">
                         <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" value="{{ old('email') }}" id="email"
+                                name="email" required>
+                        </div>
+
+                    </div>
+
+                    <div class="col-12">
+                        <div class="mb-3">
                             <label for="gender" class="form-label">Giới tính</label>
                             <select id="gender" name="gender" class="form-control" required>
-                                <option value="Nam" >Nam</option>
-                                <option value="Nu" >Nữ</option>
-                                <option value="Khac" >Khác</option>
+                                <option value="Nam">Nam</option>
+                                <option value="Nu">Nữ</option>
+                                <option value="Khac">Khác</option>
                             </select>
                         </div>
                     </div>
@@ -112,6 +137,7 @@
                     </div>
 
 
+
                     <div class="col-6">
                         <div class="mb-3">
                             <label for="password" class="form-label">Xác nhận mật khẩu</label>
@@ -129,6 +155,7 @@
                         </div>
                     </div><!--end col-->
 
+
                     <div class="col-lg-6">
                         <div class="text-end">
                             <button type="submit" class="btn btn-primary">Thêm mới</button>
@@ -138,10 +165,6 @@
                 </div>
             </form>
 
-
-                    </div><!--end col-->
-                </div><!--end row-->
-            </form>
 
         </section>
         <!-- /.content -->
