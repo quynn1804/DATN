@@ -35,7 +35,14 @@
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
 
+
                             <li class="breadcrumb-item"><a href="{{ route('admin.index') }}">Home</a></li>
+
+                            <li class="breadcrumb-item"><a href="{{ route('admin.account.index') }}">Home</a></li>
+
+                            <li class="breadcrumb-item"><a href="#">Home</a></li>
+
+
                             <li class="breadcrumb-item active">Quản lí tài khoản</li>
                         </ol>
                     </div><!-- /.col -->
@@ -48,7 +55,14 @@
         <section class="content">
             <h1 class="text-center">Thêm mới người dùng</h1>
 
+
             <form action="{{ route('account.store') }}" enctype="multipart/form-data" method="POST">
+
+            <form action="{{ route('admin.account.store') }}" enctype="multipart/form-data" method="POST">
+
+            <form action="#" method="POST">
+
+
                 @csrf
                 <div class="row">
                     <div class="col-12">
@@ -121,6 +135,26 @@
                             </select>
                         </div>
                     </div>
+
+
+
+                    <div class="col-6">
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Xác nhận mật khẩu</label>
+                            <input type="password" class="form-control" value="{{ old('password') }}"
+                                id="password_confirmation" name="password_confirmation" required>
+                        </div>
+                    </div><!--end col-->
+                    <div class="col-12">
+                        <div class="mb-3">
+                            <label for="phonenumberInput" class="form-label">Loại Người Dùng</label>
+                            <select id="type" name="type" class="form-control" required>
+                                <option value="2" selected>Member</option>
+                                <option value="1">Admin</option>
+                            </select>
+                        </div>
+                    </div><!--end col-->
+
 
                     <div class="col-lg-6">
                         <div class="text-end">
