@@ -4,10 +4,10 @@
             <div class="breadcrumb-area">
                 <div class="container">
                     <div class="breadcrumb-content">
-                        <h2>Other</h2>
+                        <h2>Khác</h2>
                         <ul>
-                            <li><a href="index.html">Home</a></li>
-                            <li class="active">Contact</li>
+                            <li><a href="{{route('home')}}">Trang Chủ</a></li>
+                            <li class="active">Liên Hệ</li>
                         </ul>
                     </div>
                 </div>
@@ -22,17 +22,17 @@
                     <div class="row">
                         <div class="col-lg-5 offset-lg-1 col-md-12 order-1 order-lg-2">
                             <div class="contact-page-side-content">
-                                <h3 class="contact-page-title">Contact Us</h3>
-                                <p class="contact-page-message">Claritas est etiam processus dynamicus, qui sequitur
-                                    mutationem consuetudium lectorum. Mirum est notare quam littera gothica, quam nunc putamus parum
-                                    claram anteposuerit litterarum formas human.</p>
+                                <h3 class="contact-page-title">Liên hệ với chúng tôi</h3>
+                                <p class="contact-page-message">Chúng tôi luôn tận tâm chăm sóc khách hàng, lắng nghe từng nhu cầu và mong muốn của bạn.
+                                     Với dịch vụ chuyên nghiệp, tận tình và chu đáo, chúng tôi cam kết mang đến những trải nghiệm tốt nhất, giúp bạn luôn
+                                      hài lòng và tin tưởng. Sự hài lòng của bạn chính là động lực để chúng tôi không ngừng cải thiện và phát triển</p>
                                 <div class="single-contact-block">
-                                    <h4><i class="fa fa-fax"></i> Address</h4>
-                                    <p>123 Main Street, Anytown, CA 12345 – USA</p>
+                                    <h4><i class="fa fa-fax"></i> Địa Chỉ</h4>
+                                    <p> Xuân Lai, Xuân Thu, Sóc Sơn, Hà Nội</p>
                                 </div>
                                 <div class="single-contact-block">
                                     <h4><i class="fa fa-phone"></i> Phone</h4>
-                                    <p>Mobile: (08) 123 456 789</p>
+                                    <p>Mobile: (08) 337 686 606</p>
                                     <p>Hotline: 1009 678 456</p>
                                 </div>
                                 <div class="single-contact-block last-child">
@@ -44,27 +44,27 @@
                         </div>
                         <div class="col-lg-6 col-md-12 order-2 order-lg-1">
                             <div class="contact-form-content">
-                                <h3 class="contact-page-title">Tell Us Your Message</h3>
+                                <h3 class="contact-page-title">Hãy Cho Chúng Tôi Biết Tin Nhắn Của Bạn</h3>
                                 <div class="contact-form">
                                     <form id="contact-form" action="https://whizthemes.com/mail-php/mamunur/kenne/kenne.php">
                                         <div class="form-group">
-                                            <label>Your Name <span class="required">*</span></label>
+                                            <label> Họ Và Tên <span class="required">*</span></label>
                                             <input type="text" name="con_name" id="con_name" required>
                                         </div>
                                         <div class="form-group">
-                                            <label>Your Email <span class="required">*</span></label>
+                                            <label>Email <span class="required">*</span></label>
                                             <input type="email" name="con_email" id="con_email" required>
                                         </div>
                                         <div class="form-group">
-                                            <label>Subject</label>
+                                            <label>Chủ Đề</label>
                                             <input type="text" name="con_subject" id="con_subject">
                                         </div>
                                         <div class="form-group form-group-2">
-                                            <label>Your Message</label>
+                                            <label>Tin Nhắn Của Bạn</label>
                                             <textarea name="con_message" id="con_message"></textarea>
                                         </div>
                                         <div class="form-group">
-                                            <button type="submit" value="submit" id="submit" class="kenne-contact-form_btn" name="submit">send</button>
+                                            <button type="submit" value="submit" id="submit" class="kenne-contact-form_btn" name="submit">Gửi</button>
                                         </div>
                                     </form>
                                 </div>

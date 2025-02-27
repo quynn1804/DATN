@@ -6,7 +6,7 @@
             <div class="breadcrumb-content">
                 <h2>Trang sản phẩm</h2>
                 <ul>
-                    <li><a href="index.html">Trang chủ</a></li>
+                    <li><a href="{{route('home')}}">Trang chủ</a></li>
                     <li class="active">sản phẩm</li>
                 </ul>
             </div>
@@ -81,9 +81,9 @@
 
 
                     </div>
-                    <div class="shop-product-wrap grid gridview-3 row">
-                        <div class="col-lg-4 col-md-4 col-sm-6">
-                            @foreach ($products as $product)
+                        <div class="shop-product-wrap grid gridview-3 row">
+                    @foreach ($products as $product)
+                    <div class="col-lg-4 col-md-4 col-sm-6">
                                 <div class="product-item">
                                     <div class="single-product" style="width: 255px; height: 360px;">
                                         <div class="product-img" style="width: 213.4px; height: 213.4px;">
@@ -177,11 +177,10 @@
                                         </div>
                                     </div>
                                 </div>
-                            @endforeach
+                            </div>
+                    @endforeach
+                </div>
 
-                        </div>
-
-                    </div>
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="kenne-paginatoin-area">

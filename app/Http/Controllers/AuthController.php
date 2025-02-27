@@ -73,10 +73,10 @@ class AuthController extends Controller
             // Kiểm tra role
             $userRoleId = Auth::user()->role_id;
 
-            if ($userRoleId == 1) { // Admin
+            if ($userRoleId == 2) { // Admin
                 return redirect()->route('admin');
-            } elseif ($userRoleId == 2) { // users
-                return redirect()->route('index');
+            } elseif ($userRoleId == 1) { // users
+                return redirect()->route('home');
             } else {
                 Auth::logout();
                 return back()->withErrors(['email' => 'Tài khoản không có quyền truy cập.']);
