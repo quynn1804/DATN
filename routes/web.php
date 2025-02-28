@@ -63,8 +63,8 @@ Route::middleware('auth')->group(function () {
 
 
 Route::prefix('admin')->name('admin.')->group(function () {
-    Route::get('', [AdminController::class, 'index']);
-    Route::resource('/account',  AccountController::class);
+    Route::get('/', [AdminController::class, 'index']);
+    Route::resource('account',  AccountController::class);
     Route::resource('products', ProductController::class);
     Route::resource('categories', CategoryController::class);
     Route::resource('orders', OrderController::class);

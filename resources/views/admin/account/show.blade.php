@@ -52,8 +52,6 @@
                             <h5 class="card-title mb-0">Danh sách tài khoản</h5><br>
                         </div>
                         <div class="card-body">
-                            <a class="btn btn-success" style="margin-bottom: 20px;"
-                                href="{{ route('admin.account.create') }}">Thêm mới tài khoản</a><br>
 
 
 
@@ -95,8 +93,8 @@
                                             <td>{{ $item->status }}</td>
                                             <td class="text-nowrap ">
                                                 <a style="margin-right: 5px" class="btn btn-warning"
-                                                    href="{{ route('account.edit', $item->id) }}">Sửa</a>
-                                                <form action="{{ route('account.destroy', $item->id) }}" method="POST"
+                                                    href="{{ route('admin.account.edit', $item->id) }}">Sửa</a>
+                                                <form action="{{ route('admin.account.destroy', $item->id) }}" method="POST"
                                                     style="display:inline-block;">
                                                     @csrf
                                                     @method('DELETE')

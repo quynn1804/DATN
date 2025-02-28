@@ -36,7 +36,7 @@
                         <ol class="breadcrumb float-sm-right">
 
 
-                            <li class="breadcrumb-item"><a href="{{ route('admin.index') }}">Home</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('admin.') }}">Home</a></li>
 
                             <li class="breadcrumb-item"><a href="{{ route('admin.account.index') }}">Home</a></li>
 
@@ -56,7 +56,7 @@
             <h1 class="text-center">Thêm mới người dùng</h1>
 
 
-            <form action="{{ route('account.store') }}" enctype="multipart/form-data" method="POST">
+            <form action="{{ route('register') }}" enctype="multipart/form-data" method="POST">
 
             <form action="{{ route('admin.account.store') }}" enctype="multipart/form-data" method="POST">
 

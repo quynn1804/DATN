@@ -46,13 +46,7 @@
                         </tr>
                     @endforeach
                 </tbody>
-                <tfoot>
-                    <tr>
-                        <th>STT</th>
-                        <th>Tên danh mục</th>
-                        <th>Trạng thái</th>
-                        <th>Thao tác</th>
-                    </tr>
+
                 </tfoot>
             </table>
         </div>

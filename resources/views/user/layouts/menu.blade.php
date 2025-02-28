@@ -20,13 +20,13 @@
                         <div class="col-lg-6">
                             <div class="header-top_right">
                                     <ul>
-                                            <li><a href="#"> Login | Logout</a></li>
-                                            
+                                            <li><a href="{{route(name: 'login')}}"> Login | Logout</a></li>
+
                                             <li><a href="#">Đơn Hàng</a></li>
                                             <li><a href="#">Tài khoản</a></li>
                                             <li>
-                                                <a href="#"> Logout</a>
-                                            </li>  
+                                                <a href="{{route('logout')}}"> Logout</a>
+                                            </li>
                                     </ul>
                             </div>
                         </div>

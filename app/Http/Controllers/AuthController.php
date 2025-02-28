@@ -44,7 +44,7 @@ class AuthController extends Controller
         // Đăng nhập người dùng ngay sau khi đăng ký
         Auth::login($user);
 
-        return redirect()->route('customer.dashboard')->with('success', 'Đăng ký thành công!');
+        return redirect()->route('home')->with('success', 'Đăng ký thành công!');
     }
 
     /** Hiển thị form đăng nhập */

@@ -54,7 +54,7 @@
                     <div class="alert alert-success">{{ session('success') }}</div>
                 @endif
 
-                <form action="{{ route('account.update', $account->id) }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('admin.account.update', $account->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
 
@@ -134,7 +134,7 @@
 
                     <!-- Nút lưu -->
                     <button type="submit" class="btn btn-primary">Cập nhật</button>
-                    <a href="{{ route('account.index') }}" class="btn btn-secondary">Quay lại</a>
+                    <a href="{{ route('admin.account.index') }}" class="btn btn-secondary">Quay lại</a>
                 </form>
 
 

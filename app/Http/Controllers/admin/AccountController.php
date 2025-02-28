@@ -61,7 +61,7 @@ class AccountController extends Controller
             'role_id' => $validated['role_id'] ?? 1,
         ]);
 
-        return redirect()->route('account.index')->with('success', 'Người dùng đã được thêm thành công.');
+        return redirect()->route('admin.account')->with('success', 'Người dùng đã được thêm thành công.');
     }
 
 
@@ -131,7 +131,7 @@ class AccountController extends Controller
         // Lưu lại dữ liệu
         $account->save();
 
-        return redirect()->route('account.index')->with('success', 'Cập nhật tài khoản thành công!');
+        return redirect()->route('admin.account.index')->with('success', 'Cập nhật tài khoản thành công!');
     }
 
 
@@ -151,7 +151,7 @@ class AccountController extends Controller
         // Xóa người dùng
         $account->delete();
 
-        return redirect()->route('account.index')->with('success', 'Người dùng đã được xóa!');
+        return redirect()->route('admin.account.index')->with('success', 'Người dùng đã được xóa!');
     }
 
 
