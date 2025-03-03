@@ -1,4 +1,8 @@
+@extends('user.layouts.main')
+@section('content')
+
 <!DOCTYPE html>
+
 <html>
 <head><title>Đăng ký</title></head>
 <body>
@@ -34,3 +38,4 @@
     <p>Đã có tài khoản? <a href="{{ route('login') }}">Đăng nhập ngay</a></p>
 </body>
 </html>
+@endsection

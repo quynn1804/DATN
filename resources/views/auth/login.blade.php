@@ -1,3 +1,5 @@
+@extends('user.layouts.main')
+@section('content')
 <!DOCTYPE html>
 <html>
 <head><title>Đăng nhập</title></head>
@@ -22,3 +24,4 @@
     <p>Chưa có tài khoản? <a href="{{ route('register') }}">Đăng ký ngay</a></p>
 </body>
 </html>
+@endsection
