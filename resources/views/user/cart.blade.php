@@ -1,196 +1,203 @@
-@extends(' user.layouts.main')
+@extends('user.layouts.main')
+
 @section('content')
-    <div class="breadcrumb-area">
-        <div class="container">
-            <div class="breadcrumb-content">
-                <h2>Cửa Hàng Liên Quan</h2>
-                <ul>
-                    <li><a href="{{route('home')}}">Trang Chủ</a></li>
-                    <li class="active">Giỏ Hàng</li>
-                </ul>
-            </div>
+<div class="breadcrumb-area">
+    <div class="container">
+        <div class="breadcrumb-content">
+            <h2>Giỏ Hàng</h2>
+            <ul>
+                <li><a href="{{ route('home') }}">Trang Chủ</a></li>
+                <li class="active">Giỏ Hàng</li>
+            </ul>
         </div>
     </div>
-    <!-- Kenne's Breadcrumb Area End Here -->
-    <!-- Begin Uren's Cart Area -->
-    <div class="kenne-cart-area">
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <form action="#">
-                        <div class="table-content table-responsive">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th class="kenne-product-remove">xoá</th>
-                                        <th class="kenne-product-thumbnail">Ảnh</th>
-                                        <th class="cart-product-name">Sản Phẩm</th>
-                                        <th class="cart-product-name">Màu Sắc</th>
-                                        <th class="cart-product-name">Dung Lượng</th>
-                                        <th class="kenne-product-price">Giá Thành</th>
-                                        <th class="kenne-product-quantity">Số Lượng</th>
-                                        <th class="kenne-product-subtotal">Tổng Tiền</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {{-- sp1 --}}
-                                    <tr>
-                                        <td class="kenne-product-remove"><a href="#"><i class="fa fa-trash"
-                                                    title="Remove"></i></a></td>
-                                        <td class="kenne-product-thumbnail"><a href="#"><img
-                                                    src="assets/images/product/small-size/1.jpg"
-                                                    alt="Uren's Cart Thumbnail"></a></td>
-                                        <td class="kenne-product-name"><a href="#">Juma rema pola</a></td>
-                                        <td class="kenne-product-color"><span class="amount">Blue</span></td>
-                                        <td class="kenne-product-capacities"><span class="amount">128GB</span></td>
-                                        <td class="kenne-product-price"><span class="amount">$46.80</span></td>
-                                        <td class="quantity">
-                                            <label>Quantity</label>
-                                            <div class="cart-plus-minus">
-                                                <input class="cart-plus-minus-box" value="1" type="text">
-                                                <div class="dec qtybutton"><i class="fa fa-angle-down"></i></div>
-                                                <div class="inc qtybutton"><i class="fa fa-angle-up"></i></div>
-                                            </div>
-                                        </td>
-                                        <td class="product-subtotal"><span class="amount">$46.80</span></td>
-                                    </tr>
-                                    {{-- sp2 --}}
-                                    <tr>
-                                        <td class="kenne-product-remove"><a href="#"><i class="fa fa-trash"
-                                                    title="Remove"></i></a></td>
-                                        <td class="kenne-product-thumbnail"><a href="#"><img
-                                                    src="assets/images/product/small-size/2.jpg"
-                                                    alt="Uren's Cart Thumbnail"></a></td>
-                                        <td class="kenne-product-name"><a href="#">Bag Goodscol model</a>
-                                        </td>
-                                        <td class="kenne-product-color"><span class="amount">Blue</span></td>
-                                        <td class="kenne-product-capacities"><span class="amount">128GB</span></td>
-                                        <td class="kenne-product-price"><span class="amount">$71.80</span></td>
-                                        <td class="quantity">
-                                            <label>Quantity</label>
-                                            <div class="cart-plus-minus">
-                                                <input class="cart-plus-minus-box" value="1" type="text">
-                                                <div class="dec qtybutton"><i class="fa fa-angle-down"></i></div>
-                                                <div class="inc qtybutton"><i class="fa fa-angle-up"></i></div>
-                                            </div>
-                                        </td>
-                                        <td class="product-subtotal"><span class="amount">$71.80</span></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="coupon-all">
-                                    <div class="coupon">
-                                        <input id="coupon_code" class="input-text" name="coupon_code" value=""
-                                            placeholder="Mã giảm giá" type="text">
-                                        <input class="button" name="apply_coupon" value="Áp dụng phiếu giảm giá"
-                                            type="submit">
-                                    </div>
-                                    <div class="coupon2">
-                                        <input class="button" name="update_cart" value="Cập nhật giỏ hàng" type="submit">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-5 ml-auto">
-                                <div class="cart-page-total">
-                                    <h2>Tổng giỏ hàng</h2>
-                                    <ul>
-                                        <li>Tổng cộng <span>$118.60</span></li>
-                                        <li>Tổng tiền <span>$118.60</span></li>
-                                    </ul>
-                                    <a href="#">Tiến hành thanh toán</a>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Uren's Cart Area End Here -->
+</div>
 
-    <!-- Begin Brand Area -->
-    <div class="brand-area ">
-        <div class="container">
-            <div class="brand-nav border-top ">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="kenne-element-carousel brand-slider slider-nav"
-                            data-slick-options='{
-                        "slidesToShow": 6,
-                        "slidesToScroll": 1,
-                        "infinite": false,
-                        "arrows": false,
-                        "dots": false,
-                        "spaceBetween": 30
-                        }'
-                            data-slick-responsive='[
-                        {"breakpoint":992, "settings": {
-                        "slidesToShow": 4
-                        }},
-                        {"breakpoint":768, "settings": {
-                        "slidesToShow": 3
-                        }},
-                        {"breakpoint":576, "settings": {
-                        "slidesToShow": 2
-                        }}
-                    ]'>
+<div class="cart-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                @if(session('success'))
+                    <div class="alert alert-success">{{ session('success') }}</div>
+                @endif
 
-                            <div class="brand-item">
-                                <a href="#">
-                                    <img src="assets/images/brand/1.png" alt="Brand Images">
-                                </a>
-                            </div>
-                            <div class="brand-item">
-                                <a href="#">
-                                    <img src="assets/images/brand/2.png" alt="Brand Images">
-                                </a>
-                            </div>
-                            <div class="brand-item">
-                                <a href="#">
-                                    <img src="assets/images/brand/3.png" alt="Brand Images">
-                                </a>
-                            </div>
-                            <div class="brand-item">
-                                <a href="#">
-                                    <img src="assets/images/brand/4.png" alt="Brand Images">
-                                </a>
-                            </div>
-                            <div class="brand-item">
-                                <a href="#">
-                                    <img src="assets/images/brand/5.png" alt="Brand Images">
-                                </a>
-                            </div>
-                            <div class="brand-item">
-                                <a href="#">
-                                    <img src="assets/images/brand/6.png" alt="Brand Images">
-                                </a>
-                            </div>
-                            <div class="brand-item">
-                                <a href="#">
-                                    <img src="assets/images/brand/1.png" alt="Brand Images">
-                                </a>
-                            </div>
-                            <div class="brand-item">
-                                <a href="#">
-                                    <img src="assets/images/brand/2.png" alt="Brand Images">
-                                </a>
-                            </div>
-
-                        </div>
+                @if($cartItems->isEmpty())
+                    <p>Giỏ hàng của bạn đang trống.</p>
+                    <a href="{{ route('home') }}" class="btn btn-primary">Tiếp tục mua sắm</a>
+                @else
+                    <div class="table-content table-responsive mt-4">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Sản Phẩm</th>
+                                    <th>Ảnh</th>
+                                    <th>Màu</th>
+                                    <th>Dung lượng</th>
+                                    <th>Đơn Giá</th>
+                                    <th>Số Lượng</th>
+                                    <th>Tổng Tiền</th>
+                                    <th>Xóa</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($cartItems as $item)
+                                <tr>
+                                    <td>{{ $item->productVariant->product->name }}</td>
+                                    <td><img src="{{ asset($item->productVariant->product->image) }}" width="50"></td>
+                                    <td>{{ $item->productVariant->color->name }}</td>
+                                    <td>{{ $item->productVariant->capacity->name }}</td>
+                                    <td>{{ number_format($item->price_at_time, 0, ',', '.') }} VND</td>
+                                    <td>
+                                        <div>
+                                            <button class="qtybutton dec" data-id="{{ $item->id }}">-</button>
+                                            <input class="cart-plus-minus-box quantity-input" 
+                                                   type="text" 
+                                                   value="{{ $item->quantity }}" 
+                                                   min="1" 
+                                                   max="{{ $item->productVariant->stock }}"
+                                                   data-id="{{ $item->id }}">
+                                            <button class="qtybutton inc" data-id="{{ $item->id }}">+</button><br>
+                                            <span style="color: red">còn {{ $item->productVariant->stock }} sản phẩm</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="total-price" id="total-{{ $item->id }}">
+                                            {{ number_format($item->price_at_time * $item->quantity, 0, ',', '.') }} VND
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <form action="{{ route('cart.destroy', $item->id) }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"
+                                                title="Remove"></i></button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
-                </div>
+
+                    <div class="cart-page-total">
+                        <h2>Tổng giỏ hàng</h2>
+                        <ul>
+                            <li>Tổng tiền: <span id="cart-total">{{ number_format($cartItems->sum(function($item) {
+                                return $item->price_at_time * $item->quantity;
+                            }), 0, ',', '.') }} VND</span></li>
+                        </ul>
+                        <a href="#">Tiến hành thanh toán</a>
+                    </div>
+                @endif
             </div>
         </div>
     </div>
-    <!-- Brand Area End Here -->
+</div>
 
-    <!-- Kenne's Footer Area End Here -->
-    <!-- Scroll To Top Start -->
-    <a class="scroll-to-top" href="#"><i class="ion-chevron-up"></i></a>
-    <!-- Scroll To Top End -->
+@section('scripts')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        function updateCart(cartId, quantity) {
+            let token = "{{ csrf_token() }}";
+
+            $.ajax({
+                url: "{{ route('cart.update', '') }}/" + cartId,
+                type: "PUT",
+                data: { _token: token, quantity: quantity },
+                success: function (response) {
+                    if (response.success) {
+                        $("#total-" + cartId).text(response.new_total + " VND");
+                        $("#cart-total").text(response.total_cart + " VND");
+                    }
+                },
+                error: function () {
+                    alert("Có lỗi xảy ra! Vui lòng thử lại.");
+                }
+            });
+        }
+
+        $(".qtybutton").on("click", function (e) {
+            e.preventDefault();
+
+            let cartId = $(this).data("id");
+            let inputField = $("input[data-id='" + cartId + "']");
+            let quantity = parseInt(inputField.val());
+            let maxStock = parseInt(inputField.attr("max")); // Lấy số lượng tối đa từ max="stock"
+
+            if ($(this).hasClass("inc") && quantity < maxStock) {
+                quantity += 1;
+            } else if ($(this).hasClass("dec") && quantity > 1) {
+                quantity -= 1;
+            }
+
+            inputField.val(quantity).trigger("change"); // Kích hoạt sự kiện change để cập nhật cart
+        });
+
+        // Xử lý khi nhập số lượng trực tiếp
+        $(".quantity-input").on("input", function () {
+            let cartId = $(this).data("id");
+            let quantity = parseInt($(this).val());
+            let maxStock = parseInt($(this).attr("max")); // Lấy số lượng tối đa từ max="stock"
+
+            if (!quantity || quantity < 1) {
+                $(this).val(1);
+                quantity = 1;
+            } else if (quantity > maxStock) {
+                $(this).val(maxStock);
+                quantity = maxStock;
+            }
+
+            updateCart(cartId, quantity);
+        });
+
+        // Xử lý khi người dùng rời khỏi ô input
+        $(".quantity-input").on("change", function () {
+            let cartId = $(this).data("id");
+            let quantity = parseInt($(this).val());
+            let maxStock = parseInt($(this).attr("max")); // Lấy số lượng tối đa từ max="stock"
+
+            if (!quantity || quantity < 1) {
+                $(this).val(1);
+                quantity = 1;
+            } else if (quantity > maxStock) {
+                $(this).val(maxStock);
+                quantity = maxStock;
+            }
+
+            updateCart(cartId, quantity);
+        });
+    });
+</script>
+@endsection
+
+
+    @yield('scripts');
+        <style>
+                .cart-plus-minus {
+            display: flex;
+            align-items: center;
+            border: 1px solid #ddd;
+            width: 120px;
+            justify-content: space-between;
+            }
+
+            .cart-plus-minus-box {
+            width: 50px;
+            text-align: center;
+            border: none;
+            background: transparent;
+            font-size: 16px;
+            }
+
+            .qtybutton {
+            background: #ddd;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            line-height: 30px;
+            cursor: pointer;
+            border: none;
+            }
+        </style>
 @endsection

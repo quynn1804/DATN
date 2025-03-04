@@ -3,18 +3,24 @@
 namespace App\Http\Controllers\user;
 
 use App\Http\Controllers\Controller;
+
 use App\Models\Capacity;
 use App\Models\Category;
 use App\Models\Color;
+
+use App\Models\Cart;
+
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\View;
 
 class UserController extends Controller
 {
     public function index()
     {
         $products = Product::all();
-        return view('user.home', compact('products'));
+        return View('user.home', compact('products'));
     }
 
     public function pageCategory()
@@ -31,9 +37,18 @@ class UserController extends Controller
         return view('user.login');
     }
 
+
+
+    public function cart()
+    {
+        $cartItems = Cart::where('user_id', Auth::id())->with('productVariant')->get();
+
+        return view('user.cart', compact('cartItems'));
+
     public function cart()
     {
         return view('user.cart');
+
     }
 
     public function about()
@@ -56,6 +71,11 @@ class UserController extends Controller
     //     return view('user.shopLeftSidebar');
     // }
 
+
+    public function singleProduct()
+    {
+        return view('user.singleProduct');
+
     public function singleProduct($id)
     {
         $product = Product::with(['variants.color', 'variants.capacity'])->findOrFail($id);
@@ -64,7 +84,11 @@ class UserController extends Controller
         $colors = $product->variants->pluck('color')->unique('id');
         $capacities = $product->variants->pluck('capacity')->unique('id');
     
+
         return view('user.singleProduct', compact('product', 'colors', 'capacities','productt'));
+
+        return view('user.singleProduct', compact('product', 'colors', 'capacities'));
+
     }
      
 

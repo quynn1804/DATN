@@ -53,10 +53,10 @@
                             <div class="header-right_area d-none d-lg-block">
                                 <ul>
                                     <li class="minicart-wrap">
-                                        <a href="{{ route('cart') }}" class="minicart-btn ">
+                                        <a href="{{ route('cart') }}" class="minicart-btn">
                                             <div class="minicart-count_area">
                                                 <span class="item-count">
-                                                    {{-- tổng sản phẩm --}}
+                                                    {{ \App\Models\Cart::where('user_id', auth()->id())->distinct('product_variant_id')->count('product_variant_id') ?? 0 }}
                                                 </span>
                                                 <i class="ion-bag"></i>
                                             </div>
@@ -67,6 +67,7 @@
                                     </li>
                                 </ul>
                             </div>
+                            
                         </div>
                     </div>
                     <div class="header-bottom_area d-none d-lg-block">
