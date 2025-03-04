@@ -18,7 +18,7 @@ Route::get('/cart', [UserController::class, 'cart'])->name('cart');
 Route::get('/about', [UserController::class, 'about'])->name('about');
 Route::get('/contact', [UserController::class, 'contact'])->name('contact');
 Route::get('/myAccount', [UserController::class, 'myAccount']);
-Route::get('/singleProduct', [UserController::class, 'singleProduct']);
+Route::get('/product/{id}', [UserController::class, 'singleProduct'])->name('singleProduct');
 
 // Xác thực người dùng
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
