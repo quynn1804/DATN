@@ -21,6 +21,9 @@ Route::get('/contact', [UserController::class, 'contact'])->name('contact');
 Route::get('/myAccount', [UserController::class, 'myAccount']);
 Route::get('/product/{id}', [UserController::class, 'singleProduct'])->name('singleProduct');
 
+// search sp
+Route::get('/search', [UserController::class, 'search'])->name('search');
+
 // Xác thực người dùng
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);
