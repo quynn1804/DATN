@@ -28,12 +28,18 @@ class UserController extends Controller
         return view('user.login');
     }
 
+<<<<<<< HEAD
 
     public function cart()
     {
         $cartItems = Cart::where('user_id', Auth::id())->with('productVariant')->get();
 
         return view('user.cart', compact('cartItems'));
+=======
+    public function cart()
+    {
+        return view('user.cart');
+>>>>>>> 1b221bd39d96a6a6bbde434095ddd9550d67da4a
     }
 
     public function about()
@@ -56,8 +62,21 @@ class UserController extends Controller
         return view('user.shopLeftSidebar');
     }
 
+<<<<<<< HEAD
     public function singleProduct()
     {
         return view('user.singleProduct');
+=======
+    public function singleProduct($id)
+    {
+        $product = Product::with(['variants.color', 'variants.capacity'])->findOrFail($id);
+        
+        // Lấy danh sách màu sắc và dung lượng 
+        $colors = $product->variants->pluck('color')->unique('id');
+        $capacities = $product->variants->pluck('capacity')->unique('id');
+    
+        return view('user.singleProduct', compact('product', 'colors', 'capacities'));
+>>>>>>> 1b221bd39d96a6a6bbde434095ddd9550d67da4a
     }
+    
 }
