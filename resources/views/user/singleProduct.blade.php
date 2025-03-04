@@ -203,9 +203,6 @@
                                         <li><a class="active" data-bs-toggle="tab" href="#description"><span>Mô
                                                     Tả</span></a>
                                         </li>
-                                        <li><a data-bs-toggle="tab" href="#specification"><span>thông số kỹ
-                                                    thuật</span></a>
-                                        </li>
                                         <li><a data-bs-toggle="tab" href="#reviews"><span>Bình Luận</span></a></li>
                                     </ul>
                                 </div>
@@ -214,101 +211,12 @@
                                         <div class="product-description">
                                             <ul>
                                                 <li>
-                                                    <span class="title">Ullam aliquam</span>
-                                                    <span>Voluptatum, minus? Optio molestias voluptates aspernatur laborum
-                                                        ratione minima, natus eaque nemo rem quisquam, suscipit architecto
-                                                        saepe. Debitis omnis labore laborum consectetur, quas, esse
-                                                        voluptates
-                                                        minus aliquam modi nesciunt earum! Vero rerum molestiae corporis
-                                                        libero
-                                                        repellat doloremque quae sapiente ratione maiores qui aliquam, sunt
-                                                        obcaecati! Iure nisi doloremque numquam delectus.</span>
-                                                </li>
-                                                <li>
-                                                    <span class="title">Enim tempore</span>
-                                                    <span>Molestias amet quibusdam eligendi exercitationem alias labore
-                                                        tenetur
-                                                        quaerat veniam similique aspernatur eveniet, suscipit corrupti
-                                                        itaque
-                                                        dolore deleniti nobis, rerum reprehenderit recusandae. Eligendi
-                                                        beatae
-                                                        asperiores nisi distinctio doloribus voluptatibus voluptas
-                                                        repellendus
-                                                        tempore unde velit temporibus atque maiores aliquid deserunt
-                                                        aspernatur
-                                                        amet, soluta fugit magni saepe fugiat vel sunt voluptate
-                                                        vitae</span>
-                                                </li>
-                                                <li>
-                                                    <span class="title">Laudantium suscipit</span>
-                                                    <span>Odit repudiandae maxime, ducimus necessitatibus error fugiat nihil
-                                                        eum
-                                                        dolorem animi voluptates sunt, rem quod reprehenderit expedita,
-                                                        nostrum
-                                                        sit accusantium ut delectus. Voluptates at ipsam, eligendi labore
-                                                        dignissimos consectetur reprehenderit id error excepturi illo velit
-                                                        ratione nisi nam saepe quod! Reiciendis eos, velit fugiat voluptates
-                                                        accusamus nesciunt dicta ratione mollitia, asperiores error aliquam!
-                                                        Reprehenderit provident, omnis blanditiis fugit, accusamus deserunt
-                                                        illum unde, voluptatum consequuntur illo officiis labore doloremque
-                                                        quidem aperiam! Fuga, expedita? Laboriosam eum, tempore vitae libero
-                                                        voluptate omnis ducimus doloremque hic quibusdam reiciendis ab
-                                                        itaque
-                                                        aperiam maiores laudantium esse, consequuntur quos labore modi quasi
-                                                        recusandae distinctio iusto optio officia tempora.</span>
-                                                </li>
-                                                <li>
-                                                    <span class="title">Molestiae veritatis officia</span>
-                                                    <span>Illum fuga esse tenetur inventore, in voluptatibus saepe iste quia
-                                                        cupiditate, explicabo blanditiis accusantium ut. Eaque nostrum,
-                                                        quisquam
-                                                        doloribus asperiores tempore autem. Ea perspiciatis vitae reiciendis
-                                                        maxime similique vel, id ratione blanditiis ullam officiis odio sunt
-                                                        nam
-                                                        quos atque accusantium ad! Repellendus, magni aliquid. Iure
-                                                        asperiores
-                                                        veniam eum unde dignissimos reprehenderit ut atque velit, harum
-                                                        labore
-                                                        nam expedita, pariatur excepturi consectetur animi optio mollitia ad
-                                                        a
-                                                        natus eaque aut assumenda inventore dolor obcaecati! Enim ab tempore
-                                                        nulla iusto consequuntur quod sit voluptatibus adipisci earum fuga,
-                                                        explicabo amet, provident, molestiae optio. Ducimus ex
-                                                        necessitatibus
-                                                        assumenda, nisi excepturi ut aspernatur est eius dignissimos
-                                                        pariatur
-                                                        unde ipsum sunt quaerat.</span>
-                                                </li>
+                                                    {{ $product->description }}
 
                                             </ul>
                                         </div>
                                     </div>
-                                    <div id="specification" class="tab-pane" role="tabpanel">
-                                        <table class="table table-bordered specification-inner_stuff">
-                                            <tbody>
-                                                <tr>
-                                                    <td colspan="2"><strong>Memory</strong></td>
-                                                </tr>
-                                            </tbody>
-                                            <tbody>
-                                                <tr>
-                                                    <td>test 1</td>
-                                                    <td>8gb</td>
-                                                </tr>
-                                            </tbody>
-                                            <tbody>
-                                                <tr>
-                                                    <td colspan="2"><strong>Processor</strong></td>
-                                                </tr>
-                                            </tbody>
-                                            <tbody>
-                                                <tr>
-                                                    <td>No. of Cores</td>
-                                                    <td>1</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                    {{-- bình luận --}}
                                     <div id="reviews" class="tab-pane" role="tabpanel">
                                         <div class="tab-pane active" id="tab-review">
                                             <form class="form-horizontal" id="form-review">
@@ -336,26 +244,26 @@
                                                         </tbody>
                                                     </table>
                                                 </div>
-                                                <h2>Write a review</h2>
+                                                <h2>Viết bài bình luận</h2>
                                                 <div class="form-group required">
                                                     <div class="col-sm-12 p-0">
-                                                        <label>Your Email <span class="required">*</span></label>
+                                                        <label>Email của bạn<span class="required">*</span></label>
                                                         <input class="review-input" type="email" name="con_email"
                                                             id="con_email" required>
                                                     </div>
                                                 </div>
                                                 <div class="form-group required second-child">
                                                     <div class="col-sm-12 p-0">
-                                                        <label class="control-label">Share your opinion</label>
+                                                        <label class="control-label">Chia sẻ ý kiến ​​của bạn</label>
                                                         <textarea class="review-textarea" name="con_message" id="con_message"></textarea>
-                                                        <div class="help-block"><span class="text-danger">Note:</span>
+                                                        {{-- <div class="help-block"><span class="text-danger">Note:</span>
                                                             HTML is
                                                             not
-                                                            translated!</div>
+                                                            translated!</div> --}}
                                                     </div>
                                                 </div>
                                                 <div class="form-group last-child required">
-                                                    <div class="col-sm-12 p-0">
+                                                    {{-- <div class="col-sm-12 p-0">
                                                         <div class="your-opinion">
                                                             <label>Your Rating</label>
                                                             <span>
@@ -368,9 +276,9 @@
                                                                 </select>
                                                             </span>
                                                         </div>
-                                                    </div>
+                                                    </div> --}}
                                                     <div class="kenne-btn-ps_right">
-                                                        <button class="kenne-btn">Continue</button>
+                                                        <button class="kenne-btn">Gửi Bình Luận</button>
                                                     </div>
                                                 </div>
                                             </form>
@@ -417,58 +325,42 @@
                 }}
             ]'>
                                 {{-- forrrr --}}
-                                <div class="product-item">
-                                    <div class="single-product">
-                                        <div class="product-img">
-                                            <a href="index.php?act=sanphamct">
-                                                <img class="primary-img" src="assets/images/product/1-1.jpg"
-                                                    alt="Kenne's Product Image">
-                                                <img class="secondary-img" src="assets/images/product/1-2.jpg"
-                                                    alt="Kenne's Product Image">
-                                            </a>
-                                            <span class="sticker-2">Hot</span>
-                                            {{-- <div class="add-actions">
-                                        <ul>
-                                            <li class="quick-view-btn" data-bs-toggle="modal"
-                                                data-bs-target="#exampleModalCenter"><a href="javascript:void(0)"
-                                                    data-bs-toggle="tooltip" data-placement="right" title="Quick View"><i
-                                                        class="ion-ios-search"></i></a>
-                                            </li>
-                                            <li><a href="wishlist.html" data-bs-toggle="tooltip" data-placement="right"
-                                                    title="Add To Wishlist"><i class="ion-ios-heart-outline"></i></a>
-                                            </li>
-                                            <li><a href="compare.html" data-bs-toggle="tooltip" data-placement="right"
-                                                    title="Add To Compare"><i class="ion-ios-reload"></i></a>
-                                            </li>
-                                            <li><a href="cart.html" data-bs-toggle="tooltip" data-placement="right"
-                                                    title="Add To cart"><i class="ion-bag"></i></a>
-                                            </li>
-                                        </ul>
-                                    </div> --}}
-                                        </div>
-                                        <div class="product-content">
-                                            <div class="product-desc_info">
-                                                <h3 class="product-name"><a href="index.php?act=sanphamct">Quibusdam
-                                                        ratione</a>
-                                                </h3>
-                                                <div class="price-box">
-                                                    <span class="new-price">$46.91</span>
-                                                    <span class="old-price">$50.99</span>
-                                                </div>
-                                                <div class="rating-box">
-                                                    <ul>
-                                                        <li><i class="ion-ios-star"></i></li>
-                                                        <li><i class="ion-ios-star"></i></li>
-                                                        <li><i class="ion-ios-star"></i></li>
-                                                        <li class="silver-color"><i class="ion-ios-star-half"></i></li>
-                                                        <li class="silver-color"><i class="ion-ios-star-outline"></i></li>
-                                                    </ul>
+                                @foreach ($productt as $product)
+                                    <div class="product-item">
+                                        <div class="single-product">
+                                            <div class="product-img">
+                                                <a href="{{ route('singleProduct', ['id' => $product->id]) }}">
+                                                    <img class="primary-img"
+                                                        src="{{ asset('assets/images/' . $product->image) }}" 
+                                                        height="180px" alt="{{ $product->name }}">
+                                                </a>
+                                                <span class="sticker-2">Hot</span>
+                                            </div>
+                                            <div class="product-content">
+                                                <div class="product-desc_info">
+                                                    <h3 class="product-name"><a href="{{ route('singleProduct', ['id' => $product->id]) }}">{{$product->name}}</a>
+                                                    </h3>
+                                                    <div class="price-box">
+                                                        <span class="new-price">{{$product->price}}VND</span>
+                                                        {{-- <span class="old-price">$50.99</span> --}}
+                                                    </div>
+                                                    {{-- đánh giá sao --}}
+                                                    {{-- <div class="rating-box">
+                                                        <ul>
+                                                            <li><i class="ion-ios-star"></i></li>
+                                                            <li><i class="ion-ios-star"></i></li>
+                                                            <li><i class="ion-ios-star"></i></li>
+                                                            <li class="silver-color"><i class="ion-ios-star-half"></i>
+                                                            </li>
+                                                            <li class="silver-color"><i class="ion-ios-star-outline"></i>
+                                                            </li>
+                                                        </ul>
+                                                    </div> --}}
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-
+                                @endforeach
 
                             </div>
                         </div>
@@ -506,42 +398,42 @@
 
                                     <div class="brand-item">
                                         <a href="javascript:void(0)">
-                                            <img src="assets/images/brand/1.png" alt="Brand Images">
+                                            <img src="{{ asset('assets/images/brand/1.png') }}" alt="Brand Images">
                                         </a>
                                     </div>
                                     <div class="brand-item">
                                         <a href="javascript:void(0)">
-                                            <img src="assets/images/brand/2.png" alt="Brand Images">
+                                            <img src="{{ asset('assets/images/brand/2.png') }}" alt="Brand Images">
                                         </a>
                                     </div>
                                     <div class="brand-item">
                                         <a href="javascript:void(0)">
-                                            <img src="assets/images/brand/3.png" alt="Brand Images">
+                                            <img src="{{ asset('assets/images/brand/3.png') }}" alt="Brand Images">
                                         </a>
                                     </div>
                                     <div class="brand-item">
                                         <a href="javascript:void(0)">
-                                            <img src="assets/images/brand/4.png" alt="Brand Images">
+                                            <img src="{{ asset('assets/images/brand/4.png') }}" alt="Brand Images">
                                         </a>
                                     </div>
                                     <div class="brand-item">
                                         <a href="javascript:void(0)">
-                                            <img src="assets/images/brand/5.png" alt="Brand Images">
+                                            <img src="{{ asset('assets/images/brand/5.png') }}" alt="Brand Images">
                                         </a>
                                     </div>
                                     <div class="brand-item">
                                         <a href="javascript:void(0)">
-                                            <img src="assets/images/brand/6.png" alt="Brand Images">
+                                            <img src="{{ asset('assets/images/brand/6.png') }}" alt="Brand Images">
                                         </a>
                                     </div>
                                     <div class="brand-item">
                                         <a href="javascript:void(0)">
-                                            <img src="assets/images/brand/1.png" alt="Brand Images">
+                                            <img src="{{ asset('assets/images/brand/1.png') }}" alt="Brand Images">
                                         </a>
                                     </div>
                                     <div class="brand-item">
                                         <a href="javascript:void(0)">
-                                            <img src="assets/images/brand/2.png" alt="Brand Images">
+                                            <img src="{{ asset('assets/images/brand/2.png') }}" alt="Brand Images">
                                         </a>
                                     </div>
 

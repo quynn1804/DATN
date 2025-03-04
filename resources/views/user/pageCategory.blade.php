@@ -27,18 +27,11 @@
                             </div>
                             <div class="sidebar-categories_menu">
                                 <ul>
+                                    @foreach ($categories->take(5) as $category)
                                     <li>
-                                        <a href="#"> IPHONE</a>
+                                        <a href="#"> {{$category->name}}</a>
                                     </li>
-                                    <li>
-                                        <a href="#"> HUAWEI</a>
-                                    </li>
-                                    <li>
-                                        <a href="#"> OPPO</a>
-                                    </li>
-                                    <li>
-                                        <a href="#"> SAMSUNG</a>
-                                    </li>
+                                    @endforeach
                                 </ul>
                             </div>
                         </div>
@@ -49,20 +42,26 @@
 
                             <div class="sidebar-categories_menu">
                                 <ul>
-                                    {{-- // Lọc các kích thước duy nhất --}}
+                                    @foreach ($Capacities->take(5) as $Capacity)
+                                    <li>
+                                        <a href="#"> {{$Capacity->name}}</a>
+                                    </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="kenne-sidebar_categories category-module">
+                            <div class="kenne-categories_title">
+                                <h5>DUNG LƯỢNG</h5>
+                            </div>
 
+                            <div class="sidebar-categories_menu">
+                                <ul>
+                                    @foreach ($colors->take(5) as $color)
                                     <li>
-                                        <a href="#">32GB</a>
+                                        <a href="#"> {{$color->name}}</a>
                                     </li>
-                                    <li>
-                                        <a href="#">64GB</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">128GB</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">256GB</a>
-                                    </li>
+                                    @endforeach
                                 </ul>
                             </div>
                         </div>
@@ -87,7 +86,7 @@
                                 <div class="product-item">
                                     <div class="single-product" style="width: 255px; height: 360px;">
                                         <div class="product-img" style="width: 213.4px; height: 213.4px;">
-                                            <a href="#">
+                                            <a href="{{ route('singleProduct', ['id' => $product->id]) }}">
                                                 <img class="primary-img"
                                                     src="{{ asset('assets/images/' . $product->image) }}"
                                                     alt="{{ $product->name }}">
@@ -96,28 +95,11 @@
                                                     alt="{{ $product->name }}">
                                             </a>
 
-                                            <div class="add-actions">
-                                                <ul>
-                                                    <li class="quick-view-btn" data-bs-toggle="modal"
-                                                        data-bs-target="#exampleModalCenter">
-                                                        <a href="#" data-bs-toggle="tooltip" data-placement="right"
-                                                            title="Quick View"><i class="ion-ios-search"></i></a>
-                                                    </li>
-                                                    <li><a href="wishlist.html" data-bs-toggle="tooltip"
-                                                            data-placement="right" title="Add To Wishlist"><i
-                                                                class="ion-ios-heart-outline"></i></a></li>
-                                                    <li><a href="compare.html" data-bs-toggle="tooltip"
-                                                            data-placement="right" title="Add To Compare"><i
-                                                                class="ion-ios-reload"></i></a></li>
-                                                    <li><a href="cart.html" data-bs-toggle="tooltip" data-placement="right"
-                                                            title="Add To cart"><i class="ion-bag"></i></a></li>
-                                                </ul>
-                                            </div>
                                         </div>
 
                                         <div class="product-content">
                                             <div class="product-desc_info">
-                                                <h3 class="product-name"><a href="#">{{ $product->name }}</a></h3>
+                                                <h3 class="product-name"><a href="{{ route('singleProduct', ['id' => $product->id]) }}">{{ $product->name }}</a></h3>
                                                 <div class="price-box">
                                                     <span
                                                         class="new-price">{{ number_format($product->price, 0, ',', '.') }}đ</span>
@@ -134,7 +116,7 @@
                                 <div class="list-product_item">
                                     <div class="single-product">
                                         <div class="product-img">
-                                            <a href="single-product.html">
+                                            <a href="{{ route('singleProduct', ['id' => $product->id]) }}">
                                                 <img class="primary-img"
                                                     src="{{ asset('assets/images/' . $product->image) }}" width="300px"
                                                     height="250px" alt="{{ $product->name }}">
@@ -149,30 +131,10 @@
                                                         class="old-price">{{ number_format($product->old_price, 0, ',', '.') }}đ</span>
                                                 </div>
                                                 <h6 class="product-name"><a
-                                                        href="single-product.html">{{ $product->name }}</a></h6>
+                                                        href="{{ route('singleProduct', ['id' => $product->id]) }}">{{ $product->name }}</a></h6>
                                                 <div class="product-short_desc">
                                                     <p>{{ $product->description }}</p>
                                                 </div>
-                                            </div>
-                                            <div class="add-actions">
-                                                <ul>
-                                                    <li class="quick-view-btn" data-bs-toggle="modal"
-                                                        data-bs-target="#exampleModalCenter"><a href="#"
-                                                            data-bs-toggle="tooltip" data-placement="top"
-                                                            title="Quick View"><i class="ion-ios-search"></i></a>
-                                                    </li>
-                                                    <li><a href="wishlist.html" data-bs-toggle="tooltip"
-                                                            data-placement="top" title="Add To Wishlist"><i
-                                                                class="ion-ios-heart-outline"></i></a>
-                                                    </li>
-                                                    <li><a href="compare.html" data-bs-toggle="tooltip"
-                                                            data-placement="top" title="Add To Compare"><i
-                                                                class="ion-ios-reload"></i></a>
-                                                    </li>
-                                                    <li><a href="cart.html" data-bs-toggle="tooltip" data-placement="top"
-                                                            title="Add To cart"><i class="ion-bag"></i></a>
-                                                    </li>
-                                                </ul>
                                             </div>
                                         </div>
                                     </div>

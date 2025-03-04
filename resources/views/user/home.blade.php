@@ -351,7 +351,7 @@
 
                                         <div class="single-product">
                                             <div class="product-img">
-                                                <a href="<{{ route('singleProduct', ['id' => $product->id]) }}">
+                                                <a href="{{ route('singleProduct', ['id' => $product->id]) }}">
                                                     <img class="primary-img"
                                                         src="{{ asset('assets/images/' . $product->image) }}"
                                                         style="width: 200px; height: 250px; object-fit: cover;"

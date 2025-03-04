@@ -40,8 +40,8 @@
                     <div class="col-lg-12">
                         <div class="header-middle_nav">
                             <div class="header-search_area d-none d-lg-block">
-                                <form class="search-form" action="#" method="POST">
-                                    <input type="text" name="keyword" placeholder="Nhập từ khóa..." required>
+                                <form class="search-form" action="{{ route('search') }}" method="GET">
+                                    <input type="text" name="q" placeholder="Nhập từ khóa..." required>
                                     <button class="search-button" type="submit"><i class="ion-ios-search"></i></button>
                                 </form>
                             </div>
@@ -81,10 +81,11 @@
                                                 </li>
                                                 <li class="megamenu-holder position-static"><a href="{{route('pageCategory')}}">Sản phẩm <i class="ion-chevron-down"></i></a>
                                                     <ul class="kenne-dropdown">
-                                                        <li>IPHONE</li>
-                                                        <li>SAMSUNG</li>
-                                                        <li>HUAWEI</li>
-                                                        <li>OPPO</li>
+                                                        @foreach ($categories->take(5) as $category)
+                                                        <li>
+                                                            <a href="#"> {{$category->name}}</a>
+                                                        </li>
+                                                        @endforeach
                                                     </ul>
                                                 </li>
 
