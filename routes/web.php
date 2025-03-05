@@ -8,6 +8,7 @@ use App\Http\Controllers\admin\ProductController;
 use App\Http\Controllers\user\UserController;
 use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\user\CartController;
 use Illuminate\Support\Facades\Route;
 
 // Trang chủ
@@ -15,11 +16,14 @@ Route::get('/', [UserController::class, 'index'])->name('home');
 
 // Các trang tĩnh
 Route::get('/pageCategory', [UserController::class, 'pageCategory'])->name('pageCategory');
-Route::get('/cart', [UserController::class, 'cart'])->name('cart');
+// Route::get('/cart', [UserController::class, 'cart'])->name('cart');
 Route::get('/about', [UserController::class, 'about'])->name('about');
 Route::get('/contact', [UserController::class, 'contact'])->name('contact');
 Route::get('/myAccount', [UserController::class, 'myAccount']);
-Route::get('/singleProduct', [UserController::class, 'singleProduct']);
+Route::get('/product/{id}', [UserController::class, 'singleProduct'])->name('singleProduct');
+
+// search sp
+Route::get('/search', [UserController::class, 'search'])->name('search');
 
 // Xác thực người dùng
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
@@ -48,4 +52,13 @@ Route::middleware('auth')->group(function () {
     });
 });
 
+
+
+
+// Giỏ hàng (yêu cầu đăng nhập)
+Route::middleware('auth')->group(function () {
+    Route::get('/cart', [CartController::class, 'index'])->name('cart');
+    Route::put('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
+    Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
+});
 

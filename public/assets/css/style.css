@@ -5091,6 +5091,8 @@ i, .tab-content .tab-pane.active, .scroll-to-top i, .quantity .cart-plus-minus >
   z-index: 4;
 }
 
+
+
 .slick-current .slider-progress {
   -webkit-animation: timebar 8s ease-in-out 0s 1 backwards;
   animation: timebar 8s ease-in-out 0s 1 backwards;

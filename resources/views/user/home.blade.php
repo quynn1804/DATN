@@ -176,7 +176,7 @@
 
                                 <div class="single-product">
                                     <div class="product-img">
-                                        <a href="<#">
+                                        <a href="{{ route('singleProduct', ['id' => $product->id]) }}">
                                             <img class="primary-img" src="{{ asset('assets/images/' . $product->image) }}"
                                                 style="width: 200px; height: 250px; object-fit: cover;"
                                                 alt="{{ $product->name }}">
@@ -187,7 +187,7 @@
                                     </div>
                                     <div class="product-content">
                                         <div class="product-desc_info">
-                                            <h3 class="product-name"><a href="#"> {{ $product->name }} </a></h3>
+                                            <h3 class="product-name"><a href="{{ route('singleProduct', ['id' => $product->id]) }}"> {{ $product->name }} </a></h3>
                                             <div class="price-box">
                                                 <span class="new-price"> {{ number_format($product->price, 0, ',', '.') }}đ
                                                 </span>
@@ -255,7 +255,7 @@
 
                                 <div class="single-product">
                                     <div class="product-img">
-                                        <a href="<#">
+                                        <a href="{{ route('singleProduct', ['id' => $product->id]) }}">
                                             <img class="primary-img" src="{{ asset('assets/images/' . $product->image) }}"
                                                 style="width: 200px; height: 250px; object-fit: cover;"
                                                 alt="{{ $product->name }}">
@@ -266,7 +266,7 @@
                                     </div>
                                     <div class="product-content">
                                         <div class="product-desc_info">
-                                            <h3 class="product-name"><a href="#"> {{ $product->name }} </a></h3>
+                                            <h3 class="product-name"><a href="{{ route('singleProduct', ['id' => $product->id]) }}"> {{ $product->name }} </a></h3>
                                             <div class="price-box">
                                                 <span class="new-price">
                                                     {{ number_format($product->price, 0, ',', '.') }}đ </span>
@@ -351,7 +351,7 @@
 
                                         <div class="single-product">
                                             <div class="product-img">
-                                                <a href="<#">
+                                                <a href="{{ route('singleProduct', ['id' => $product->id]) }}">
                                                     <img class="primary-img"
                                                         src="{{ asset('assets/images/' . $product->image) }}"
                                                         style="width: 200px; height: 250px; object-fit: cover;"
@@ -363,7 +363,7 @@
                                             </div>
                                             <div class="product-content">
                                                 <div class="product-desc_info">
-                                                    <h3 class="product-name"><a href="#"> {{ $product->name }} </a>
+                                                    <h3 class="product-name"><a href="{{ route('singleProduct', ['id' => $product->id]) }}"> {{ $product->name }} </a>
                                                     </h3>
                                                     <div class="price-box">
                                                         <span class="new-price">
