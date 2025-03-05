@@ -73,9 +73,9 @@ class AuthController extends Controller
             // Kiểm tra role
             $userRoleId = Auth::user()->role_id;
 
-            if ($userRoleId == 2) { // Admin
-                return redirect()->route('admin');
-            } elseif ($userRoleId == 1) { // users
+            if ($userRoleId == 1) { // Admin
+                return redirect()->route('admin.dashboard');
+            } elseif ($userRoleId == 2) { // users
                 return redirect()->route('home');
             } else {
                 Auth::logout();

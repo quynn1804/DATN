@@ -18,6 +18,12 @@ class DatabaseSeeder extends Seeder
                 CapacitySeeder::class,
                 ProductSeeder::class,
                 ProductVariantSeeder::class,
+                RoleSeeder::class,
+
+                UserSeeder::class,
+
+
+
             ]);
         }
 

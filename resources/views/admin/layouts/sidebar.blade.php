@@ -1,6 +1,8 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="{{ route('admin.') }}" class="brand-link">
+    <a href="{{ route('admin.dashboard') }}" class="brand-link">
+
+
         <img src="{{ asset('assets/images/favicon.png') }}" alt="Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
         <span class="brand-text font-weight-light">Sneaker store</span>
     </a>
@@ -21,7 +23,8 @@
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <li class="nav-item">
-                    <a href="{{ route('admin.') }}" class="nav-link">
+                    <a href="{{ route('admin.dashboard') }}" class="brand-link">
+
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>Trang chủ</p>
                     </a>
@@ -41,12 +44,6 @@
                     </a>
                 </li>
 
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-sort-numeric-up"></i>
-                        <p>Quản lý biến thể</p>
-                    </a>
-                </li>
 
                 <li class="nav-item">
                     <a href="{{ route('admin.account.index') }}" class="nav-link">
@@ -56,25 +53,20 @@
                 </li>
 
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a href="{{route('admin.orders.index')}}" class="nav-link">
                         <i class="nav-icon fas fa-tasks"></i>
                         <p>Đơn hàng</p>
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a href="{{route('admin.comments.index')}}" class="nav-link">
                         <i class="nav-icon far fa-comment-dots"></i>
                         <p>Bình luận</p>
                     </a>
                 </li>
 
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-phone-square-alt"></i>
-                        <p>Liên hệ</p>
-                    </a>
-                </li>
+
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

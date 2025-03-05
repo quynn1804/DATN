@@ -1,11 +1,12 @@
 <?php
-
+// use App\Http\Controllers\CommentController;
 use App\Http\Controllers\admin\AccountController;
 use App\Http\Controllers\admin\AdminController;
 use App\Http\Controllers\admin\CategoryController;
 use App\Http\Controllers\admin\OrderController;
 use App\Http\Controllers\admin\ProductController;
 use App\Http\Controllers\user\UserController;
+use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
@@ -26,6 +27,7 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::post('products/{id}/comments', [CommentController::class, 'store'])->middleware('auth')->name('comments.store');
 
 // Dashboard (yêu cầu đăng nhập)
 Route::middleware('auth')->group(function () {
@@ -35,11 +37,15 @@ Route::middleware('auth')->group(function () {
 
     // Admin routes (yêu cầu đăng nhập)
     Route::prefix('admin')->name('admin.')->group(function () {
-        Route::get('/', [AdminController::class, 'index']);
+        Route::get('/', [AdminController::class, 'index'])->name('dashboard');
         Route::resource('account', AccountController::class);
+        Route::resource('comments', CommentController::class)->except(['create', 'edit', 'update']);
+
         Route::resource('products', ProductController::class);
         Route::resource('categories', CategoryController::class);
         Route::resource('orders', OrderController::class);
         Route::delete('/products/variant/{id}', [ProductController::class, 'destroyVariant'])->name('products.variant.destroy');
     });
 });
+
+

@@ -4,18 +4,23 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Product;
+use App\Models\Category;
 
 class ProductSeeder extends Seeder
 {
     public function run()
     {
+        // Lấy ID của danh mục 'Điện thoại' (hoặc tạo nếu chưa có)
+        $category = Category::firstOrCreate(['name' => 'Điện thoại']);
+
         Product::create([
             'name' => 'iPhone 15 Pro',
             'description' => 'iPhone 15 Pro với chip A17 Bionic mới nhất.',
             'price' => 30000000,
             'quantity' => 50,
-            'image' => 'product/iphone15pro.jpg', // Đảm bảo ảnh có sẵn trong storage/app/public/products
+            'image' => 'product/iphone15pro.jpg',
             'status' => true,
+            'category_id' => $category->id, // Gán ID danh mục
         ]);
 
         Product::create([
@@ -25,6 +30,7 @@ class ProductSeeder extends Seeder
             'quantity' => 40,
             'image' => 'product/galaxys23.jpg',
             'status' => true,
+            'category_id' => $category->id,
         ]);
     }
 }

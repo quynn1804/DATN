@@ -1,9 +1,8 @@
 <?php
 
-
-
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Category;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\ProductVariant;
@@ -14,29 +13,40 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::with('variants.color', 'variants.capacity')->paginate(10);
-        return view('admin.products.index', compact('products'));
+        $query = Product::query();
+
+        if ($request->has('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        $products = $query->with('category')->paginate(10);
+        $categories = Category::all();
+
+        return view('admin.products.index', compact('products', 'categories'));
     }
 
     public function show($id)
-{
-    $product = Product::with('variants.color', 'variants.capacity')->findOrFail($id);
-    return view('admin.products.show', compact('product'));
-}
+    {
+        $product = Product::with('variants.color', 'variants.capacity', 'category')->findOrFail($id);
+        return view('admin.products.show', compact('product'));
+    }
 
     public function create()
     {
         $colors = Color::all();
         $capacities = Capacity::all();
-        return view('admin.products.create', compact('colors', 'capacities'));
+        $categories = Category::all();
+
+        return view('admin.products.create', compact('colors', 'capacities', 'categories'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'category_id' => 'required|exists:categories,id',
             'price' => 'required|numeric',
             'description' => 'required|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -47,15 +57,12 @@ class ProductController extends Controller
             'variants.*.stock' => 'required|integer',
         ]);
 
-        // Lưu ảnh nếu có
         if ($request->hasFile('image')) {
             $validated['image'] = $request->file('image')->store('products', 'public');
         }
 
-        // Tạo sản phẩm
         $product = Product::create($validated);
 
-        // Thêm các biến thể
         foreach ($request->variants as $variant) {
             $product->variants()->create($variant);
         }
@@ -67,14 +74,17 @@ class ProductController extends Controller
     {
         $colors = Color::all();
         $capacities = Capacity::all();
+        $categories = Category::all();
         $product->load('variants');
-        return view('admin.products.edit', compact('product', 'colors', 'capacities'));
+
+        return view('admin.products.edit', compact('product', 'colors', 'capacities', 'categories'));
     }
 
     public function update(Request $request, Product $product)
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'category_id' => 'required|exists:categories,id',
             'price' => 'required|numeric',
             'description' => 'required',
             'image' => 'nullable|image',
@@ -87,7 +97,6 @@ class ProductController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            // Xóa ảnh cũ nếu có
             if ($product->image) {
                 Storage::disk('public')->delete($product->image);
             }
@@ -96,7 +105,6 @@ class ProductController extends Controller
 
         $product->update($validated);
 
-        // Cập nhật hoặc thêm biến thể
         foreach ($request->variants as $variant) {
             if (isset($variant['id'])) {
                 $existingVariant = ProductVariant::find($variant['id']);
@@ -111,11 +119,11 @@ class ProductController extends Controller
 
     public function destroy(Product $product)
     {
-        // Xóa ảnh sản phẩm nếu có
         if ($product->image) {
             Storage::disk('public')->delete($product->image);
         }
         $product->delete();
+
         return redirect()->route('admin.products.index')->with('success', 'Sản phẩm đã bị xóa!');
     }
 

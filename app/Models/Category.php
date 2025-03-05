@@ -9,4 +9,9 @@ class Category extends Model
 {
     use HasFactory;
     protected $fillable = ['name', 'is_active'];
+    public function category()
+{
+    return $this->belongsTo(Category::class);
+}
+
 }

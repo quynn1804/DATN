@@ -1,6 +1,4 @@
-
 @extends('admin.layouts.index')
-
 
 @section('content')
 <div class="container mx-auto p-6 bg-white rounded-lg shadow-md">
@@ -23,6 +21,19 @@
         <div>
             <label class="block font-medium text-gray-700">Tên sản phẩm</label>
             <input type="text" name="name" value="{{ old('name') }}" class="w-full border border-gray-300 p-2 rounded">
+        </div>
+
+        <!-- Danh mục sản phẩm -->
+        <div>
+            <label class="block font-medium text-gray-700">Danh mục</label>
+            <select name="category_id" class="w-full border border-gray-300 p-2 rounded">
+                <option value="">-- Chọn danh mục --</option>
+                @foreach ($categories as $category)
+                    <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                        {{ $category->name }}
+                    </option>
+                @endforeach
+            </select>
         </div>
 
         <!-- Giá sản phẩm -->
@@ -54,7 +65,6 @@
             <h3 class="text-xl font-semibold">Biến thể sản phẩm</h3>
 
             <div class="variant-item grid grid-cols-4 gap-4 border p-4 rounded relative">
-                <!-- Nút xoá biến thể -->
                 <button type="button" class="remove-variant absolute top-2 right-2 text-black hover:text-red-700 font-bold text-lg">
                     ❌
                 </button>

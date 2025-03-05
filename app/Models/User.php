@@ -43,6 +43,11 @@ class User extends Authenticatable
      *
      * @var array<string, string>
      */
+    public function comments()
+{
+    return $this->hasMany(Comment::class);
+}
+
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
