@@ -4,6 +4,8 @@ use App\Http\Controllers\user\UserController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\Admin\OrderController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\user\CartController;
+use App\Http\Controllers\PaymentController;
 Route::get('/', function () {
     return view('welcome');
 });
@@ -42,6 +44,24 @@ Route::prefix('admin/orders')->middleware(['auth', 'admin'])->group(function () 
 });
 
 
+// Route::middleware('auth')->group(function () {
+//     // Route::post('products/{id}/comments', [CommentController::class, 'store'])->name('comments.store');
+//     Route::get('/cart', [CartController::class, 'index'])->name('cart');
+//     Route::put('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
+//     Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
+// });
+Route::get('/cart', [CartController::class, 'index'])->name('cart');
+Route::put('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
+Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
+// thanh toan bang vnpayvnpay
+Route::post('/vnpay_payment', [PaymentController::class, 'vnpay_payment']);
 
+// thanh toan bang qr vnpayvnpay
+// Route::get('/payment', function () {
+//     return view('user.payment');
+// })->name('payment');
+
+// Route::post('/payment/create', [PaymentController::class, 'createPayment'])->name('payment.create');
+// Route::get('/vnpay/callback', [PaymentController::class, 'paymentCallback'])->name('vnpay.callback');
 
 

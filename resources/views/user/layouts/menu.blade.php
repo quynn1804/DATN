@@ -21,12 +21,12 @@
                             <div class="header-top_right">
                                     <ul>
                                             <li><a href="#"> Login | Logout</a></li>
-                                            
+
                                             <li><a href="#">Đơn Hàng</a></li>
                                             <li><a href="#">Tài khoản</a></li>
                                             <li>
                                                 <a href="#"> Logout</a>
-                                            </li>  
+                                            </li>
                                     </ul>
                             </div>
                         </div>
@@ -53,10 +53,10 @@
                             <div class="header-right_area d-none d-lg-block">
                                 <ul>
                                     <li class="minicart-wrap">
-                                        <a href="#" class="minicart-btn ">
+                                        <a href="{{ route('cart') }}" class="minicart-btn">
                                             <div class="minicart-count_area">
                                                 <span class="item-count">
-                                                    {{-- tổng sản phẩm --}}
+                                                    {{-- {{ \App\Models\Cart::where('user_id', auth()->id())->distinct('product_variant_id')->count('product_variant_id') ?? 0 }} --}}
                                                 </span>
                                                 <i class="ion-bag"></i>
                                             </div>

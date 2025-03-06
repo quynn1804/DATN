@@ -89,6 +89,16 @@
                                     <li>Total <span>$118.60</span></li>
                                 </ul>
                                 <a href="#">Proceed to checkout</a>
+                                <form action="{{url('/vnpay_payment')}}" method="POST">
+                                    @csrf
+                                    <button type="submit" name="redirect" style="background-color: black; color: white; padding: 10px; height: 44px;">Thanh Toan Bang VnPay</button>
+                                </form>
+                                {{-- <form action="{{ route('payment.create') }}" method="POST">
+                                    @csrf
+                                    <input type="number" name="amount" required>
+                                    <button type="submit">QR VNPAY</button>
+                                </form> --}}
+
                             </div>
                         </div>
                     </div>
