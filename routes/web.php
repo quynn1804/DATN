@@ -9,6 +9,7 @@ use App\Http\Controllers\user\UserController;
 use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\user\CartController;
+use App\Http\Controllers\user\PaymentController;
 use Illuminate\Support\Facades\Route;
 
 // Trang chủ
@@ -61,5 +62,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/cart', [CartController::class, 'index'])->name('cart');
     Route::put('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
     Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
+    Route::post('/vnpay_payment', [PaymentController::class, 'vnpay_payment']);
 });
 

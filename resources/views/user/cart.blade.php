@@ -50,10 +50,10 @@
                                     <td>
                                         <div>
                                             <button class="qtybutton dec" data-id="{{ $item->id }}">-</button>
-                                            <input class="cart-plus-minus-box quantity-input" 
-                                                   type="text" 
-                                                   value="{{ $item->quantity }}" 
-                                                   min="1" 
+                                            <input class="cart-plus-minus-box quantity-input"
+                                                   type="text"
+                                                   value="{{ $item->quantity }}"
+                                                   min="1"
                                                    max="{{ $item->productVariant->stock }}"
                                                    data-id="{{ $item->id }}">
                                             <button class="qtybutton inc" data-id="{{ $item->id }}">+</button><br>
@@ -87,6 +87,13 @@
                             }), 0, ',', '.') }} VND</span></li>
                         </ul>
                         <a href="#">Tiến hành thanh toán</a>
+                        <form action="{{url('/vnpay_payment')}}" method="POST">
+                            @csrf
+                            <input type="hidden" name="cart-total" value="{{ number_format($cartItems->sum(function($item) {
+                                return $item->price_at_time * $item->quantity;
+                            }), 0, ',', '.') }}">
+                            <button type="submit" name="redirect" style="background-color: black; color: white; padding: 10px; height: 44px;">Thanh Toan Bang VnPay</button>
+                        </form>
                     </div>
                 @endif
             </div>
