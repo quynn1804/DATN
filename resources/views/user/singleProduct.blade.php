@@ -217,73 +217,98 @@
                                         </div>
                                     </div>
                                     {{-- bình luận --}}
-                                    <div id="reviews" class="tab-pane" role="tabpanel">
-                                        <div class="tab-pane active" id="tab-review">
-                                            <form class="form-horizontal" id="form-review">
-                                                <div id="review">
-                                                    <table class="table table-striped table-bordered">
-                                                        <tbody>
-                                                            <tr>
-                                                                <td style="width: 50%;"><strong>Customer</strong></td>
-                                                                <td class="text-right">26/10/19</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td colspan="2">
-                                                                    <p>Good product! Thank you very much</p>
-                                                                    <div class="rating-box">
-                                                                        <ul>
-                                                                            <li><i class="ion-android-star"></i></li>
-                                                                            <li><i class="ion-android-star"></i></li>
-                                                                            <li><i class="ion-android-star"></i></li>
-                                                                            <li><i class="ion-android-star"></i></li>
-                                                                            <li><i class="ion-android-star"></i></li>
-                                                                        </ul>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                                <h2>Viết bài bình luận</h2>
-                                                <div class="form-group required">
-                                                    <div class="col-sm-12 p-0">
-                                                        <label>Email của bạn<span class="required">*</span></label>
-                                                        <input class="review-input" type="email" name="con_email"
-                                                            id="con_email" required>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group required second-child">
-                                                    <div class="col-sm-12 p-0">
-                                                        <label class="control-label">Chia sẻ ý kiến ​​của bạn</label>
-                                                        <textarea class="review-textarea" name="con_message" id="con_message"></textarea>
-                                                        {{-- <div class="help-block"><span class="text-danger">Note:</span>
-                                                            HTML is
-                                                            not
-                                                            translated!</div> --}}
-                                                    </div>
-                                                </div>
-                                                <div class="form-group last-child required">
-                                                    {{-- <div class="col-sm-12 p-0">
-                                                        <div class="your-opinion">
-                                                            <label>Your Rating</label>
-                                                            <span>
-                                                                <select class="star-rating">
-                                                                    <option value="1">1</option>
-                                                                    <option value="2">2</option>
-                                                                    <option value="3">3</option>
-                                                                    <option value="4">4</option>
-                                                                    <option value="5">5</option>
-                                                                </select>
-                                                            </span>
-                                                        </div>
-                                                    </div> --}}
-                                                    <div class="kenne-btn-ps_right">
-                                                        <button class="kenne-btn">Gửi Bình Luận</button>
-                                                    </div>
-                                                </div>
-                                            </form>
+                                    <div class="tab-content uren-tab_content">
+                                        <div id="description" class="tab-pane active show" role="tabpanel">
+                                            <div class="product-description">
+                                                <ul>
+                                                    <li>{{ $product->description }}</li>
+                                                </ul>
+                                            </div>
                                         </div>
+
+                                        {{-- Bình luận --}}
+                                     {{-- Bootstrap 5 --}}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<style>
+    /* CSS đẹp hơn cho bình luận */
+    .comment-box {
+        background: #f8f9fa;
+        padding: 10px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+    }
+    .comment-box strong {
+        color: #007bff;
+    }
+    .star-rating input {
+        display: none;
+    }
+    .star-rating label {
+        font-size: 24px;
+        color: #ccc;
+        cursor: pointer;
+    }
+    .star-rating input:checked ~ label,
+    .star-rating label:hover,
+    .star-rating label:hover ~ label {
+        color: #fdd835;
+    }
+</style>
+
+<div id="reviews" class="tab-pane" role="tabpanel">
+    <h2 class="text-lg fw-bold text-dark mb-4">Bình luận về sản phẩm: {{ $product->name }}</h2>
+
+    {{-- Thông báo nếu bình luận thành công --}}
+    @if(session('success'))
+        <div class="alert alert-success text-green-600">{{ session('success') }}</div>
+    @endif
+
+    {{-- Form bình luận --}}
+    @auth
+    <div class="p-3 border rounded bg-light">
+        <form action="{{ route('comments.store', $product->id) }}" method="POST">
+            @csrf
+            <label class="fw-bold text-dark">Đánh giá:</label>
+            <div class="star-rating d-flex">
+                <input type="radio" name="rating" id="star5" value="5"><label for="star5">★</label>
+                <input type="radio" name="rating" id="star4" value="4"><label for="star4">★</label>
+                <input type="radio" name="rating" id="star3" value="3"><label for="star3">★</label>
+                <input type="radio" name="rating" id="star2" value="2"><label for="star2">★</label>
+                <input type="radio" name="rating" id="star1" value="1"><label for="star1">★</label>
+            </div>
+
+            <label class="fw-bold text-dark mt-2">Bình luận:</label>
+            <textarea name="content" required class="form-control" placeholder="Nhập bình luận của bạn..."></textarea>
+
+            <button type="submit" class="mt-3 btn btn-primary">Gửi</button>
+        </form>
+    </div>
+    @else
+        <p class="text-muted">Vui lòng <a href="{{ route('login') }}" class="text-primary">đăng nhập</a> để bình luận.</p>
+    @endauth
+
+    {{-- Danh sách bình luận --}}
+    <h3 class="fw-bold text-dark mt-4">Danh sách bình luận:</h3>
+
+    <div class="mt-3">
+        @foreach($product->comments as $comment)
+            <div class="comment-box">
+                <p><strong>{{ $comment->user->name }}</strong>
+                    <span class="text-warning">
+                        {!! str_repeat('★', $comment->rating) !!}
+                        {!! str_repeat('☆', 5 - $comment->rating) !!}
+                    </span>
+                </p>
+                <p>{{ $comment->content }}</p>
+            </div>
+        @endforeach
+    </div>
+</div>
+
                                     </div>
+
                                 </div>
                             </div>
                         </div>
@@ -331,7 +356,7 @@
                                             <div class="product-img">
                                                 <a href="{{ route('singleProduct', ['id' => $product->id]) }}">
                                                     <img class="primary-img"
-                                                        src="{{ asset('assets/images/' . $product->image) }}" 
+                                                        src="{{ asset('assets/images/' . $product->image) }}"
                                                         height="180px" alt="{{ $product->name }}">
                                                 </a>
                                                 <span class="sticker-2">Hot</span>

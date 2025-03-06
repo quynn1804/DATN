@@ -9,6 +9,13 @@ use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
 {
+    public function index($productId)
+{
+    $product = Product::with('comments.user')->findOrFail($productId);
+    $comments = $product->comments()->latest()->get();
+
+    return view('user.single-product', compact('product', 'comments'));
+}
     public function store(Request $request, $productId)
     {
         $request->validate([
@@ -25,4 +32,10 @@ class CommentController extends Controller
 
         return redirect()->back()->with('success', 'Bình luận đã được thêm.');
     }
+    public function show($id)
+{
+    $product = Product::with('comments.user')->findOrFail($id);
+    return view('products.show', compact('product'));
+}
+
 }

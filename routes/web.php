@@ -43,7 +43,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/', [AdminController::class, 'index'])->name('dashboard');
         Route::resource('account', AccountController::class);
-        Route::resource('comments', CommentController::class)->except(['create', 'edit', 'update']);
+        Route::resource('comments', CommentController::class)->only(['index', 'destroy']);
 
         Route::resource('products', ProductController::class);
         Route::resource('categories', CategoryController::class);
@@ -57,6 +57,7 @@ Route::middleware('auth')->group(function () {
 
 // Giỏ hàng (yêu cầu đăng nhập)
 Route::middleware('auth')->group(function () {
+    Route::post('products/{id}/comments', [CommentController::class, 'store'])->name('comments.store');
     Route::get('/cart', [CartController::class, 'index'])->name('cart');
     Route::put('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
     Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
