@@ -45,10 +45,6 @@ class UserController extends Controller
 
         return view('user.cart', compact('cartItems'));
 
-    public function cart()
-    {
-        return view('user.cart');
-
     }
 
     public function about()
@@ -72,9 +68,7 @@ class UserController extends Controller
     // }
 
 
-    public function singleProduct()
-    {
-        return view('user.singleProduct');
+
 
     public function singleProduct($id)
     {
@@ -87,7 +81,6 @@ class UserController extends Controller
 
         return view('user.singleProduct', compact('product', 'colors', 'capacities','productt'));
 
-        return view('user.singleProduct', compact('product', 'colors', 'capacities'));
 
     }
      
