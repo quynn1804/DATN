@@ -1,5 +1,6 @@
 <?php
 // use App\Http\Controllers\CommentController;
+use App\Http\Controllers\User\CartController;
 use App\Http\Controllers\admin\AccountController;
 use App\Http\Controllers\admin\AdminController;
 use App\Http\Controllers\admin\CategoryController;
@@ -8,7 +9,7 @@ use App\Http\Controllers\admin\ProductController;
 use App\Http\Controllers\user\UserController;
 use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\user\CartController;
+
 use App\Http\Controllers\user\PaymentController;
 use Illuminate\Support\Facades\Route;
 
@@ -59,9 +60,11 @@ Route::middleware('auth')->group(function () {
 // Giỏ hàng (yêu cầu đăng nhập)
 Route::middleware('auth')->group(function () {
     Route::post('products/{id}/comments', [CommentController::class, 'store'])->name('comments.store');
+    Route::post('products/{id}/cart', [CartController::class, 'store'])->name('cart.store');
     Route::get('/cart', [CartController::class, 'index'])->name('cart');
+    Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
     Route::put('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
     Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
-    Route::post('/vnpay_payment', [PaymentController::class, 'vnpay_payment']);
+   Route::post('/vnpay_payment', [PaymentController::class, 'vnpay_payment']);
 });
 
