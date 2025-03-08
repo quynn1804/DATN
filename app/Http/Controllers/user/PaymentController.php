@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 class PaymentController extends Controller
 {
     public function vnpay_payment(Request $request){
+        $cartTotal = str_replace('.', '', $request->input('cart-total'));
+        // dd($cartTotal);
         $data=$request->all();
 
         $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
@@ -18,7 +20,7 @@ class PaymentController extends Controller
         $vnp_TxnRef = "123456"; //Mã đơn hàng. Trong thực tế Merchant cần insert đơn hàng vào DB và gửi mã này
         $vnp_OrderInfo = "Thanh Toan Don Hang";
         $vnp_OrderType = "PinaStore";
-        $vnp_Amount = $data['cart-total'] * 100;
+        $vnp_Amount = $cartTotal * 100;
         $vnp_Locale = "VN";
         $vnp_BankCode = "NCB";
         $vnp_IpAddr = $_SERVER['REMOTE_ADDR'];
