@@ -14,6 +14,15 @@
             </div>
 
             <div class="mb-4">
+                <label class="block text-gray-700">Danh mục sản phẩm</label>
+                <select name="category_id" class="w-full border rounded p-2">
+                    @foreach($categories as $category)
+                        <option value="{{ $category->id }}" {{ $product->category_id == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="mb-4">
                 <label class="block text-gray-700">Giá</label>
                 <input type="text" name="price" value="{{ old('price', $product->price) }}" class="w-full border rounded p-2">
             </div>
@@ -32,18 +41,19 @@
                 <label class="block text-gray-700">Ảnh sản phẩm</label>
                 <input type="file" name="image" class="w-full border rounded p-2">
                 @if($product->image)
-                    <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-32 mt-2">
+                    <div class="w-48 h-48 overflow-hidden flex items-center justify-center border rounded-lg mt-2">
+                        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="max-w-full max-h-full object-contain">
+                    </div>
                 @endif
             </div>
 
             <h2 class="text-xl font-bold mt-6">Biến thể sản phẩm</h2>
-            <div class="flex space-x-4 overflow-x-auto py-4">
+            <div id="variants-container" class="flex space-x-4 overflow-x-auto py-4">
                 @foreach($product->variants as $index => $variant)
                     <div class="border p-4 relative min-w-[300px]">
                         <input type="hidden" name="variants[{{ $index }}][id]" value="{{ $variant->id }}">
 
-                        <!-- Nút xóa với dấu ❌ -->
-                        <button type="button" class="absolute top-2 right-2 text-black hover:text-red-600 font-bold text-xl" onclick="removeVariant({{ $variant->id }})">❌</button>
+                        <button type="button" class="absolute top-2 right-2 text-black hover:text-red-600 font-bold text-xl" onclick="removeVariant(this)">❌</button>
 
                         <div class="space-y-2">
                             <div>
@@ -78,34 +88,8 @@
                 @endforeach
             </div>
 
+            <button type="button" onclick="addVariant()" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mt-4">➕ Thêm biến thể</button>
             <button type="submit" class="bg-blue-500 text-black px-4 py-2 rounded hover:bg-blue-600">Cập nhật sản phẩm</button>
         </form>
     </div>
 @endsection
-
-<script>
-    function removeVariant(variantId) {
-        if (confirm('Bạn có chắc chắn muốn xóa biến thể này?')) {
-            fetch(`/admin/products/variant/${variantId}`, {
-                method: 'DELETE',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Xóa biến thể thành công!');
-                    location.reload();
-                } else {
-                    alert('Xóa thất bại: ' + (data.message || 'Đã có lỗi xảy ra.'));
-                }
-            })
-            .catch(error => {
-                alert('Đã xảy ra lỗi khi xóa biến thể.');
-                console.error('Error:', error);
-            });
-        }
-    }
-</script>

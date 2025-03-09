@@ -41,16 +41,14 @@
                                 <div class="tab-content myaccount-tab-content" id="account-page-tab-content">
                                     <div class="tab-pane fade show active" id="account-dashboard" role="tabpanel" aria-labelledby="account-dashboard-tab">
                                         <div class="myaccount-dashboard">
-                                            <p>Hello <b>Edwin Adams</b> (not Edwin Adams? <a href="login-register.html">Sign
-                                                    out</a>)</p>
-                                            <p>From your account dashboard you can view your recent orders, manage your shipping and
-                                                billing addresses and <a href="#">edit your password and account
-                                                    details</a>.</p>
+                                            <p>Xin Chào <b>Edwin Adams</b> (Không phải bạn? <a href="login-register.html">Đăng Xuất</a>)</p>
+                                            <p>Từ bảng điều khiển tài khoản của bạn, bạn có thể xem các đơn hàng gần đây, quản lý địa chỉ giao hàng và
+                                                thanh toán và <a href="#">chỉnh sửa mật khẩu và thông tin tài khoản của bạn.</a>.</p>
                                         </div>
                                     </div>
                                     <div class="tab-pane fade" id="account-orders" role="tabpanel" aria-labelledby="account-orders-tab">
                                         <div class="myaccount-orders">
-                                            <h4 class="small-title">MY ORDERS</h4>
+                                            <h4 class="small-title">ĐƠN HÀNG CỦA TÔI</h4>
                                             <div class="table-responsive">
                                                 <table class="table table-bordered table-hover">
                                                     <tbody>
@@ -84,7 +82,7 @@
                                     </div>
                                     <div class="tab-pane fade" id="account-address" role="tabpanel" aria-labelledby="account-address-tab">
                                         <div class="myaccount-address">
-                                            <p>The following addresses will be used on the checkout page by default.</p>
+                                            <p>Các địa chỉ sau đây sẽ được sử dụng trên trang thanh toán theo mặc định.</p>
                                             <div class="row">
                                                 <div class="col">
                                                     <h4 class="small-title">Billing Adress</h4>
@@ -106,34 +104,27 @@
                                             <form action="#" class="kenne-form">
                                                 <div class="kenne-form-inner">
                                                     <div class="single-input single-input-half">
-                                                        <label for="account-details-firstname">First Name*</label>
+                                                        <label for="account-details-firstname">Họ Và Tên</label>
                                                         <input type="text" id="account-details-firstname">
                                                     </div>
-                                                    <div class="single-input single-input-half">
-                                                        <label for="account-details-lastname">Last Name*</label>
-                                                        <input type="text" id="account-details-lastname">
-                                                    </div>
                                                     <div class="single-input">
-                                                        <label for="account-details-email">Email*</label>
+                                                        <label for="account-details-email">Email</label>
                                                         <input type="email" id="account-details-email">
                                                     </div>
                                                     <div class="single-input">
-                                                        <label for="account-details-oldpass">Current Password(leave blank to leave
-                                                            unchanged)</label>
+                                                        <label for="account-details-oldpass">Mật khẩu hiện tại (để trống để không thay đổi)</label>
                                                         <input type="password" id="account-details-oldpass">
                                                     </div>
                                                     <div class="single-input">
-                                                        <label for="account-details-newpass">New Password (leave blank to leave
-                                                            unchanged)</label>
+                                                        <label for="account-details-newpass">Mật khẩu mới (để trống để không thay đổi)</label>
                                                         <input type="password" id="account-details-newpass">
                                                     </div>
                                                     <div class="single-input">
-                                                        <label for="account-details-confpass">Confirm New Password</label>
+                                                        <label for="account-details-confpass">Xác nhận mật khẩu mới</label>
                                                         <input type="password" id="account-details-confpass">
                                                     </div>
                                                     <div class="single-input">
-                                                        <button class="kenne-btn kenne-btn_dark" type="submit"><span>SAVE
-                                                        CHANGES</span></button>
+                                                        <button class="kenne-btn kenne-btn_dark" type="submit"><span>LƯU THAY ĐỔI</span></button>
                                                     </div>
                                                 </div>
                                             </form>

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\user;
+namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 
@@ -46,7 +46,6 @@ class UserController extends Controller
         return view('user.cart', compact('cartItems'));
 
     }
-
     public function about()
     {
         return view('user.about');
@@ -62,32 +61,24 @@ class UserController extends Controller
         return view('user.myAccount');
     }
 
-    // public function shopLeftSidebar()
-    // {
-    //     return view('user.shopLeftSidebar');
-    // }
-
-
-
 
     public function singleProduct($id)
     {
         $product = Product::with(['variants.color', 'variants.capacity'])->findOrFail($id);
         $productt = Product::all();
-        // Lấy danh sách màu sắc và dung lượng 
+        // Lấy danh sách màu sắc và dung lượng
         $colors = $product->variants->pluck('color')->unique('id');
         $capacities = $product->variants->pluck('capacity')->unique('id');
-    
+
 
         return view('user.singleProduct', compact('product', 'colors', 'capacities','productt'));
 
-
     }
-     
+
 
     // Hàm tìm kiếm sp
     public function search(Request $request)
-{
+  {
     $keyword = $request->input('q'); // Lấy từ khóa tìm kiếm từ input
 
     $products = Product::where('name', 'LIKE', "%$keyword%")
@@ -95,6 +86,7 @@ class UserController extends Controller
         ->get();
 
     return view('user.search', compact('products', 'keyword'));
+   }
+
 }
-    
-}
+
