@@ -45,9 +45,7 @@ class UserController extends Controller
 
         return view('user.cart', compact('cartItems'));
 
-
     }
-
     public function about()
     {
         return view('user.about');
@@ -63,12 +61,6 @@ class UserController extends Controller
         return view('user.myAccount');
     }
 
-    // public function shopLeftSidebar()
-    // {
-    //     return view('user.shopLeftSidebar');
-    // }
-
-
 
     public function singleProduct($id)
     {
@@ -80,8 +72,6 @@ class UserController extends Controller
 
 
         return view('user.singleProduct', compact('product', 'colors', 'capacities','productt'));
-
-
 
     }
 
