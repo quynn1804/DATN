@@ -96,6 +96,16 @@
                                 Thanh Toan Bang VnPay
                             </button>
                         </form>
+
+                        <form action="{{ url('/momo_payment') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="cart-total"
+                                   value="{{ number_format($cartItems->sum(fn($item) => $item->price_at_time * $item->quantity), 0, ',', '.') }}">
+                            <button type="submit" name="payUrl"
+                                    style="background-color: black; color: white; padding: 10px; height: 44px;">
+                                Thanh Toan Bang MoMo
+                            </button>
+                        </form>
                     </div>
                 @endif
             </div>

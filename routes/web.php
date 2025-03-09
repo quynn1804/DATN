@@ -65,6 +65,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
     Route::put('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
     Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
-   Route::post('/vnpay_payment', [PaymentController::class, 'vnpay_payment']);
+    Route::post('/vnpay_payment', [PaymentController::class, 'vnpay_payment']);
+    Route::post('/momo_payment', [PaymentController::class, 'momo_payment']);
 });
 
