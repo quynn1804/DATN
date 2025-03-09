@@ -87,25 +87,6 @@
                             }), 0, ',', '.') }} VND</span></li>
                         </ul>
                         <a href="#">Tiến hành thanh toán</a>
-                        <form action="{{ url('/vnpay_payment') }}" method="POST">
-                            @csrf
-                            <input type="hidden" name="cart-total"
-                                   value="{{ number_format($cartItems->sum(fn($item) => $item->price_at_time * $item->quantity), 0, ',', '.') }}">
-                            <button type="submit" name="redirect"
-                                    style="background-color: black; color: white; padding: 10px; height: 44px;">
-                                Thanh Toan Bang VnPay
-                            </button>
-                        </form>
-
-                        <form action="{{ url('/momo_payment') }}" method="POST">
-                            @csrf
-                            <input type="hidden" name="cart-total"
-                                   value="{{ number_format($cartItems->sum(fn($item) => $item->price_at_time * $item->quantity), 0, ',', '.') }}">
-                            <button type="submit" name="payUrl"
-                                    style="background-color: black; color: white; padding: 10px; height: 44px;">
-                                Thanh Toan Bang MoMo
-                            </button>
-                        </form>
                     </div>
                 @endif
             </div>
@@ -145,9 +126,9 @@
             let maxStock = parseInt(inputField.attr("max")); // Lấy số lượng tối đa từ max="stock"
 
             if ($(this).hasClass("inc") && quantity < maxStock) {
-                quantity += 1;
+                quantity += 0;
             } else if ($(this).hasClass("dec") && quantity > 1) {
-                quantity -= 1;
+                quantity -= 0;
             }
 
             inputField.val(quantity).trigger("change"); // Kích hoạt sự kiện change để cập nhật cart
@@ -190,7 +171,6 @@
 </script>
 @endsection
 
-
     @yield('scripts');
         <style>
                 .cart-plus-minus {
@@ -220,3 +200,4 @@
             }
         </style>
 @endsection
+
