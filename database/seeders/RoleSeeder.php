@@ -10,8 +10,17 @@ use App\Models\Role;
 class RoleSeeder extends Seeder
 {
     public function run()
+
     {
-        Role::create(['name' => 'Admin', 'action_level' => 'high']);
-        Role::create(['name' => 'users', 'action_level' => 'basic']);
+        Role::updateOrCreate(
+            ['name' => 'Admin'], // Điều kiện kiểm tra trùng
+            ['action_level' => 'low']
+        );
+
+        Role::updateOrCreate(
+            ['name' => 'User'],
+            ['action_level' => 'high']
+        );
+
     }
 }
