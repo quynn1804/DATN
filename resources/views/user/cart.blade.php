@@ -86,7 +86,7 @@
                                 return $item->price_at_time * $item->quantity;
                             }), 0, ',', '.') }} VND</span></li>
                         </ul>
-                        <a href="#">Tiến hành thanh toán</a>
+                        <a href="{{route('checkout')}}">Tiến hành thanh toán</a>
                     </div>
                 @endif
             </div>
@@ -171,7 +171,7 @@
 </script>
 @endsection
 
-    @yield('scripts');
+    @yield('scripts')
         <style>
                 .cart-plus-minus {
             display: flex;

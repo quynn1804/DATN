@@ -21,7 +21,7 @@ Route::get('/pageCategory', [UserController::class, 'pageCategory'])->name('page
 // Route::get('/cart', [UserController::class, 'cart'])->name('cart');
 Route::get('/about', [UserController::class, 'about'])->name('about');
 Route::get('/contact', [UserController::class, 'contact'])->name('contact');
-Route::get('/myAccount', [UserController::class, 'myAccount']);
+Route::get('/myAccount', [UserController::class, 'myAccount'])->name('myAccount')->middleware('auth');
 Route::get('/product/{id}', [UserController::class, 'singleProduct'])->name('singleProduct');
 
 // search sp
@@ -69,3 +69,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/momo_payment', [PaymentController::class, 'momo_payment']);
 });
 
+Route::get('/checkout', [PaymentController::class, 'checkout'])->name('checkout');
+Route::post('/process-payment', [PaymentController::class, 'processPayment'])->name('payment.process');
+Route::get('/payment/success', [PaymentController::class, 'paymentSuccess'])->name('payment.success');
+Route::get('/payment/failure', [PaymentController::class, 'paymentFailure'])->name('payment.failure');

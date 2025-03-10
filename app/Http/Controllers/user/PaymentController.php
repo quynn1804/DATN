@@ -3,20 +3,27 @@
 namespace App\Http\Controllers\user;
 
 use App\Http\Controllers\Controller;
+use App\Models\Cart;
+use App\Models\Order;
+use App\Models\OrderDetail;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
 class PaymentController extends Controller
 {
     public function execPostRequest($url, $data)
-{
+    {
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+        curl_setopt(
+            $ch,
+            CURLOPT_HTTPHEADER,
+            array(
                 'Content-Type: application/json',
-                'Content-Length: ' . strlen($data))
+                'Content-Length: ' . strlen($data)
+            )
         );
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -25,10 +32,11 @@ class PaymentController extends Controller
         //close connection
         curl_close($ch);
         return $result;
-}
+    }
 
 
-    public function momo_payment(Request $request){
+    public function momo_payment(Request $request)
+    {
 
         // include "../common/helper.php";
 
@@ -36,67 +44,70 @@ class PaymentController extends Controller
 
 
         $partnerCode = 'MOMOBKUN20180529';
-        $accessKey ='klm05TvNBzhg7h7j';
+        $accessKey = 'klm05TvNBzhg7h7j';
         $secretKey = 'at67qH6mk8w5Y1nAyMoYKMWACiEi2bsa';
         $orderInfo = "Thanh toán qua MoMo";
         $amount = "10000";
-        $orderId = time() ."";
+        $orderId = time() . "";
         $returnUrl = "http://localhost:8000/atm/result_atm.php";
         $notifyurl = "http://localhost:8000/atm/ipn_momo.php";
         // Lưu ý: link notifyUrl không phải là dạng localhost
         $bankCode = "SML";
-        $requestId = time()."";
+        $requestId = time() . "";
         $requestType = "payWithMoMoATM";
         $extraData = "";
-         //before sign HMAC SHA256 signature
-         $rawHashArr =  array(
-                        'partnerCode' => $partnerCode,
-                        'accessKey' => $accessKey,
-                        'requestId' => $requestId,
-                        'amount' => $amount,
-                        'orderId' => $orderId,
-                        'orderInfo' => $orderInfo,
-                        'bankCode' => $bankCode,
-                        'returnUrl' => $returnUrl,
-                        'notifyUrl' => $notifyurl,
-                        'extraData' => $extraData,
-                        'requestType' => $requestType
-                        );
-         // echo $serectkey;die;
-         $rawHash = "partnerCode=".$partnerCode."&accessKey=".$accessKey."&requestId=".$requestId."&bankCode=".$bankCode."&amount=".$amount."&orderId=".$orderId."&orderInfo=".$orderInfo."&returnUrl=".$returnUrl."&notifyUrl=".$notifyurl."&extraData=".$extraData."&requestType=".$requestType;
-         $signature = hash_hmac("sha256", $rawHash, $secretKey);
+        //before sign HMAC SHA256 signature
+        $rawHashArr = array(
+            'partnerCode' => $partnerCode,
+            'accessKey' => $accessKey,
+            'requestId' => $requestId,
+            'amount' => $amount,
+            'orderId' => $orderId,
+            'orderInfo' => $orderInfo,
+            'bankCode' => $bankCode,
+            'returnUrl' => $returnUrl,
+            'notifyUrl' => $notifyurl,
+            'extraData' => $extraData,
+            'requestType' => $requestType
+        );
+        // echo $serectkey;die;
+        $rawHash = "partnerCode=" . $partnerCode . "&accessKey=" . $accessKey . "&requestId=" . $requestId . "&bankCode=" . $bankCode . "&amount=" . $amount . "&orderId=" . $orderId . "&orderInfo=" . $orderInfo . "&returnUrl=" . $returnUrl . "&notifyUrl=" . $notifyurl . "&extraData=" . $extraData . "&requestType=" . $requestType;
+        $signature = hash_hmac("sha256", $rawHash, $secretKey);
 
-         $data =  array('partnerCode' => $partnerCode,
-                        'accessKey' => $accessKey,
-                        'requestId' => $requestId,
-                        'amount' => $amount,
-                        'orderId' => $orderId,
-                        'orderInfo' => $orderInfo,
-                        'returnUrl' => $returnUrl,
-                        'bankCode' => $bankCode,
-                        'notifyUrl' => $notifyurl,
-                        'extraData' => $extraData,
-                        'requestType' => $requestType,
-                        'signature' => $signature);
-         $result = $this->execPostRequest($endpoint, json_encode($data));
-         $jsonResult = json_decode($result,true);  // decode json
-         return redirect($jsonResult['payUrl']);
+        $data = array(
+            'partnerCode' => $partnerCode,
+            'accessKey' => $accessKey,
+            'requestId' => $requestId,
+            'amount' => $amount,
+            'orderId' => $orderId,
+            'orderInfo' => $orderInfo,
+            'returnUrl' => $returnUrl,
+            'bankCode' => $bankCode,
+            'notifyUrl' => $notifyurl,
+            'extraData' => $extraData,
+            'requestType' => $requestType,
+            'signature' => $signature
+        );
+        $result = $this->execPostRequest($endpoint, json_encode($data));
+        $jsonResult = json_decode($result, true);  // decode json
+        return redirect($jsonResult['payUrl']);
 
 
     }
 
 
-    public function vnpay_payment(Request $request){
+    public function vnpay_payment(Request $request)
+    {
         $cartTotal = str_replace('.', '', $request->input('cart-total'));
         // dd($cartTotal);
-        $data=$request->all();
+        $data = $request->all();
 
         $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
         $vnp_Returnurl = "https://localhost/vnpay_php/vnpay_return.php";
         $vnp_TmnCode = "BTBFJN9W";//Mã website tại VNPAY
         $vnp_HashSecret = "GGHNNJ0P5F96PLOMSWBVM0N4NVR0RNPY"; //Chuỗi bí mật
 
-        $vnp_TxnRef = rand(00,0000); //Mã đơn hàng. Trong thực tế Merchant cần insert đơn hàng vào DB và gửi mã này
+        $vnp_TxnRef = rand(00, 0000); //Mã đơn hàng. Trong thực tế Merchant cần insert đơn hàng vào DB và gửi mã này
         $vnp_OrderInfo = "Thanh Toan Don Hang";
         $vnp_OrderType = "PinaStore";
         $vnp_Amount = $cartTotal * 100;
@@ -180,20 +191,96 @@ class PaymentController extends Controller
 
         $vnp_Url = $vnp_Url . "?" . $query;
         if (isset($vnp_HashSecret)) {
-            $vnpSecureHash =   hash_hmac('sha512', $hashdata, $vnp_HashSecret);//
+            $vnpSecureHash = hash_hmac('sha512', $hashdata, $vnp_HashSecret);//
             $vnp_Url .= 'vnp_SecureHash=' . $vnpSecureHash;
         }
-        $returnData = array('code' => '00'
-            , 'message' => 'success'
-            , 'data' => $vnp_Url);
-            if (isset($_POST['redirect'])) {
-                header('Location: ' . $vnp_Url);
-                die();
-            } else {
-                echo json_encode($returnData);
-            }
-            // vui lòng tham khảo thêm tại code demo
-
-
+        $returnData = array(
+            'code' => '00'
+            ,
+            'message' => 'success'
+            ,
+            'data' => $vnp_Url
+        );
+        if (isset($_POST['redirect'])) {
+            header('Location: ' . $vnp_Url);
+            die();
+        } else {
+            echo json_encode($returnData);
         }
+        // vui lòng tham khảo thêm tại code demo
+
+
+    }
+
+    public function checkout()
+    {
+        // Lấy giỏ hàng của người dùng từ cơ sở dữ liệu
+        $cartItems = \App\Models\Cart::where('user_id', auth()->id())->get();
+
+        // Tính tổng tiền của giỏ hàng
+        $cartTotal = $cartItems->sum(function ($item) {
+            return $item->price_at_time * $item->quantity;
+        });
+
+        return view('user.checkout', compact('cartItems', 'cartTotal'));
+    }
+
+    public function processPayment(Request $request)
+    {
+        $data = $request->all();
+
+        // Kiểm tra phương thức thanh toán
+        if ($data['payment_method'] === 'cod') {
+            try {
+                // Tạo mã đơn hàng duy nhất
+                $orderCode = 'ORD-' . strtoupper(uniqid());
+                $cartItems = Cart::where('user_id', auth()->id())->get();
+                // Lưu đơn hàng vào bảng orders
+                $order = Order::create([
+                    'order_code' => $orderCode,
+                    'user_id' => auth()->check() ? auth()->id() : null,  // Lưu user_id nếu người dùng đã đăng nhập
+                    'name' => $data['fullname'],
+                    'phone' => $data['phone'],
+                    'address' => $data['address'],
+                    'total_money' => $data['amount'],
+                    'status' => 'pending',  // Trạng thái đơn hàng ban đầu là 'pending'
+                    'payment_method' => 'cash',     // COD = Thanh toán khi nhận hàng
+                    'note' => $data['voucher'] ?? null,
+                ]);
+
+                // Lưu các sản phẩm trong giỏ hàng vào bảng `order_details`
+                foreach ($cartItems as $item) {
+                    OrderDetail::create([
+                        'order_id' => $order->id,
+                        'product_variant_id' => $item->product_variant_id,
+                        'quantity' => $item->quantity,
+                        'price_at_time' => $item->price_at_time,
+                        'total_price' => $item->price_at_time * $item->quantity,
+                    ]);
+                }
+
+                // Xoá giỏ hàng sau khi đặt hàng thành công
+                Cart::where('user_id', auth()->id())->delete(); // Nếu bạn đang lưu giỏ hàng trong database
+
+                // Chuyển hướng về trang cảm ơn hoặc trang nào đó bạn muốn
+                return redirect()->route('home')->with('success', 'Đơn hàng của bạn đã được tạo thành công!');
+            } catch (\Exception $e) {
+                return back()->with('error', 'Có lỗi xảy ra khi tạo đơn hàng. Vui lòng thử lại.');
+            }
+        }
+
+        // Các phương thức thanh toán khác (Momo, VNPay) sẽ được xử lý như cũ
+        if ($data['payment_method'] === 'momo') {
+            return $this->processMoMoPayment($request);
+        }
+
+        if ($data['payment_method'] === 'vnpay') {
+            return $this->processVNPayPayment($request);
+        }
+
+        return back()->with('error', 'Phương thức thanh toán không hợp lệ.');
+    }
+
+
+
 }

@@ -10,7 +10,9 @@ use App\Models\Color;
 
 use App\Models\Cart;
 
+use App\Models\Order;
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
@@ -58,7 +60,12 @@ class UserController extends Controller
 
     public function myAccount()
     {
-        return view('user.myAccount');
+        $user = Auth::user();
+        
+        // Lấy các đơn hàng của người dùng đang đăng nhập
+        $orders = Order::where('user_id', $user->id)->get();
+
+        return view('user.myAccount', compact('user', 'orders'));
     }
 
 

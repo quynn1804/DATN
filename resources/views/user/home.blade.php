@@ -1,5 +1,11 @@
+
 @extends('user.layouts.main')
 @section('content')
+@if (session('success'))
+    <div class="alert alert-success mt-3 text-center">
+        {{ session('success') }}
+    </div>
+@endif
     <!-- Begin Slider Area Three -->
     <div class="slider-area slider-area-3">
 
@@ -187,7 +193,9 @@
                                     </div>
                                     <div class="product-content">
                                         <div class="product-desc_info">
-                                            <h3 class="product-name"><a href="{{ route('singleProduct', ['id' => $product->id]) }}"> {{ $product->name }} </a></h3>
+                                            <h3 class="product-name"><a
+                                                    href="{{ route('singleProduct', ['id' => $product->id]) }}">
+                                                    {{ $product->name }} </a></h3>
                                             <div class="price-box">
                                                 <span class="new-price"> {{ number_format($product->price, 0, ',', '.') }}đ
                                                 </span>
@@ -256,7 +264,8 @@
                                 <div class="single-product">
                                     <div class="product-img">
                                         <a href="{{ route('singleProduct', ['id' => $product->id]) }}">
-                                            <img class="primary-img" src="{{ asset('assets/images/' . $product->image) }}"
+                                            <img class="primary-img"
+                                                src="{{ asset('assets/images/' . $product->image) }}"
                                                 style="width: 200px; height: 250px; object-fit: cover;"
                                                 alt="{{ $product->name }}">
                                         </a>
@@ -266,7 +275,9 @@
                                     </div>
                                     <div class="product-content">
                                         <div class="product-desc_info">
-                                            <h3 class="product-name"><a href="{{ route('singleProduct', ['id' => $product->id]) }}"> {{ $product->name }} </a></h3>
+                                            <h3 class="product-name"><a
+                                                    href="{{ route('singleProduct', ['id' => $product->id]) }}">
+                                                    {{ $product->name }} </a></h3>
                                             <div class="price-box">
                                                 <span class="new-price">
                                                     {{ number_format($product->price, 0, ',', '.') }}đ </span>
@@ -363,7 +374,9 @@
                                             </div>
                                             <div class="product-content">
                                                 <div class="product-desc_info">
-                                                    <h3 class="product-name"><a href="{{ route('singleProduct', ['id' => $product->id]) }}"> {{ $product->name }} </a>
+                                                    <h3 class="product-name"><a
+                                                            href="{{ route('singleProduct', ['id' => $product->id]) }}">
+                                                            {{ $product->name }} </a>
                                                     </h3>
                                                     <div class="price-box">
                                                         <span class="new-price">
