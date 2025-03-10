@@ -28,7 +28,7 @@
         <tbody>
             @foreach ($order->orderDetails as $detail)
             <tr>
-                <td>{{ $detail->productVariant->name }}</td>
+                <td>{{ $detail->productVariant->product->name }}</td>
                 <td>{{ $detail->quantity }}</td>
                 <td>{{ number_format($detail->price_at_time, 0, ',', '.') }} đ</td>
                 <td>{{ number_format($detail->total_price, 0, ',', '.') }} đ</td>

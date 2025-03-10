@@ -19,16 +19,30 @@
                         </div>
                         <div class="col-lg-6">
                             <div class="header-top_right">
-                                    <ul>
-                                            <li><a href="{{route(name: 'login')}}"> Login | Logout</a></li>
+                                <ul>
+                                    @if (Auth::check())
+                                        <li>Xin chào, {{ Auth::user()->name }}</li>
 
-                                            <li><a href="#">Đơn Hàng</a></li>
-                                            <li><a href="#">Tài khoản</a></li>
-                                            <li>
-                                                <a href="{{route('logout')}}"> Logout</a>
-                                            </li>
-                                    </ul>
+                                        @if (Auth::user()->role_id == 1)
+                                            <li><a href="{{ route('admin.dashboard') }}">Trang Quản Trị</a></li>
+                                        @endif
+
+                                        <li><a href="{{ route('myAccount') }}">Tài khoản</a></li>
+                                        <li>
+                                            <form action="{{ route('logout') }}" method="POST">
+                                                @csrf
+                                                <button type="submit">Đăng Xuất</button>
+                                            </form>
+                                        </li>
+                                    @else
+                                        <li><a href="{{ route('login') }}">Đăng Nhập</a></li>
+                                        <li><a href="{{ route('register') }}">Đăng Ký</a></li>
+                                    @endif
+                                </ul>
+
+
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -47,7 +61,8 @@
                             </div>
                             <div class="header-logo_area">
                                 <a href="#">
-                                    <img src="{{ asset('assets/images/menu/logo/2.png') }}" height="300px" alt="Header Logo">
+                                    <img src="{{ asset('assets/images/menu/logo/2.png') }}" height="300px"
+                                        alt="Header Logo">
                                 </a>
                             </div>
                             <div class="header-right_area d-none d-lg-block">
@@ -67,7 +82,7 @@
                                     </li>
                                 </ul>
                             </div>
-                            
+
                         </div>
                     </div>
                     <div class="header-bottom_area d-none d-lg-block">
@@ -80,18 +95,20 @@
                                                 <li class="dropdown-holder"><a href="{{ route('home') }}">Trang chủ</a>
 
                                                 </li>
-                                                <li class="megamenu-holder position-static"><a href="{{route('pageCategory')}}">Sản phẩm <i class="ion-chevron-down"></i></a>
+                                                <li class="megamenu-holder position-static"><a
+                                                        href="{{ route('pageCategory') }}">Sản phẩm <i
+                                                            class="ion-chevron-down"></i></a>
                                                     <ul class="kenne-dropdown">
                                                         @foreach ($categories->take(5) as $category)
-                                                        <li>
-                                                            <a href="#"> {{$category->name}}</a>
-                                                        </li>
+                                                            <li>
+                                                                <a href="#"> {{ $category->name }}</a>
+                                                            </li>
                                                         @endforeach
                                                     </ul>
                                                 </li>
 
                                                 </li>
-                                                <li><a href="{{route('contact')}}">Liên hệ</a></li>
+                                                <li><a href="{{ route('contact') }}">Liên hệ</a></li>
 
                                                 <li><a href="{{ route('about') }}">Giới thiệu</a></li>
                                             </ul>
