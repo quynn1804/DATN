@@ -39,8 +39,6 @@ class PaymentController extends Controller
     {
         $cart_Total = $request->all();
 
-        // include "../common/helper.php";
-
         $endpoint = "https://test-payment.momo.vn/gw_payment/transactionProcessor";
 
 
