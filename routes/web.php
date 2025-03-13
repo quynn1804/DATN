@@ -1,5 +1,6 @@
 <?php
 // use App\Http\Controllers\CommentController;
+use App\Http\Controllers\Admin\StatisticController;
 use App\Http\Controllers\User\CartController;
 use App\Http\Controllers\admin\AccountController;
 use App\Http\Controllers\admin\AdminController;
@@ -47,8 +48,13 @@ Route::middleware('auth')->group(function () {
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/', [AdminController::class, 'index'])->name('dashboard');
         Route::resource('account', AccountController::class);
+<<<<<<< HEAD
         Route::resource('comments', CommentController::class)->only(['index', 'destroy','show']);
         Route::resource('vouchers', VoucherController::class);
+=======
+        Route::resource('comments', CommentController::class)->only(['index','show', 'destroy']);
+        Route::resource('statistic', StatisticController::class);
+>>>>>>> 4645c86662b88332eb0f98ef354855de471b2cf5
         Route::resource('products', ProductController::class);
         Route::resource('categories', CategoryController::class);
         Route::resource('orders', OrderController::class);
