@@ -43,7 +43,7 @@ class PaymentController extends Controller
         $accessKey = 'klm05TvNBzhg7h7j';
         $secretKey = 'at67qH6mk8w5Y1nAyMoYKMWACiEi2bsa';
         $orderInfo = "Thanh toán qua MoMo";
-        $amount = $cart_Total['amount'];
+    $amount = $cart_Total['amount'];
         $orderId = time() . "";
         $returnUrl = "http://localhost:8000/atm/result_atm.php";
         $notifyurl = "http://localhost:8000/atm/ipn_momo.php";
