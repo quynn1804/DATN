@@ -71,7 +71,7 @@
                                         <a href="{{ route('cart') }}" class="minicart-btn">
                                             <div class="minicart-count_area">
                                                 <span class="item-count">
-                                                    {{-- {{ \App\Models\Cart::where('user_id', auth()->id())->distinct('product_variant_id')->count('product_variant_id') ?? 0 }} --}}
+                                                    {{ \App\Models\Cart::where('user_id', auth()->id())->distinct('product_variant_id')->count('product_variant_id') ?? 0 }}
                                                 </span>
                                                 <i class="ion-bag"></i>
                                             </div>

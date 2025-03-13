@@ -95,7 +95,7 @@ class CartController extends Controller
             $cartItem->delete();
         }
 
-        return redirect()->route('cart.index')->with('success', 'Xóa sản phẩm khỏi giỏ hàng thành công.');
+        return redirect()->route('cart')->with('success', 'Xóa sản phẩm khỏi giỏ hàng thành công.');
     }
 }
 ?>
