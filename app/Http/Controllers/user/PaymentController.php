@@ -229,22 +229,26 @@ class PaymentController extends Controller
     {
         $data = $request->all();
 
+        // Lấy tổng tiền sau khi đã trừ giảm giá từ request
+        $finalAmount = $data['amount'];
+
         // Kiểm tra phương thức thanh toán
         if ($data['payment_method'] === 'cod') {
             try {
                 // Tạo mã đơn hàng duy nhất
                 $orderCode = 'ORD-' . strtoupper(uniqid());
                 $cartItems = Cart::where('user_id', auth()->id())->get();
+
                 // Lưu đơn hàng vào bảng orders
                 $order = Order::create([
                     'order_code' => $orderCode,
-                    'user_id' => auth()->check() ? auth()->id() : null,  // Lưu user_id nếu người dùng đã đăng nhập
+                    'user_id' => auth()->check() ? auth()->id() : null,
                     'name' => $data['fullname'],
                     'phone' => $data['phone'],
                     'address' => $data['address'],
-                    'total_money' => $data['amount'],
-                    'status' => 'pending',  // Trạng thái đơn hàng ban đầu là 'pending'
-                    'payment_method' => 'cash',     // COD = Thanh toán khi nhận hàng
+                    'total_money' => $finalAmount, // ✅ Lưu giá trị đã trừ giảm giá
+                    'status' => 'pending',
+                    'payment_method' => 'cash',
                     'note' => $data['voucher'] ?? null,
                 ]);
 
@@ -260,16 +264,16 @@ class PaymentController extends Controller
                 }
 
                 // Xoá giỏ hàng sau khi đặt hàng thành công
-                Cart::where('user_id', auth()->id())->delete(); // Nếu bạn đang lưu giỏ hàng trong database
+                Cart::where('user_id', auth()->id())->delete();
 
-                // Chuyển hướng về trang cảm ơn hoặc trang nào đó bạn muốn
+                // Chuyển hướng về trang cảm ơn hoặc trang chủ
                 return redirect()->route('home')->with('success', 'Đơn hàng của bạn đã được tạo thành công!');
             } catch (\Exception $e) {
                 return back()->with('error', 'Có lỗi xảy ra khi tạo đơn hàng. Vui lòng thử lại.');
             }
         }
 
-        // Các phương thức thanh toán khác (Momo, VNPay) sẽ được xử lý như cũ
+        // Các phương thức thanh toán khác
         if ($data['payment_method'] === 'momo') {
             return $this->processMoMoPayment($request);
         }
@@ -280,7 +284,6 @@ class PaymentController extends Controller
 
         return back()->with('error', 'Phương thức thanh toán không hợp lệ.');
     }
-
 
 
 }

@@ -16,6 +16,7 @@ class CommentController extends Controller
 
     return view('user.single-product', compact('product', 'comments'));
 }
+
     public function store(Request $request, $productId)
     {
         $request->validate([

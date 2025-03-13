@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
-
+use App\Models\Voucher;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\OrderDetail;
@@ -73,4 +73,32 @@ class OrderController extends Controller
 
         return redirect()->route('admin.orders.index')->with('success', 'Đơn hàng đã bị xóa.');
     }
+    public function checkout(Request $request)
+{
+    $request->validate([
+        'voucher_code' => 'nullable|string',
+    ]);
+
+    $orderTotal = $this->calculateOrderTotal();
+
+    // Kiểm tra voucher
+    $voucher = null;
+    if ($request->voucher_code) {
+        $voucher = Voucher::where('code', $request->voucher_code)->first();
+        if (!$voucher || !$voucher->isValid($orderTotal)) {
+            return back()->with('error', 'Mã giảm giá không hợp lệ');
+        }
+        $discount = $voucher->calculateDiscount($orderTotal);
+        $orderTotal -= $discount;
+    }
+
+    // Tạo đơn hàng
+    $order = Order::create([
+        'user_id' => auth()->id(),
+        'total' => $orderTotal,
+        'voucher_id' => $voucher ? $voucher->id : null,
+    ]);
+
+    return redirect()->route('order.success', $order->id);
+}
 }

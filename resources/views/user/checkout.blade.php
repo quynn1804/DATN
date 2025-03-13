@@ -61,14 +61,22 @@
                                         @endforeach
                                     </tbody>
                                     <tfoot>
-                                        <tr>
-                                            <th colspan="2">Mã giảm giá:</th>
-                                            <th><input type="text" name="voucher" placeholder="Nhập voucher..."></th>
-                                        </tr>
-                                        <tr>
-                                            <th colspan="2">Tổng tiền:</th>
-                                            <th>{{ number_format($cartTotal, 0, ',', '.') }} VND</th>
-                                        </tr>
+                                        <tfoot>
+                                            <tr>
+                                                <th colspan="2">Mã giảm giá:</th>
+                                                <td>
+                                                    <input type="text" id="voucher-code" placeholder="Nhập mã giảm giá" class="form-control">
+                                                    <button id="apply-voucher" class="btn btn-secondary mt-2">Áp dụng</button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th colspan="2">Tổng tiền:</th>
+                                                <th id="total-price" data-original="{{ $cartTotal }}">
+                                                    {{ number_format($cartTotal, 0, ',', '.') }} VND
+                                                </th>
+                                            </tr>
+                                        </tfoot>
+
                                     </tfoot>
                                 </table>
                             </div>
@@ -100,6 +108,37 @@
             </div>
         </div>
     </div>
+    <script>
+        document.getElementById('apply-voucher').addEventListener('click', function(event) {
+            event.preventDefault();
+            let voucherCode = document.getElementById('voucher-code').value;
+            if (!voucherCode) {
+                alert("Vui lòng nhập mã giảm giá!");
+                return;
+            }
+
+            fetch("{{ route('cart.apply') }}", {
+                method: "POST",
+                body: JSON.stringify({ voucher_code: voucherCode, cart_total: {{ $cartTotal }} }),
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Mã giảm giá áp dụng thành công! Giảm: " + data.discount_amount + " VND");
+                    let newTotal = data.new_total;
+                    document.getElementById('total-price').textContent = newTotal.toLocaleString('vi-VN') + ' VND';
+                    document.getElementById('final-amount').value = newTotal;
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
 
     <style>
         .checkout-area {
