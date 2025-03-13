@@ -37,17 +37,12 @@ class PaymentController extends Controller
 
     public function momo_payment(Request $request)
     {
-
         $cart_Total = $request->all();
-
         $endpoint = "https://test-payment.momo.vn/gw_payment/transactionProcessor";
-
-
         $partnerCode = 'MOMOBKUN20180529';
         $accessKey = 'klm05TvNBzhg7h7j';
         $secretKey = 'at67qH6mk8w5Y1nAyMoYKMWACiEi2bsa';
         $orderInfo = "Thanh toán qua MoMo";
-
         $amount = $cart_Total['amount'];
         $orderId = time() . "";
         $returnUrl = "http://localhost:8000/atm/result_atm.php";
@@ -98,7 +93,6 @@ class PaymentController extends Controller
 
 
     public function vnpay_payment(Request $request){
-
         $cart_Total = $request->all();
 
         $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
@@ -109,7 +103,6 @@ class PaymentController extends Controller
         $vnp_TxnRef = time() . ""; //Mã đơn hàng. Trong thực tế Merchant cần insert đơn hàng vào DB và gửi mã này
         $vnp_OrderInfo = "Thanh Toan Don Hang";
         $vnp_OrderType = "PinaStore";
-
         $vnp_Amount =  $cart_Total['amount'] * 100;
         $vnp_Locale = "VN";
         $vnp_BankCode = "";
@@ -196,13 +189,8 @@ class PaymentController extends Controller
             $vnpSecureHash =   hash_hmac('sha512', $hashdata, $vnp_HashSecret);//
             $vnp_Url .= 'vnp_SecureHash=' . $vnpSecureHash;
         }
-
         return redirect()->away($vnp_Url);
-
-        //
             // vui lòng tham khảo thêm tại code demo
-
-
         }
 
     public function checkout()
