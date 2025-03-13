@@ -40,7 +40,6 @@ class UserController extends Controller
     }
 
 
-
     public function cart()
     {
         $cartItems = Cart::where('user_id', Auth::id())->with('productVariant')->get();
@@ -48,6 +47,9 @@ class UserController extends Controller
         return view('user.cart', compact('cartItems'));
 
     }
+
+
+  
     public function about()
     {
         return view('user.about');
@@ -67,6 +69,7 @@ class UserController extends Controller
 
         return view('user.myAccount', compact('user', 'orders'));
     }
+
 
 
     public function singleProduct($id)
