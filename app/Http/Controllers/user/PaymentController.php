@@ -37,6 +37,7 @@ class PaymentController extends Controller
 
     public function momo_payment(Request $request)
     {
+        $cart_Total = $request->all();
 
         // include "../common/helper.php";
 
@@ -47,12 +48,12 @@ class PaymentController extends Controller
         $accessKey = 'klm05TvNBzhg7h7j';
         $secretKey = 'at67qH6mk8w5Y1nAyMoYKMWACiEi2bsa';
         $orderInfo = "Thanh toán qua MoMo";
-        $amount = "10000";
+        $amount = $cart_Total['amount'];
         $orderId = time() . "";
         $returnUrl = "http://localhost:8000/atm/result_atm.php";
         $notifyurl = "http://localhost:8000/atm/ipn_momo.php";
         // Lưu ý: link notifyUrl không phải là dạng localhost
-        $bankCode = "SML";
+        $bankCode = "";
         $requestId = time() . "";
         $requestType = "payWithMoMoATM";
         $extraData = "";
@@ -96,23 +97,21 @@ class PaymentController extends Controller
     }
 
 
-    public function vnpay_payment(Request $request)
-    {
-        $cartTotal = str_replace('.', '', $request->input('cart-total'));
-        // dd($cartTotal);
-        $data = $request->all();
+    public function vnpay_payment(Request $request){
+       $cart_Total = $request->all();
 
         $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-        $vnp_Returnurl = "https://localhost/vnpay_php/vnpay_return.php";
+        $vnp_Returnurl = "http://127.0.0.1:8000/checkout";
         $vnp_TmnCode = "BTBFJN9W";//Mã website tại VNPAY
         $vnp_HashSecret = "GGHNNJ0P5F96PLOMSWBVM0N4NVR0RNPY"; //Chuỗi bí mật
 
-        $vnp_TxnRef = rand(00, 0000); //Mã đơn hàng. Trong thực tế Merchant cần insert đơn hàng vào DB và gửi mã này
+        $vnp_TxnRef = time() . ""; //Mã đơn hàng. Trong thực tế Merchant cần insert đơn hàng vào DB và gửi mã này
         $vnp_OrderInfo = "Thanh Toan Don Hang";
         $vnp_OrderType = "PinaStore";
-        $vnp_Amount = $cartTotal * 100;
+        $vnp_Amount =  $cart_Total['amount'] * 100;
         $vnp_Locale = "VN";
-        $vnp_BankCode = "NCB";
+        $vnp_BankCode = "";
+        // $vnp_PaymentMethod = "VNPAYQR";
         $vnp_IpAddr = $_SERVER['REMOTE_ADDR'];
         //Add Params of 2.0.1 Version
         // $vnp_ExpireDate = $_POST['txtexpire'];
@@ -150,6 +149,7 @@ class PaymentController extends Controller
             "vnp_OrderType" => $vnp_OrderType,
             "vnp_ReturnUrl" => $vnp_Returnurl,
             "vnp_TxnRef" => $vnp_TxnRef
+            // "vnp_PaymentMethod" => $vnp_PaymentMethod
             // "vnp_ExpireDate"=>$vnp_ExpireDate,
             // "vnp_Bill_Mobile"=>$vnp_Bill_Mobile,
             // "vnp_Bill_Email"=>$vnp_Bill_Email,
@@ -191,26 +191,16 @@ class PaymentController extends Controller
 
         $vnp_Url = $vnp_Url . "?" . $query;
         if (isset($vnp_HashSecret)) {
-            $vnpSecureHash = hash_hmac('sha512', $hashdata, $vnp_HashSecret);//
+            $vnpSecureHash =   hash_hmac('sha512', $hashdata, $vnp_HashSecret);//
             $vnp_Url .= 'vnp_SecureHash=' . $vnpSecureHash;
         }
-        $returnData = array(
-            'code' => '00'
-            ,
-            'message' => 'success'
-            ,
-            'data' => $vnp_Url
-        );
-        if (isset($_POST['redirect'])) {
-            header('Location: ' . $vnp_Url);
-            die();
-        } else {
-            echo json_encode($returnData);
+       return redirect()->away($vnp_Url);
+
+        //
+            // vui lòng tham khảo thêm tại code demo
+
+
         }
-        // vui lòng tham khảo thêm tại code demo
-
-
-    }
 
     public function checkout()
     {
@@ -275,11 +265,11 @@ class PaymentController extends Controller
 
         // Các phương thức thanh toán khác
         if ($data['payment_method'] === 'momo') {
-            return $this->processMoMoPayment($request);
+            return $this->momo_payment($request);
         }
 
         if ($data['payment_method'] === 'vnpay') {
-            return $this->processVNPayPayment($request);
+            return $this->vnpay_payment($request);
         }
 
         return back()->with('error', 'Phương thức thanh toán không hợp lệ.');
