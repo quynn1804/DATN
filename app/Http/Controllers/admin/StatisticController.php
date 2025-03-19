@@ -12,4 +12,5 @@ class StatisticController extends Controller
 
         return view('admin.statistic.index');
     }
+    
 }

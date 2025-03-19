@@ -65,7 +65,7 @@ class UserController extends Controller
         $user = Auth::user();
         
         // Lấy các đơn hàng của người dùng đang đăng nhập
-        $orders = Order::where('user_id', $user->id)->get();
+        $orders = Order::where('user_id', $user->id)->paginate(5);
 
         return view('user.myAccount', compact('user', 'orders'));
     }
