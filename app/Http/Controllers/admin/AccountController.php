@@ -60,7 +60,7 @@ class AccountController extends Controller
             'role_id' => $validated['role_id'] ?? 1,
         ]);
 
-        return redirect()->route('admin.account')->with('success', 'Người dùng đã được thêm thành công.');
+        return redirect()->route('admin.account.index')->with('success', 'Người dùng đã được thêm thành công.');
     }
 
 

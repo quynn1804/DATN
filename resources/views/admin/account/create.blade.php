@@ -36,11 +36,9 @@
                         <ol class="breadcrumb float-sm-right">
 
 
-                            <li class="breadcrumb-item"><a href="{{ route('admin.') }}">Home</a></li>
 
                             <li class="breadcrumb-item"><a href="{{ route('admin.account.index') }}">Home</a></li>
 
-                            <li class="breadcrumb-item"><a href="#">Home</a></li>
 
 
                             <li class="breadcrumb-item active">Quản lí tài khoản</li>
@@ -56,16 +54,11 @@
             <h1 class="text-center">Thêm mới người dùng</h1>
 
 
-            <form action="{{ route('register') }}" enctype="multipart/form-data" method="POST">
 
             <form action="{{ route('admin.account.store') }}" enctype="multipart/form-data" method="POST">
-
-            <form action="#" method="POST">
-
-
                 @csrf
                 <div class="row">
-                    <div class="col-12">
+                    <div class="col-6">
                         <div class="mb-3">
                             <label for="name" class="form-label">Tên</label>
                             <input type="text" class="form-control" value="{{ old('name') }}" id="name"
@@ -73,7 +66,7 @@
                         </div>
                     </div>
 
-                    <div class="col-12">
+                    <div class="col-6">
                         <div class="mb-3">
                             <label for="role_id" class="form-label">Vai trò</label>
                             <select id="role_id" name="role_id" class="form-control" required>
@@ -84,23 +77,30 @@
                     </div>
 
 
-                    <div class="col-12">
+                    <div class="col-6">
                         <div class="mb-3">
                             <label for="password" class="form-label">Mật khẩu</label>
                             <input type="password" class="form-control" id="password" name="password" required>
                         </div>
                     </div>
 
-                    <div class="col-12">
+                    <div class="col-6">
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Xác nhận mật khẩu</label>
+                            <input type="password" class="form-control" value="{{ old('password') }}"
+                                id="password_confirmation" name="password_confirmation" required>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
                         <div class="mb-3">
                             <label for="email" class="form-label">Email</label>
                             <input type="email" class="form-control" value="{{ old('email') }}" id="email"
                                 name="email" required>
                         </div>
-
                     </div>
 
-                    <div class="col-12">
+                    <div class="col-6">
                         <div class="mb-3">
                             <label for="gender" class="form-label">Giới tính</label>
                             <select id="gender" name="gender" class="form-control" required>
@@ -111,7 +111,7 @@
                         </div>
                     </div>
 
-                    <div class="col-12">
+                    <div class="col-6">
                         <div class="mb-3">
                             <label for="phone" class="form-label">Số điện thoại</label>
                             <input type="text" class="form-control" value="{{ old('phone') }}" id="phone"
@@ -119,42 +119,24 @@
                         </div>
                     </div>
 
-                    <div class="col-12">
+                    <div class="col-6">
                         <div class="mb-3">
                             <label for="image" class="form-label">Ảnh</label>
                             <input type="file" class="form-control" id="image" name="image" required>
                         </div>
                     </div>
 
-                    <div class="col-12">
+                    <div class="col-6">
                         <div class="mb-3">
                             <label for="status" class="form-label">Trạng thái</label>
                             <select id="status" name="status" class="form-control" required>
-                                <option value="1" {{ old('status') == '1' ? 'selected' : '' }}>Hoạt động</option>
-                                <option value="0" {{ old('status') == '0' ? 'selected' : '' }}>Tạm dừng</option>
+                                <option value="1" {{ old('status') == '1' ? 'selected' : '' }}>Hoạt động
+                                </option>
+                                <option value="0" {{ old('status') == '0' ? 'selected' : '' }}>Tạm dừng
+                                </option>
                             </select>
                         </div>
                     </div>
-
-
-
-                    <div class="col-6">
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Xác nhận mật khẩu</label>
-                            <input type="password" class="form-control" value="{{ old('password') }}"
-                                id="password_confirmation" name="password_confirmation" required>
-                        </div>
-                    </div><!--end col-->
-                    <div class="col-12">
-                        <div class="mb-3">
-                            <label for="phonenumberInput" class="form-label">Loại Người Dùng</label>
-                            <select id="type" name="type" class="form-control" required>
-                                <option value="2" selected>Member</option>
-                                <option value="1">Admin</option>
-                            </select>
-                        </div>
-                    </div><!--end col-->
-
 
                     <div class="col-lg-6">
                         <div class="text-end">

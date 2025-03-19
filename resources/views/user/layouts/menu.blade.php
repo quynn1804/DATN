@@ -24,14 +24,14 @@
                                         <li>Xin chào, {{ Auth::user()->name }}</li>
 
                                         @if (Auth::user()->role_id == 1)
-                                            <li><a href="{{ route('admin.dashboard') }}">Trang Quản Trị</a></li>
+                                            <li><a href="{{ route('admin.statistic.index') }}">Trang Quản Trị</a></li>
                                         @endif
 
                                         <li><a href="{{ route('myAccount') }}">Tài khoản</a></li>
                                         <li>
                                             <form action="{{ route('logout') }}" method="POST">
                                                 @csrf
-                                                <button type="submit">Đăng Xuất</button>
+                                                <button type="submit" onclick="return confirm('Đăng xuất tài khoản')">Đăng Xuất</button>
                                             </form>
                                         </li>
                                     @else
