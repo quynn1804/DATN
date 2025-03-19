@@ -111,6 +111,8 @@
                                                 <li><a href="{{ route('contact') }}">Liên hệ</a></li>
 
                                                 <li><a href="{{ route('about') }}">Giới thiệu</a></li>
+
+                                                <li><a href="{{ route('products.topFavorites') }}">Top Sản Phẩm</a></li>
                                             </ul>
                                         </nav>
                                     </div>

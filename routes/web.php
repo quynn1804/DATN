@@ -12,7 +12,6 @@ use App\Http\Controllers\user\UserController;
 use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\admin\ApplyVoucherController;
-
 use App\Http\Controllers\user\PaymentController;
 use Illuminate\Support\Facades\Route;
 
@@ -48,13 +47,10 @@ Route::middleware('auth')->group(function () {
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/', [AdminController::class, 'index'])->name('dashboard');
         Route::resource('account', AccountController::class);
-<<<<<<< HEAD
         Route::resource('comments', CommentController::class)->only(['index', 'destroy','show']);
         Route::resource('vouchers', VoucherController::class);
-=======
         Route::resource('comments', CommentController::class)->only(['index','show', 'destroy']);
         Route::resource('statistic', StatisticController::class);
->>>>>>> 4645c86662b88332eb0f98ef354855de471b2cf5
         Route::resource('products', ProductController::class);
         Route::resource('categories', CategoryController::class);
         Route::resource('orders', OrderController::class);
@@ -83,7 +79,7 @@ Route::get('/checkout', [PaymentController::class, 'checkout'])->name('checkout'
 Route::post('/process-payment', [PaymentController::class, 'processPayment'])->name('payment.process');
 Route::get('/payment/success', [PaymentController::class, 'paymentSuccess'])->name('payment.success');
 Route::get('/payment/failure', [PaymentController::class, 'paymentFailure'])->name('payment.failure');
-
+Route::get('/top-favorite-products', [ProductController::class, 'topFavorites'])->name('products.topFavorites');
 
 Route::post('/checkout/apply-voucher', [CartController::class, 'apply'])->name('cart.apply');
 

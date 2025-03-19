@@ -139,4 +139,10 @@ class ProductController extends Controller
 
         return response()->json(['success' => true, 'message' => 'Xóa biến thể thành công.']);
     }
+
+    public function topFavorites()
+    {
+        $topProducts = Product::topFavoriteProducts();
+        return view('user.top_favorites', compact('topProducts'));
+    }
 }
