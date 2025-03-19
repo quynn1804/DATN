@@ -1,5 +1,6 @@
 <?php
-namespace App\Http\Controllers\user;
+namespace App\Http\Controllers\User;
+
 
 use Illuminate\Support\Facades\Log;
 use App\Models\Product;
@@ -94,7 +95,6 @@ class CartController extends Controller {
         }
 
         return redirect()->route('cart')->with('success', 'Xóa sản phẩm khỏi giỏ hàng thành công.');
-
     }
 
     public function apply(Request $request) {
@@ -142,6 +142,5 @@ class CartController extends Controller {
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => 'Có lỗi xảy ra!'], 500);
         }
-
     }
 }

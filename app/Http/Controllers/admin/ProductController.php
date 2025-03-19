@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Category;
@@ -142,6 +141,7 @@ class ProductController extends Controller
 
     public function topFavorites()
     {
+        
         $topProducts = Product::topFavoriteProducts();
         return view('user.top_favorites', compact('topProducts'));
     }

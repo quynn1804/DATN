@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
+
 use App\Http\Controllers\Controller;
 
 use App\Models\Capacity;
@@ -49,7 +50,7 @@ class UserController extends Controller
     }
 
 
-  
+
     public function about()
     {
         return view('user.about');
@@ -63,7 +64,7 @@ class UserController extends Controller
     public function myAccount()
     {
         $user = Auth::user();
-        
+
         // Lấy các đơn hàng của người dùng đang đăng nhập
         $orders = Order::where('user_id', $user->id)->get();
 

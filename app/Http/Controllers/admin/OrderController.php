@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Admin;
 use App\Models\Voucher;
 use App\Http\Controllers\Controller;

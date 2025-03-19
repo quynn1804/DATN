@@ -36,6 +36,7 @@ class Product extends Model
         return self::withCount(['orderDetails' => function ($query) {
             $query->where('created_at', '>=', Carbon::now()->subDays(30));
         }])
+        
         ->orderByDesc('order_details_count')
         ->limit($limit)
         ->get();

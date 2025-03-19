@@ -59,8 +59,6 @@ Route::middleware('auth')->group(function () {
 });
 
 
-
-
 // Giỏ hàng (yêu cầu đăng nhập)
 Route::middleware('auth')->group(function () {
     Route::post('products/{id}/comments', [CommentController::class, 'store'])->name('comments.store');
@@ -69,8 +67,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
     Route::put('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
     Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
-
-
     Route::post('/vnpay_payment', [PaymentController::class, 'vnpay_payment']);
     Route::post('/momo_payment', [PaymentController::class, 'momo_payment']);
 });
@@ -80,7 +76,6 @@ Route::post('/process-payment', [PaymentController::class, 'processPayment'])->n
 Route::get('/payment/success', [PaymentController::class, 'paymentSuccess'])->name('payment.success');
 Route::get('/payment/failure', [PaymentController::class, 'paymentFailure'])->name('payment.failure');
 Route::get('/top-favorite-products', [ProductController::class, 'topFavorites'])->name('products.topFavorites');
-
 Route::post('/checkout/apply-voucher', [CartController::class, 'apply'])->name('cart.apply');
 
 
