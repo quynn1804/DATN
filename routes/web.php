@@ -14,6 +14,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\admin\ApplyVoucherController;
 
 use App\Http\Controllers\user\PaymentController;
+use App\Models\Cart;
 use Illuminate\Support\Facades\Route;
 
 // Trang chủ
@@ -48,6 +49,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/', [AdminController::class, 'index'])->name('dashboard');
         Route::resource('account', AccountController::class);
+        Route::resource('statistic', StatisticController::class);
         Route::resource('comments', CommentController::class)->only(['index', 'destroy','show']);
         Route::resource('vouchers', VoucherController::class);
         Route::resource('products', ProductController::class);
@@ -80,6 +82,6 @@ Route::get('/payment/success', [PaymentController::class, 'paymentSuccess'])->na
 Route::get('/payment/failure', [PaymentController::class, 'paymentFailure'])->name('payment.failure');
 
 
-Route::post('/checkout/apply-voucher', [CartController::class, 'apply'])->name('cart.apply');
-
+Route::post('/checkout/apply-voucher', [CartController::class, 'applyVoucher'])
+    ->name('checkout.applyVoucher');
 
