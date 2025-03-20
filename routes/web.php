@@ -93,4 +93,7 @@ Route::get('/payment/failure', [PaymentController::class, 'paymentFailure'])->na
 
 Route::post('/checkout/apply-voucher', [CartController::class, 'applyVoucher'])
     ->name('checkout.applyVoucher');
+Route::get('/top-favorite-products', [ProductController::class, 'topFavorites'])->name('products.topFavorites');
+Route::post('/checkout/apply-voucher', [CartController::class, 'apply'])->name('cart.apply');
+
 
