@@ -35,11 +35,7 @@
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
 
-
-
                             <li class="breadcrumb-item"><a href="{{ route('admin.account.index') }}">Home</a></li>
-
-
 
                             <li class="breadcrumb-item active">Quản lí tài khoản</li>
                         </ol>
@@ -51,38 +47,73 @@
 
         <!-- Main content -->
         <section class="content">
-            <h1 class="text-center">Thêm mới người dùng</h1>
+
+            <div class="bg-white rounded-lg shadow-md" style="margin-left: 50px;margin-right: 50px; border-radius: 2px">
+                <div class="card-header mb-4" style="background:#ebe8ff;border-radius: 2px; height: 55px;">
+                    <h4 class="text-center" style="font-weight: 400; ">Thêm mới người dùng</h4>
+                </div>
+                <form action="{{ route('register') }}" enctype="multipart/form-data" method="POST">
+
+                <form action="{{ route('admin.account.store') }}" enctype="multipart/form-data" method="POST">
+
+                <form action="#" method="POST">
 
 
+                    @csrf
+                    <div class="row justify-content-between text-left" style="margin-left: 100px;margin-right: 100px">
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Tên <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" value="{{ old('name') }}" id="name"
+                                    name="name" required>
+                            </div>
 
-            <form action="{{ route('admin.account.store') }}" enctype="multipart/form-data" method="POST">
-                @csrf
-                <div class="row">
-                    <div class="col-6">
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Tên</label>
-                            <input type="text" class="form-control" value="{{ old('name') }}" id="name"
-                                name="name" required>
                         </div>
-                    </div>
 
-                    <div class="col-6">
-                        <div class="mb-3">
-                            <label for="role_id" class="form-label">Vai trò</label>
-                            <select id="role_id" name="role_id" class="form-control" required>
-                                <option value="1">User</option>
-                                <option value="2">Admin</option>
-                            </select>
+
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="gender" class="form-label">Giới tính <span class="text-danger">*</span></label>
+                                <select id="gender" name="gender" class="form-control" required>
+                                    <option value="Nam">Nam</option>
+                                    <option value="Nu">Nữ</option>
+                                    <option value="Khac">Khác</option>
+                                </select>
+                            </div>
+
                         </div>
-                    </div>
+
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+                                <input type="email" class="form-control" value="{{ old('email') }}" id="email"
+                                    name="email" required>
+                            </div>
 
 
                     <div class="col-6">
                         <div class="mb-3">
                             <label for="password" class="form-label">Mật khẩu</label>
                             <input type="password" class="form-control" id="password" name="password" required>
+
                         </div>
-                    </div>
+
+ <div class="col-6">
+                            <div class="mb-3">
+                                <label for="phone" class="form-label">Số điện thoại <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" value="{{ old('phone') }}" id="phone"
+                                    name="phone" required>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="role_id" class="form-label">Vai trò <span class="text-danger">*</span></label>
+                                <select id="role_id" name="role_id" class="form-control" required>
+                                    <option value="1">User</option>
+                                    <option value="2">Admin</option>
+                                </select>
+                            </div>
 
                     <div class="col-6">
                         <div class="mb-3">
@@ -108,23 +139,41 @@
                                 <option value="Nu">Nữ</option>
                                 <option value="Khac">Khác</option>
                             </select>
+
                         </div>
-                    </div>
+
+
 
                     <div class="col-6">
                         <div class="mb-3">
                             <label for="phone" class="form-label">Số điện thoại</label>
                             <input type="text" class="form-control" value="{{ old('phone') }}" id="phone"
-                                name="phone" required>
+
                         </div>
-                    </div>
+
+
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Mật khẩu <span class="text-danger">*</span></label>
+                                <input type="password" class="form-control" id="password" name="password" required>
+                            </div>
 
                     <div class="col-6">
                         <div class="mb-3">
                             <label for="image" class="form-label">Ảnh</label>
                             <input type="file" class="form-control" id="image" name="image" required>
+
                         </div>
-                    </div>
+
+
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="status" class="form-label">Trạng thái <span class="text-danger">*</span></label>
+                                <select id="status" name="status" class="form-control" required>
+                                    <option value="1" {{ old('status') == '1' ? 'selected' : '' }}>Hoạt động</option>
+                                    <option value="0" {{ old('status') == '0' ? 'selected' : '' }}>Tạm dừng</option>
+                                </select>
+                            </div>
 
                     <div class="col-6">
                         <div class="mb-3">
@@ -135,19 +184,44 @@
                                 <option value="0" {{ old('status') == '0' ? 'selected' : '' }}>Tạm dừng
                                 </option>
                             </select>
+
                         </div>
-                    </div>
+
+
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Xác nhận mật khẩu <span class="text-danger">*</span></label>
+                                <input type="password" class="form-control" value="{{ old('password') }}"
+                                    id="password_confirmation" name="password_confirmation" required>
+                            </div>
+                        </div><!--end col-->
+
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="phonenumberInput" class="form-label">Loại Người Dùng <span class="text-danger">*</span></label>
+                                <select id="type" name="type" class="form-control" required>
+                                    <option value="2" selected>Member</option>
+                                    <option value="1">Admin</option>
+                                </select>
+                            </div>
+                        </div><!--end col-->
+
+
+                        <div>
+                            <div class="text-end">
+                                <button type="submit" class="btn btn-primary" style="margin: 50px;">Thêm mới</button>
+                            </div>
 
                     <div class="col-lg-6">
                         <div class="text-end">
                             <button type="submit" class="btn btn-primary">Thêm mới</button>
                         </div>
 
+
                     </div>
-                </div>
-            </form>
+                </form>
 
-
+            </div>
         </section>
         <!-- /.content -->
     </div>

@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 class AdminController extends Controller
 {
     public function index(){
-        return view('admin.layouts.index');
+        return view('admin.statistic.index');
     }
 }
 
