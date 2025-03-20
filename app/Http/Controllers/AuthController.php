@@ -26,7 +26,7 @@ class AuthController extends Controller
         ]);
 
         // Lấy role_id của role 'users'
-        $userRole = Role::where('name', 'users')->first();
+        $userRole = Role::where('name', 'user')->first();
 
         if (!$userRole) {
             return back()->withErrors(['role' => 'Vai trò mặc định không tồn tại.']);
@@ -74,7 +74,7 @@ class AuthController extends Controller
             $userRoleId = Auth::user()->role_id;
 
             if ($userRoleId == 1) { // Admin
-                return redirect()->route('admin.dashboard');
+                return redirect()->route('admin.statistic.index');
             } elseif ($userRoleId == 2) { // users
                 return redirect()->route('home');
             } else {

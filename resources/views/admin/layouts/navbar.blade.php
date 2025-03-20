@@ -19,7 +19,7 @@
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link"  href="" onclick="return confirm('Đăng xuất tài khoản')">
+        <a class="nav-link"  href="{{route('home')}}">
           <i class="fas fa-sign-out-alt"></i>
         </a>
       </li>

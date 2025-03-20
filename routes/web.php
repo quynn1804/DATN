@@ -12,7 +12,6 @@ use App\Http\Controllers\user\UserController;
 use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\admin\ApplyVoucherController;
-
 use App\Http\Controllers\user\PaymentController;
 use App\Models\Cart;
 use Illuminate\Support\Facades\Route;
@@ -45,7 +44,6 @@ Route::middleware('auth')->group(function () {
         return 'Chào mừng bạn đến trang Dashboard!';
     })->name('dashboard');
 
-    // Admin routes (yêu cầu đăng nhập)
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/', [AdminController::class, 'index'])->name('dashboard');
         Route::resource('account', AccountController::class);
@@ -57,6 +55,19 @@ Route::middleware('auth')->group(function () {
         Route::resource('orders', OrderController::class);
         Route::delete('/products/variant/{id}', [ProductController::class, 'destroyVariant'])->name('products.variant.destroy');
     });
+
+    Route::get('/', function () {
+        return redirect()->route('admin.statistic.index');
+    })->name('dashboard');
+
+    Route::resource('account', AccountController::class);
+    Route::resource('comments', CommentController::class)->only(['index', 'destroy', 'show']);
+    Route::resource('vouchers', VoucherController::class);
+    Route::resource('statistic', StatisticController::class);
+    Route::resource('products', ProductController::class);
+    Route::resource('categories', CategoryController::class);
+    Route::resource('orders', OrderController::class);
+    Route::delete('/products/variant/{id}', [ProductController::class, 'destroyVariant'])->name('products.variant.destroy');
 });
 
 
@@ -70,8 +81,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
     Route::put('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
     Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
-
-
     Route::post('/vnpay_payment', [PaymentController::class, 'vnpay_payment']);
     Route::post('/momo_payment', [PaymentController::class, 'momo_payment']);
 });
