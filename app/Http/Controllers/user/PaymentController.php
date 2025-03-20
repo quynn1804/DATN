@@ -9,6 +9,8 @@ use App\Models\Order;
 use App\Models\OrderDetail;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 
 class PaymentController extends Controller
 {
@@ -44,7 +46,7 @@ class PaymentController extends Controller
         $accessKey = 'klm05TvNBzhg7h7j';
         $secretKey = 'at67qH6mk8w5Y1nAyMoYKMWACiEi2bsa';
         $orderInfo = "Thanh toán qua MoMo";
-    $amount = $cart_Total['amount'];
+        $amount = $cart_Total['amount'];
         $orderId = time() . "";
         $returnUrl = "http://localhost:8000/atm/result_atm.php";
         $notifyurl = "http://localhost:8000/atm/ipn_momo.php";
@@ -97,7 +99,8 @@ class PaymentController extends Controller
         $cart_Total = $request->all();
 
         $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-        $vnp_Returnurl = "http://127.0.0.1:8000/checkout";
+
+        $vnp_Returnurl = url('/vnpay/return');
         $vnp_TmnCode = "BTBFJN9W";//Mã website tại VNPAY
         $vnp_HashSecret = "GGHNNJ0P5F96PLOMSWBVM0N4NVR0RNPY"; //Chuỗi bí mật
 
@@ -109,29 +112,6 @@ class PaymentController extends Controller
         $vnp_BankCode = "";
         // $vnp_PaymentMethod = "VNPAYQR";
         $vnp_IpAddr = $_SERVER['REMOTE_ADDR'];
-        //Add Params of 2.0.1 Version
-        // $vnp_ExpireDate = $_POST['txtexpire'];
-        // //Billing
-        // $vnp_Bill_Mobile = $_POST['txt_billing_mobile'];
-        // $vnp_Bill_Email = $_POST['txt_billing_email'];
-        // $fullName = trim($_POST['txt_billing_fullname']);
-        // if (isset($fullName) && trim($fullName) != '') {
-        //     $name = explode(' ', $fullName);
-        //     $vnp_Bill_FirstName = array_shift($name);
-        //     $vnp_Bill_LastName = array_pop($name);
-        // }
-        // $vnp_Bill_Address=$_POST['txt_inv_addr1'];
-        // $vnp_Bill_City=$_POST['txt_bill_city'];
-        // $vnp_Bill_Country=$_POST['txt_bill_country'];
-        // $vnp_Bill_State=$_POST['txt_bill_state'];
-        // // Invoice
-        // $vnp_Inv_Phone=$_POST['txt_inv_mobile'];
-        // $vnp_Inv_Email=$_POST['txt_inv_email'];
-        // $vnp_Inv_Customer=$_POST['txt_inv_customer'];
-        // $vnp_Inv_Address=$_POST['txt_inv_addr1'];
-        // $vnp_Inv_Company=$_POST['txt_inv_company'];
-        // $vnp_Inv_Taxcode=$_POST['txt_inv_taxcode'];
-        // $vnp_Inv_Type=$_POST['cbo_inv_type'];
         $inputData = array(
             "vnp_Version" => "2.1.0",
             "vnp_TmnCode" => $vnp_TmnCode,
@@ -145,22 +125,6 @@ class PaymentController extends Controller
             "vnp_OrderType" => $vnp_OrderType,
             "vnp_ReturnUrl" => $vnp_Returnurl,
             "vnp_TxnRef" => $vnp_TxnRef
-            // "vnp_PaymentMethod" => $vnp_PaymentMethod
-            // "vnp_ExpireDate"=>$vnp_ExpireDate,
-            // "vnp_Bill_Mobile"=>$vnp_Bill_Mobile,
-            // "vnp_Bill_Email"=>$vnp_Bill_Email,
-            // "vnp_Bill_FirstName"=>$vnp_Bill_FirstName,
-            // "vnp_Bill_LastName"=>$vnp_Bill_LastName,
-            // "vnp_Bill_Address"=>$vnp_Bill_Address,
-            // "vnp_Bill_City"=>$vnp_Bill_City,
-            // "vnp_Bill_Country"=>$vnp_Bill_Country,
-            // "vnp_Inv_Phone"=>$vnp_Inv_Phone,
-            // "vnp_Inv_Email"=>$vnp_Inv_Email,
-            // "vnp_Inv_Customer"=>$vnp_Inv_Customer,
-            // "vnp_Inv_Address"=>$vnp_Inv_Address,
-            // "vnp_Inv_Company"=>$vnp_Inv_Company,
-            // "vnp_Inv_Taxcode"=>$vnp_Inv_Taxcode,
-            // "vnp_Inv_Type"=>$vnp_Inv_Type
         );
 
         if (isset($vnp_BankCode) && $vnp_BankCode != "") {
@@ -194,6 +158,78 @@ class PaymentController extends Controller
             // vui lòng tham khảo thêm tại code demo
         }
 
+
+
+        public function vnpayReturn(Request $request)
+        {
+            // Lấy dữ liệu từ VNPay
+            $vnp_ResponseCode = $request->input('vnp_ResponseCode'); // Mã phản hồi
+            $vnp_TxnRef = $request->input('vnp_TxnRef'); // Mã đơn hàng
+            $vnp_Amount = $request->input('vnp_Amount') / 100; // Chuyển về đơn vị VNĐ
+            $data = $request->all();
+
+            // Log dữ liệu VNPay trả về
+            Log::info("VNPay Response: ", $data);
+
+            // Kiểm tra giao dịch có thành công không
+            if ($vnp_ResponseCode == '00') { // '00' nghĩa là thanh toán thành công
+                try {
+                    // Lấy danh sách sản phẩm trong giỏ hàng
+                    $cartItems = Cart::where('user_id', auth()->id())->get();
+
+                    // Nếu giỏ hàng trống thì không tạo đơn hàng
+                    if ($cartItems->isEmpty()) {
+                        Log::error("Giỏ hàng trống, không thể tạo đơn hàng.");
+                        return redirect()->route('checkout')->with('error', 'Giỏ hàng trống, không thể tạo đơn hàng.');
+                    }
+
+                    // Tạo đơn hàng
+                    $order = Order::create([
+                        'order_code' => $vnp_TxnRef,
+                        'user_id' => auth()->check() ? auth()->id() : null,
+                        'name' => $data['fullname'] ,
+                        'phone' => $data['phone'] ,
+                        'address' => $data['address'] ,
+                        'total_money' => $vnp_Amount,
+                        'status' => 'pending',
+                        'payment_method' => 'VNPay',
+                        'note' => $data['voucher'] ?? null,
+                    ]);
+
+                    Log::info("Đơn hàng đã tạo thành công: ", $order->toArray());
+
+                    // Thêm sản phẩm vào order_details
+                    foreach ($cartItems as $item) {
+                        OrderDetail::create([
+                            'order_id' => $order->id,
+                            'product_variant_id' => $item->product_variant_id,
+                            'quantity' => $item->quantity,
+                            'price_at_time' => $item->price_at_time,
+                            'total_price' => $item->price_at_time * $item->quantity,
+                        ]);
+                    }
+
+                    Log::info("Đã thêm sản phẩm vào OrderDetail");
+
+                    // Xóa giỏ hàng sau khi đặt hàng thành công
+                    Cart::where('user_id', auth()->id())->delete();
+                    Log::info("Đã xóa giỏ hàng của user_id: " . auth()->id());
+
+                    // Cập nhật session để hiển thị thông báo
+                    Session::flash('success', 'Thanh toán thành công! Đơn hàng đã được cập nhật.');
+
+                    // Chuyển hướng về trang checkout với thông báo
+                    return redirect()->route('checkout');
+                } catch (\Exception $e) {
+                    Log::error("Lỗi khi tạo đơn hàng: " . $e->getMessage());
+                    return redirect()->route('checkout')->with('error', 'Có lỗi xảy ra khi tạo đơn hàng. Vui lòng thử lại.');
+                }
+            } else {
+                // Giao dịch không thành công
+                Log::warning("Thanh toán thất bại, mã phản hồi: " . $vnp_ResponseCode);
+                return redirect()->route('checkout')->with('error', 'Thanh toán không thành công. Vui lòng thử lại.');
+            }
+        }
     public function checkout()
     {
         // Lấy giỏ hàng của người dùng từ cơ sở dữ liệu
