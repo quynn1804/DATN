@@ -110,7 +110,6 @@ class PaymentController extends Controller
         $vnp_Amount =  $cart_Total['amount'] * 100;
         $vnp_Locale = "VN";
         $vnp_BankCode = "";
-        // $vnp_PaymentMethod = "VNPAYQR";
         $vnp_IpAddr = $_SERVER['REMOTE_ADDR'];
         $inputData = array(
             "vnp_Version" => "2.1.0",
@@ -162,34 +161,32 @@ class PaymentController extends Controller
 
         public function vnpayReturn(Request $request)
         {
-            // Lấy dữ liệu từ VNPay
-            $vnp_ResponseCode = $request->input('vnp_ResponseCode'); // Mã phản hồi
-            $vnp_TxnRef = $request->input('vnp_TxnRef'); // Mã đơn hàng
-            $vnp_Amount = $request->input('vnp_Amount') / 100; // Chuyển về đơn vị VNĐ
+            $vnp_ResponseCode = $request->input('vnp_ResponseCode');
+            $vnp_TxnRef = $request->input('vnp_TxnRef');
+            $vnp_Amount = $request->input('vnp_Amount') / 100;
             $data = $request->all();
 
-            // Log dữ liệu VNPay trả về
-            Log::info("VNPay Response: ", $data);
+            Log::info("VNPay Response Data: ", $data);
 
-            // Kiểm tra giao dịch có thành công không
-            if ($vnp_ResponseCode == '00') { // '00' nghĩa là thanh toán thành công
+            if ($vnp_ResponseCode == '00') {
                 try {
-                    // Lấy danh sách sản phẩm trong giỏ hàng
                     $cartItems = Cart::where('user_id', auth()->id())->get();
-
-                    // Nếu giỏ hàng trống thì không tạo đơn hàng
                     if ($cartItems->isEmpty()) {
                         Log::error("Giỏ hàng trống, không thể tạo đơn hàng.");
                         return redirect()->route('checkout')->with('error', 'Giỏ hàng trống, không thể tạo đơn hàng.');
                     }
 
-                    // Tạo đơn hàng
+                    // Xử lý nếu thiếu dữ liệu
+                    $fullname = $data['fullname'] ?? 'Khách hàng chưa nhập';
+                    $phone = $data['phone'] ?? '0000000000';
+                    $address = $data['address'] ?? 'Chưa có địa chỉ';
+
                     $order = Order::create([
                         'order_code' => $vnp_TxnRef,
                         'user_id' => auth()->check() ? auth()->id() : null,
-                        'name' => $data['fullname'] ,
-                        'phone' => $data['phone'] ,
-                        'address' => $data['address'] ,
+                        'name' => $fullname,
+                        'phone' => $phone,
+                        'address' => $address,
                         'total_money' => $vnp_Amount,
                         'status' => 'pending',
                         'payment_method' => 'VNPay',
@@ -198,7 +195,6 @@ class PaymentController extends Controller
 
                     Log::info("Đơn hàng đã tạo thành công: ", $order->toArray());
 
-                    // Thêm sản phẩm vào order_details
                     foreach ($cartItems as $item) {
                         OrderDetail::create([
                             'order_id' => $order->id,
@@ -209,27 +205,21 @@ class PaymentController extends Controller
                         ]);
                     }
 
-                    Log::info("Đã thêm sản phẩm vào OrderDetail");
-
-                    // Xóa giỏ hàng sau khi đặt hàng thành công
                     Cart::where('user_id', auth()->id())->delete();
                     Log::info("Đã xóa giỏ hàng của user_id: " . auth()->id());
 
-                    // Cập nhật session để hiển thị thông báo
-                    Session::flash('success', 'Thanh toán thành công! Đơn hàng đã được cập nhật.');
-
-                    // Chuyển hướng về trang checkout với thông báo
-                    return redirect()->route('checkout');
+                    return redirect()->route('checkout')->with('success', 'Thanh toán thành công! Đơn hàng đã được cập nhật.');
                 } catch (\Exception $e) {
                     Log::error("Lỗi khi tạo đơn hàng: " . $e->getMessage());
                     return redirect()->route('checkout')->with('error', 'Có lỗi xảy ra khi tạo đơn hàng. Vui lòng thử lại.');
                 }
             } else {
-                // Giao dịch không thành công
                 Log::warning("Thanh toán thất bại, mã phản hồi: " . $vnp_ResponseCode);
                 return redirect()->route('checkout')->with('error', 'Thanh toán không thành công. Vui lòng thử lại.');
             }
         }
+
+
     public function checkout()
     {
         // Lấy giỏ hàng của người dùng từ cơ sở dữ liệu
