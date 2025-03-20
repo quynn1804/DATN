@@ -99,6 +99,7 @@ class PaymentController extends Controller
         $cart_Total = $request->all();
 
         $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
+
         $vnp_Returnurl = url('/vnpay/return');
         $vnp_TmnCode = "BTBFJN9W";//Mã website tại VNPAY
         $vnp_HashSecret = "GGHNNJ0P5F96PLOMSWBVM0N4NVR0RNPY"; //Chuỗi bí mật
@@ -156,6 +157,8 @@ class PaymentController extends Controller
         return redirect()->away($vnp_Url);
             // vui lòng tham khảo thêm tại code demo
         }
+
+
 
         public function vnpayReturn(Request $request)
         {

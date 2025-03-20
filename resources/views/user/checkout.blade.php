@@ -2,6 +2,7 @@
 
 @section('content')
 
+
 @if(Session::has('success'))
     <div class="alert alert-success">
         {{ Session::get('success') }}
@@ -67,48 +68,41 @@
                                             <tr>
                                                 <td>{{ $item->productVariant->product->name }}</td>
                                                 <td>{{ $item->quantity }}</td>
-                                                <td>{{ number_format($item->price_at_time * $item->quantity, 0, ',', '.') }}
-                                                    VND</td>
+                                                <td>{{ number_format($item->price_at_time * $item->quantity, 0, ',', '.') }} VND</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
                                     <tfoot>
-                                        <tfoot>
-                                            <tr>
-                                                <th colspan="2">Mã giảm giá:</th>
-                                                <td>
-                                                    <input type="text" id="voucher-code" placeholder="Nhập mã giảm giá" class="form-control">
-                                                    <button id="apply-voucher" class="btn btn-secondary mt-2">Áp dụng</button>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th colspan="2">Tổng tiền:</th>
-                                                <th id="total-price" data-original="{{ $cartTotal }}">
-                                                    {{ number_format($cartTotal, 0, ',', '.') }} VND
-                                                </th>
-                                            </tr>
-                                        </tfoot>
-
+                                        <tr>
+                                            <th colspan="2">Mã giảm giá:</th>
+                                            <td>
+                                                <input type="text" id="voucher-code" placeholder="Nhập mã giảm giá" class="form-control">
+                                                <button id="apply-voucher" class="btn btn-secondary mt-2">Áp dụng</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th colspan="2">Tổng tiền:</th>
+                                            <th id="total-price" data-original="{{ $cartTotal }}">
+                                                {{ number_format(session('discount_amount') ? $cartTotal - session('discount_amount') : $cartTotal, 0, ',', '.') }} VND
+                                            </th>
+                                        </tr>
                                     </tfoot>
                                 </table>
                             </div>
 
                             <div class="payment-method mt-4">
                                 <h3>Phương Thức Thanh Toán</h3>
-                                <input type="hidden" name="amount" value="{{ $cartTotal }}">
+                                <input type="hidden" name="amount" id="final-amount" value="{{ $cartTotal }}">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="payment_method" value="momo"
-                                        id="momo" required>
+                                    <input class="form-check-input" type="radio" name="payment_method" value="momo" id="momo" required>
                                     <label class="form-check-label" for="momo">Thanh toán qua Momo</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="payment_method" value="vnpay"
-                                        id="vnpay">
+                                    <input class="form-check-input" type="radio" name="payment_method" value="vnpay" id="vnpay">
                                     <label class="form-check-label" for="vnpay">Thanh toán qua VNPay</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="payment_method" value="cod"
-                                        id="cod">
+                                    <input class="form-check-input" type="radio" name="payment_method" value="cod" id="cod">
                                     <label class="form-check-label" for="cod">Thanh toán khi nhận hàng (COD)</label>
                                 </div>
                             </div>
@@ -123,15 +117,18 @@
     <script>
         document.getElementById('apply-voucher').addEventListener('click', function(event) {
             event.preventDefault();
-            let voucherCode = document.getElementById('voucher-code').value;
+            let voucherCode = document.getElementById('voucher-code').value.trim();
+            let totalElement = document.getElementById('total-price');
+            let originalTotal = parseFloat(totalElement.getAttribute('data-original'));
+
             if (!voucherCode) {
                 alert("Vui lòng nhập mã giảm giá!");
                 return;
             }
 
-            fetch("{{ route('cart.apply') }}", {
+            fetch("{{ route('checkout.applyVoucher') }}", {
                 method: "POST",
-                body: JSON.stringify({ voucher_code: voucherCode, cart_total: {{ $cartTotal }} }),
+                body: JSON.stringify({ voucher_code: voucherCode, cart_total: originalTotal }),
                 headers: {
                     'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
                     'Content-Type': 'application/json'
@@ -140,15 +137,14 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert("Mã giảm giá áp dụng thành công! Giảm: " + data.discount_amount + " VND");
-                    let newTotal = data.new_total;
-                    document.getElementById('total-price').textContent = newTotal.toLocaleString('vi-VN') + ' VND';
-                    document.getElementById('final-amount').value = newTotal;
+                    alert("Áp dụng mã giảm giá thành công! Giảm: " + data.discount_amount.toLocaleString('vi-VN') + " VND");
+                    totalElement.textContent = data.new_total.toLocaleString('vi-VN') + ' VND';
+                    document.getElementById('final-amount').value = data.new_total;
                 } else {
                     alert(data.message);
                 }
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => console.error('Lỗi:', error));
         });
     </script>
 
@@ -157,7 +153,6 @@
             background: #f8f9fa;
             padding: 40px 0;
         }
-
         .order-summary,
         .payment-method {
             background: #fff;

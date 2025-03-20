@@ -96,51 +96,44 @@ class CartController extends Controller {
 
         return redirect()->route('cart')->with('success', 'Xóa sản phẩm khỏi giỏ hàng thành công.');
     }
-
-    public function apply(Request $request) {
+    public function applyVoucher(Request $request)
+    {
         $request->validate([
             'voucher_code' => 'required|string',
             'cart_total' => 'required|numeric'
         ]);
 
-        // Kiểm tra voucher tồn tại
-        $voucher = Voucher::where('code', $request->voucher_code)->first();
+        $voucher = Voucher::where('code', $request->voucher_code)
+            ->where('is_active', 1)
+            ->whereDate('start', '<=', now())
+            ->whereDate('end', '>=', now())
+            ->first();
+
         if (!$voucher) {
-            return response()->json(['success' => false, 'message' => 'Mã giảm giá không hợp lệ.'], 422);
+            return response()->json(['success' => false, 'message' => 'Mã giảm giá không hợp lệ hoặc đã hết hạn!']);
         }
 
-        // Kiểm tra điều kiện áp dụng
-        $valid = $voucher->isValid($request->cart_total);
-        if (!$valid['status']) {
-            return response()->json(['success' => false, 'message' => $valid['message']], 422);
+        $cartTotal = $request->cart_total;
+        $discountAmount = 0;
+
+        if ($voucher->discount_type === 'fixed') {
+            $discountAmount = min($voucher->discount_value, $cartTotal);
+        } elseif ($voucher->discount_type === 'percentage') {
+            $discountAmount = min($cartTotal * ($voucher->discount_value / 100), $voucher->max_discount_amount);
         }
 
-        // Tính số tiền giảm giá
-        $discountAmount = $voucher->calculateDiscount($request->cart_total);
-        $discountedTotal = max(0, $request->cart_total - $discountAmount);
+        $newTotal = max(0, $cartTotal - $discountAmount);
+
+        // Lưu vào session
+        session([
+            'voucher_code' => $voucher->code,
+            'discount_amount' => $discountAmount
+        ]);
 
         return response()->json([
             'success' => true,
             'discount_amount' => $discountAmount,
-            'new_total' => number_format($discountedTotal, 0, ',', '.'),
+            'new_total' => $newTotal
         ]);
-        try {
-            $voucher = Voucher::where('code', $request->voucher_code)->first();
-
-            if (!$voucher) {
-                return response()->json(['success' => false, 'message' => 'Mã giảm giá không hợp lệ!']);
-            }
-
-            $discount = min($voucher->discount_amount, $request->cart_total);
-            $newTotal = $request->cart_total - $discount;
-
-            return response()->json([
-                'success' => true,
-                'discount_amount' => $discount,
-                'new_total' => $newTotal
-            ]);
-        } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => 'Có lỗi xảy ra!'], 500);
-        }
     }
 }

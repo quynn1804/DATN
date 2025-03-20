@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\admin\ApplyVoucherController;
 use App\Http\Controllers\user\PaymentController;
+use App\Models\Cart;
 use Illuminate\Support\Facades\Route;
 
 // Trang chủ
@@ -43,20 +44,33 @@ Route::middleware('auth')->group(function () {
         return 'Chào mừng bạn đến trang Dashboard!';
     })->name('dashboard');
 
-    // Admin routes (yêu cầu đăng nhập)
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/', [AdminController::class, 'index'])->name('dashboard');
         Route::resource('account', AccountController::class);
+        Route::resource('statistic', StatisticController::class);
         Route::resource('comments', CommentController::class)->only(['index', 'destroy','show']);
         Route::resource('vouchers', VoucherController::class);
-        Route::resource('comments', CommentController::class)->only(['index','show', 'destroy']);
-        Route::resource('statistic', StatisticController::class);
         Route::resource('products', ProductController::class);
         Route::resource('categories', CategoryController::class);
         Route::resource('orders', OrderController::class);
         Route::delete('/products/variant/{id}', [ProductController::class, 'destroyVariant'])->name('products.variant.destroy');
     });
+
+    Route::get('/', function () {
+        return redirect()->route('admin.statistic.index');
+    })->name('dashboard');
+
+    Route::resource('account', AccountController::class);
+    Route::resource('comments', CommentController::class)->only(['index', 'destroy', 'show']);
+    Route::resource('vouchers', VoucherController::class);
+    Route::resource('statistic', StatisticController::class);
+    Route::resource('products', ProductController::class);
+    Route::resource('categories', CategoryController::class);
+    Route::resource('orders', OrderController::class);
+    Route::delete('/products/variant/{id}', [ProductController::class, 'destroyVariant'])->name('products.variant.destroy');
 });
+
+
 
 
 // Giỏ hàng (yêu cầu đăng nhập)
@@ -68,6 +82,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
     Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
     Route::post('/vnpay_payment', [PaymentController::class, 'vnpay_payment']);
+
     Route::get('/vnpay/return', [PaymentController::class, 'vnpayReturn'])->name('vnpay.return');
     Route::post('/momo_payment', [PaymentController::class, 'momo_payment']);
 });
@@ -76,6 +91,10 @@ Route::get('/checkout', [PaymentController::class, 'checkout'])->name('checkout'
 Route::post('/process-payment', [PaymentController::class, 'processPayment'])->name('payment.process');
 Route::get('/payment/success', [PaymentController::class, 'paymentSuccess'])->name('payment.success');
 Route::get('/payment/failure', [PaymentController::class, 'paymentFailure'])->name('payment.failure');
+
+
+Route::post('/checkout/apply-voucher', [CartController::class, 'applyVoucher'])
+    ->name('checkout.applyVoucher');
 Route::get('/top-favorite-products', [ProductController::class, 'topFavorites'])->name('products.topFavorites');
 Route::post('/checkout/apply-voucher', [CartController::class, 'apply'])->name('cart.apply');
 
