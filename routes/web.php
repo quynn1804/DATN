@@ -84,11 +84,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/checkout/apply-voucher', [CartController::class, 'applyVoucher'])
         ->name('checkout.applyVoucher');
     Route::get('/top-favorite-products', [ProductController::class, 'topFavorites'])->name('products.topFavorites');
-    Route::post('/checkout/apply-voucher', [CartController::class, 'apply'])->name('cart.apply');
     Route::get('user/orders/{order}', [UserOrderController::class, 'show'])
         ->middleware('auth')
         ->name('user.order.detail');
-        Route::post('user/orders/{order}/comment', [CommentController::class, 'store'])
+    Route::post('user/orders/{order}/comment', [CommentController::class, 'store'])
         ->middleware('auth')
         ->name('comments.store');
 });
