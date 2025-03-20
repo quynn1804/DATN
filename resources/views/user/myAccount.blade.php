@@ -103,7 +103,7 @@
                                                             @endif
                                                         </td>
                                                         <td>{{ number_format($order->total_money, 0, ',', '.') }} VNĐ</td>
-                                                        <td><a href="#" class="kenne-btn kenne-btn_sm"><span>Chi
+                                                        <td><a href="{{ route('user.order.detail', $order) }}" class="kenne-btn kenne-btn_sm"><span>Chi
                                                                     tiết</span></a></td>
                                                     </tr>
                                                 @endforeach

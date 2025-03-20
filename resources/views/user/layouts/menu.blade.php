@@ -92,7 +92,7 @@
                                     <div class="main-menu_area position-relative">
                                         <nav class="main-nav d-flex justify-content-center">
                                             <ul>
-                                                <li class="dropdown-holder"><a href="{{ route('home') }}">Trang chủ</a>
+                                                <li class="dropdown-holder"><a href="{{ route('home') }}">Trang Chủ</a>
 
                                                 </li>
                                                 <li class="megamenu-holder position-static"><a

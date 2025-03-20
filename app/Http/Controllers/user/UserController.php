@@ -23,7 +23,7 @@ class UserController extends Controller
     public function index()
     {
         $products = Product::all();
-        return View('user.home', compact('products'));
+        return view('user.home', compact('products'));
     }
 
     public function pageCategory()
