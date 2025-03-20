@@ -1,42 +1,45 @@
 @extends('admin.layouts.index')
 
 @section('content')
-    <!-- end page title --> 
+    <!-- end page title -->
     <div class="row">
         <div class="col-xl-3">
             <div class="card-box">
-                <i class="fa fa-info-circle text-muted float-right" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="More Info"></i>
-                <h4 class="mt-0 font-16">Wallet Balance</h4>
-                <h2 class="text-primary my-4 text-center">$<span data-plugin="counterup">31,570</span></h2>
+                <h4 class="mt-0 font-16 text-center">Doanh Thu Hôm Nay</h4>
+                <p class="text-muted mb-1 text-center">{{ $currentDate }}</p>
+                <h3 class="text-primary text-center">{{ number_format($todayRevenue, 0, ',', '.') }} VND</h3>
                 <div class="row mb-4">
-                    <div class="col-6">
-                        <p class="text-muted mb-1">This Month</p>
-                        <h3 class="mt-0 font-20 text-truncate">$120,254 <small class="badge badge-light-success font-13">+15%</small></h3>
+                    <div class="col-12">
+                        <p class="text-muted mb-1">Tháng này</p>
+                        <h3 class="mt-0 font-20 text-truncate">{{ number_format($currentMonthRevenue, 0, ',', '.') }}
+                            VND<br>
+                            @if ($percentageChange >= 0)
+                                <small class="badge badge-light-success font-13">+{{ $percentageChange }}%</small>
+                            @else
+                                <small class="badge badge-light-danger font-13">{{ $percentageChange }}%</small>
+                            @endif
+                        </h3>
                     </div>
 
-                    <div class="col-6">
-                        <p class="text-muted mb-1">Last Month</p>
-                        <h3 class="mt-0 font-20 text-truncate">$98,741 <small class="badge badge-light-danger font-13">-5%</small></h3>
+                    <div class="col-12">
+                        <p class="text-muted mb-1">Tháng trước</p>
+                        <h3 class="mt-0 font-20 text-truncate">{{ number_format($lastMonthRevenue, 0, ',', '.') }} VND</h3>
                     </div>
                 </div>
-
-                <div class="mt-5">
-                    <span data-plugin="peity-line" data-fill="#56c2d6" data-stroke="#4297a6" data-width="100%" data-height="50">3,5,2,9,7,2,5,3,9,6,5,9,7</span>
-                </div>
-
             </div> <!-- end card-box-->
         </div>
-        
+
+
         <div class="col-xl-6">
             <div class="card-box" dir="ltr">
                 <div class="float-right d-none d-md-inline-block">
                     <div class="btn-group mb-2">
-                        <button type="button" class="btn btn-xs btn-light active">Today</button>
-                        <button type="button" class="btn btn-xs btn-light">Weekly</button>
-                        <button type="button" class="btn btn-xs btn-light">Monthly</button>
+                        <button type="button" class="btn btn-xs btn-light active">Ngày</button>
+                        <button type="button" class="btn btn-xs btn-light">Tuần</button>
+                        <button type="button" class="btn btn-xs btn-light">Tháng</button>
                     </div>
                 </div>
-                <h4 class="header-title mb-1">Transaction History</h4>
+                <h4 class="header-title mb-1">Thống Kê Đơn Hàng</h4>
                 <div id="rotate-labels-column" class="apex-charts"></div>
             </div> <!-- end card-box-->
         </div> <!-- end col -->
@@ -59,7 +62,8 @@
                 <div class="mt-3">
                     <h6 class="text-uppercase">Target <span class="float-right">49%</span></h6>
                     <div class="progress progress-sm m-0">
-                        <div class="progress-bar bg-success" role="progressbar" aria-valuenow="49" aria-valuemin="0" aria-valuemax="100" style="width: 49%">
+                        <div class="progress-bar bg-success" role="progressbar" aria-valuenow="49" aria-valuemin="0"
+                            aria-valuemax="100" style="width: 49%">
                             <span class="sr-only">49% Complete</span>
                         </div>
                     </div>
@@ -83,7 +87,8 @@
                 <div class="mt-3">
                     <h6 class="text-uppercase">Target <span class="float-right">60%</span></h6>
                     <div class="progress progress-sm m-0">
-                        <div class="progress-bar bg-purple" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
+                        <div class="progress-bar bg-purple" role="progressbar" aria-valuenow="60" aria-valuemin="0"
+                            aria-valuemax="100" style="width: 60%">
                             <span class="sr-only">60% Complete</span>
                         </div>
                     </div>
@@ -99,7 +104,8 @@
                 <div class="card-body" dir="ltr">
                     <div class="card-widgets">
                         <a href="javascript: void(0);" data-toggle="reload"><i class="mdi mdi-refresh"></i></a>
-                        <a data-toggle="collapse" href="#cardCollpase1" role="button" aria-expanded="false" aria-controls="cardCollpase1"><i class="mdi mdi-minus"></i></a>
+                        <a data-toggle="collapse" href="#cardCollpase1" role="button" aria-expanded="false"
+                            aria-controls="cardCollpase1"><i class="mdi mdi-minus"></i></a>
                         <a href="javascript: void(0);" data-toggle="remove"><i class="mdi mdi-close"></i></a>
                     </div>
                     <h4 class="header-title mb-0">Revenue</h4>
@@ -132,7 +138,8 @@
                         </div>
                         <div class="dash-item-overlay d-none d-md-block">
                             <h5>Today's Earning: $751.25</h5>
-                            <p class="text-muted font-13 mb-3 mt-2">Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget...</p>
+                            <p class="text-muted font-13 mb-3 mt-2">Etiam ultricies nisi vel augue. Curabitur ullamcorper
+                                ultricies nisi. Nam eget...</p>
                             <a href="javascript: void(0);" class="btn btn-primary">View Statements
                                 <i class="mdi mdi-arrow-right ml-2"></i>
                             </a>
@@ -148,7 +155,8 @@
                 <div class="card-body">
                     <div class="card-widgets">
                         <a href="javascript: void(0);" data-toggle="reload"><i class="mdi mdi-refresh"></i></a>
-                        <a data-toggle="collapse" href="#cardCollpase2" role="button" aria-expanded="false" aria-controls="cardCollpase2"><i class="mdi mdi-minus"></i></a>
+                        <a data-toggle="collapse" href="#cardCollpase2" role="button" aria-expanded="false"
+                            aria-controls="cardCollpase2"><i class="mdi mdi-minus"></i></a>
                         <a href="javascript: void(0);" data-toggle="remove"><i class="mdi mdi-close"></i></a>
                     </div>
                     <h4 class="header-title mb-0">Orders Analytics</h4>
@@ -166,14 +174,17 @@
                             <div class="avatar-md bg-soft-light rounded-circle text-center mb-2">
                                 <i class="mdi mdi-store font-22 avatar-title text-white"></i>
                             </div>
-                            <h3 class="m-0 font-weight-normal text-white sp-line-1 cta-box-title">Special launcing <b>Discount</b> offer</h3>
-                            <p class="text-white-50 mt-2 sp-line-2">Suspendisse vel quam malesuada, aliquet sem sit amet, fringilla elit. Morbi tempor tincidunt tempor. Etiam id turpis viverra.</p>
-                            <a href="javascript: void(0);" class="text-white font-weight-semibold text-uppercase">Read More <i class="mdi mdi-arrow-right"></i></a>
+                            <h3 class="m-0 font-weight-normal text-white sp-line-1 cta-box-title">Special launcing
+                                <b>Discount</b> offer
+                            </h3>
+                            <p class="text-white-50 mt-2 sp-line-2">Suspendisse vel quam malesuada, aliquet sem sit amet,
+                                fringilla elit. Morbi tempor tincidunt tempor. Etiam id turpis viverra.</p>
+                            <a href="javascript: void(0);" class="text-white font-weight-semibold text-uppercase">Read
+                                More <i class="mdi mdi-arrow-right"></i></a>
                         </div>
-                        <img class="ml-3" src="{{ asset('assets2/images/update.svg') }}" 
-                        width="120" 
-                        alt="Generic placeholder image">
-                                                </div>
+                        <img class="ml-3" src="{{ asset('assets2/images/update.svg') }}" width="120"
+                            alt="Generic placeholder image">
+                    </div>
                 </div>
                 <!-- end card-body -->
             </div>
@@ -200,11 +211,9 @@
                         <tbody>
                             <tr>
                                 <td style="width: 36px;">
-                                    <img src="{{ asset('assets2/images/users/user-2.jpg') }}" 
-                                    alt="contact-img" 
-                                    title="contact-img" 
-                                    class="rounded-circle avatar-sm">
-                                                                        </td>
+                                    <img src="{{ asset('assets2/images/users/user-2.jpg') }}" alt="contact-img"
+                                        title="contact-img" class="rounded-circle avatar-sm">
+                                </td>
 
                                 <td>
                                     <h5 class="m-0 font-weight-normal">Tomaslau</h5>
@@ -224,18 +233,18 @@
                                 </td>
 
                                 <td>
-                                    <a href="javascript: void(0);" class="btn btn-xs btn-light"><i class="mdi mdi-plus"></i></a>
-                                    <a href="javascript: void(0);" class="btn btn-xs btn-danger"><i class="mdi mdi-minus"></i></a>
+                                    <a href="javascript: void(0);" class="btn btn-xs btn-light"><i
+                                            class="mdi mdi-plus"></i></a>
+                                    <a href="javascript: void(0);" class="btn btn-xs btn-danger"><i
+                                            class="mdi mdi-minus"></i></a>
                                 </td>
                             </tr>
 
                             <tr>
                                 <td style="width: 36px;">
-                                    <img src="{{ asset('assets2/images/users/user-3.jpg') }}" 
-                                    alt="contact-img" 
-                                    title="contact-img" 
-                                    class="rounded-circle avatar-sm">
-                                                                        </td>
+                                    <img src="{{ asset('assets2/images/users/user-3.jpg') }}" alt="contact-img"
+                                        title="contact-img" class="rounded-circle avatar-sm">
+                                </td>
 
                                 <td>
                                     <h5 class="m-0 font-weight-normal">Erwin E. Brown</h5>
@@ -255,17 +264,17 @@
                                 </td>
 
                                 <td>
-                                    <a href="javascript: void(0);" class="btn btn-xs btn-light"><i class="mdi mdi-plus"></i></a>
-                                    <a href="javascript: void(0);" class="btn btn-xs btn-danger"><i class="mdi mdi-minus"></i></a>
+                                    <a href="javascript: void(0);" class="btn btn-xs btn-light"><i
+                                            class="mdi mdi-plus"></i></a>
+                                    <a href="javascript: void(0);" class="btn btn-xs btn-danger"><i
+                                            class="mdi mdi-minus"></i></a>
                                 </td>
                             </tr>
                             <tr>
                                 <td style="width: 36px;">
-                                    <img src="{{ asset('assets2/images/users/user-4.jpg') }}" 
-                                    alt="contact-img" 
-                                    title="contact-img" 
-                                    class="rounded-circle avatar-sm">
-                                                                        </td>
+                                    <img src="{{ asset('assets2/images/users/user-4.jpg') }}" alt="contact-img"
+                                        title="contact-img" class="rounded-circle avatar-sm">
+                                </td>
 
                                 <td>
                                     <h5 class="m-0 font-weight-normal">Margeret V. Ligon</h5>
@@ -285,13 +294,16 @@
                                 </td>
 
                                 <td>
-                                    <a href="javascript: void(0);" class="btn btn-xs btn-light"><i class="mdi mdi-plus"></i></a>
-                                    <a href="javascript: void(0);" class="btn btn-xs btn-danger"><i class="mdi mdi-minus"></i></a>
+                                    <a href="javascript: void(0);" class="btn btn-xs btn-light"><i
+                                            class="mdi mdi-plus"></i></a>
+                                    <a href="javascript: void(0);" class="btn btn-xs btn-danger"><i
+                                            class="mdi mdi-minus"></i></a>
                                 </td>
                             </tr>
                             <tr>
                                 <td style="width: 36px;">
-                                    <img src="assets2\images\users\user-5.jpg" alt="contact-img" title="contact-img" class="rounded-circle avatar-sm">
+                                    <img src="assets2\images\users\user-5.jpg" alt="contact-img" title="contact-img"
+                                        class="rounded-circle avatar-sm">
                                 </td>
 
                                 <td>
@@ -312,17 +324,17 @@
                                 </td>
 
                                 <td>
-                                    <a href="javascript: void(0);" class="btn btn-xs btn-light"><i class="mdi mdi-plus"></i></a>
-                                    <a href="javascript: void(0);" class="btn btn-xs btn-danger"><i class="mdi mdi-minus"></i></a>
+                                    <a href="javascript: void(0);" class="btn btn-xs btn-light"><i
+                                            class="mdi mdi-plus"></i></a>
+                                    <a href="javascript: void(0);" class="btn btn-xs btn-danger"><i
+                                            class="mdi mdi-minus"></i></a>
                                 </td>
                             </tr>
                             <tr>
                                 <td style="width: 36px;">
-                                    <img src="{{ asset('assets2/images/users/user-6.jpg') }}" 
-                                    alt="contact-img" 
-                                    title="contact-img" 
-                                    class="rounded-circle avatar-sm">
-                                                                        </td>
+                                    <img src="{{ asset('assets2/images/users/user-6.jpg') }}" alt="contact-img"
+                                        title="contact-img" class="rounded-circle avatar-sm">
+                                </td>
 
                                 <td>
                                     <h5 class="m-0 font-weight-normal">Luke J. Sain</h5>
@@ -342,8 +354,10 @@
                                 </td>
 
                                 <td>
-                                    <a href="javascript: void(0);" class="btn btn-xs btn-light"><i class="mdi mdi-plus"></i></a>
-                                    <a href="javascript: void(0);" class="btn btn-xs btn-danger"><i class="mdi mdi-minus"></i></a>
+                                    <a href="javascript: void(0);" class="btn btn-xs btn-light"><i
+                                            class="mdi mdi-plus"></i></a>
+                                    <a href="javascript: void(0);" class="btn btn-xs btn-danger"><i
+                                            class="mdi mdi-minus"></i></a>
                                 </td>
                             </tr>
 
@@ -388,7 +402,8 @@
                                 </td>
 
                                 <td>
-                                    <a href="javascript: void(0);" class="btn btn-xs btn-light"><i class="mdi mdi-pencil"></i></a>
+                                    <a href="javascript: void(0);" class="btn btn-xs btn-light"><i
+                                            class="mdi mdi-pencil"></i></a>
                                 </td>
                             </tr>
 
@@ -410,7 +425,8 @@
                                 </td>
 
                                 <td>
-                                    <a href="javascript: void(0);" class="btn btn-xs btn-light"><i class="mdi mdi-pencil"></i></a>
+                                    <a href="javascript: void(0);" class="btn btn-xs btn-light"><i
+                                            class="mdi mdi-pencil"></i></a>
                                 </td>
                             </tr>
 
@@ -432,7 +448,8 @@
                                 </td>
 
                                 <td>
-                                    <a href="javascript: void(0);" class="btn btn-xs btn-light"><i class="mdi mdi-pencil"></i></a>
+                                    <a href="javascript: void(0);" class="btn btn-xs btn-light"><i
+                                            class="mdi mdi-pencil"></i></a>
                                 </td>
                             </tr>
 
@@ -454,7 +471,8 @@
                                 </td>
 
                                 <td>
-                                    <a href="javascript: void(0);" class="btn btn-xs btn-light"><i class="mdi mdi-pencil"></i></a>
+                                    <a href="javascript: void(0);" class="btn btn-xs btn-light"><i
+                                            class="mdi mdi-pencil"></i></a>
                                 </td>
                             </tr>
 
@@ -476,7 +494,8 @@
                                 </td>
 
                                 <td>
-                                    <a href="javascript: void(0);" class="btn btn-xs btn-light"><i class="mdi mdi-pencil"></i></a>
+                                    <a href="javascript: void(0);" class="btn btn-xs btn-light"><i
+                                            class="mdi mdi-pencil"></i></a>
                                 </td>
                             </tr>
 
@@ -498,7 +517,8 @@
                                 </td>
 
                                 <td>
-                                    <a href="javascript: void(0);" class="btn btn-xs btn-light"><i class="mdi mdi-pencil"></i></a>
+                                    <a href="javascript: void(0);" class="btn btn-xs btn-light"><i
+                                            class="mdi mdi-pencil"></i></a>
                                 </td>
                             </tr>
 
@@ -514,25 +534,26 @@
 
 
 
-<script src="{{ asset('assets2/js/vendor.min.js') }}"></script>
-<!-- Third Party js -->
-<script src="{{ asset('assets2/libs/peity/jquery.peity.min.js') }}"></script>
-<script src="{{ asset('assets2/libs/apexcharts/apexcharts.min.js') }}"></script>
-<script src="{{ asset('assets2/libs/jquery-vectormap/jquery-jvectormap-1.2.2.min.js') }}"></script>
-<script src="{{ asset('assets2/libs/jquery-vectormap/jquery-jvectormap-us-merc-en.js') }}"></script>
-<!-- Dashboard init -->
-<script src="{{ asset('assets2/js/pages/dashboard-1.init.js') }}"></script>
-<!-- App js -->
-<script src="{{ asset('assets2/js/app.min.js') }}"></script>
+    <script src="{{ asset('assets2/js/vendor.min.js') }}"></script>
+    <!-- Third Party js -->
+    <script src="{{ asset('assets2/libs/peity/jquery.peity.min.js') }}"></script>
+    <script src="{{ asset('assets2/libs/apexcharts/apexcharts.min.js') }}"></script>
+    <script src="{{ asset('assets2/libs/jquery-vectormap/jquery-jvectormap-1.2.2.min.js') }}"></script>
+    <script src="{{ asset('assets2/libs/jquery-vectormap/jquery-jvectormap-us-merc-en.js') }}"></script>
+    <!-- Dashboard init -->
+    <script src="{{ asset('assets2/js/pages/dashboard-1.init.js') }}"></script>
+    <!-- App js -->
+    <script src="{{ asset('assets2/js/app.min.js') }}"></script>
 
 
-{{-- <link rel="shortcut icon" href="{{ asset('assets2/images/favicon.ico') }}"> --}}
+    {{-- <link rel="shortcut icon" href="{{ asset('assets2/images/favicon.ico') }}"> --}}
 
-<!-- Plugin CSS -->
-<link href="{{ asset('assets2/libs/jquery-vectormap/jquery-jvectormap-1.2.2.css') }}" rel="stylesheet" type="text/css">
+    <!-- Plugin CSS -->
+    <link href="{{ asset('assets2/libs/jquery-vectormap/jquery-jvectormap-1.2.2.css') }}" rel="stylesheet"
+        type="text/css">
 
-<!-- App CSS -->
-<link href="{{ asset('assets2/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
-<link href="{{ asset('assets2/css/icons.min.css') }}" rel="stylesheet" type="text/css">
-<link href="{{ asset('assets2/css/app.min.css') }}" rel="stylesheet" type="text/css">
+    <!-- App CSS -->
+    <link href="{{ asset('assets2/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('assets2/css/icons.min.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('assets2/css/app.min.css') }}" rel="stylesheet" type="text/css">
 @endsection
