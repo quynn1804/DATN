@@ -7,18 +7,6 @@
                 <div class="overflow-hidden card table-nowrap table-card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h5 class="mb-0">Danh sách đơn hàng</h5>
-                        {{-- <form action="{{ route('admin.orders.index') }}" method="GET" class="mb-3 px-3 ms-auto">
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <input type="text" name="search" class="form-control"
-                                        placeholder="Nhập mã đơn hàng hoặc tên khách hàng..."
-                                        value="{{ request('search') }}">
-                                </div>
-                                <div class="col-md-4">
-                                    <button type="submit" class="btn btn-primary">Tìm kiếm</button>
-                                </div>
-                            </div>
-                        </form> --}}
                         <form action="{{ route('admin.orders.index') }}" method="GET" class="mb-3 px-3 ms-auto">
                             <div class="row">
                                 <div class="col-md-3 mb-2">
@@ -45,9 +33,41 @@
                                 <div class="col-md-2 mb-2">
                                     <select name="year" class="form-control">
                                         <option value="">Chọn năm</option>
+
                                         @php
                                             $currentYear = date('Y');
                                         @endphp
+
+                                        <span class="badge {{ $statusColor[$order->status] ?? 'badge-secondary' }}">
+                                            {{ ucfirst($order->status) }}
+                                        </span>
+                                    </td>
+                                    <td>{{ $order->created_at->format('d/m/Y H:i') }}</td>
+
+                                    <td class="text-end">
+                                        <div class="dropdown">
+                                            <a data-bs-toggle="dropdown" href="#" class="btn p-1">
+                                                <i class="fa fa-bars" aria-hidden="true"></i>
+                                            </a>
+                                            <div class="dropdown-menu dropdown-menu-end">
+                                                <a href="{{ route('admin.orders.show', $order->id) }}" class="dropdown-item">Chi tiết</a>
+                                                <form action="{{ route('admin.orders.destroy', $order->id) }}" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn xóa đơn hàng này?');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="dropdown-item text-danger">Xóa</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="d-flex justify-content-center mt-3">
+                    {{ $orders->links() }}
+
                                         @for ($i = $currentYear; $i >= $currentYear - 5; $i--)
                                             <option value="{{ $i }}"
                                                 {{ request('year') == $i ? 'selected' : '' }}>{{ $i }}</option>
@@ -79,6 +99,7 @@
                                     <th>Mã đơn hàng</th>
                                     <th>Khách hàng</th>
                                     <th>Tổng tiền</th>
+                                    <th>Ngày Tạo</th>
                                     <th>Trạng thái</th>
                                     <th class="text-end">Hành động</th>
                                 </tr>
@@ -90,6 +111,7 @@
                                         <td>{{ $order->order_code }}</td>
                                         <td>{{ $order->name }}</td>
                                         <td>{{ number_format($order->total_money, 0, ',', '.') }} đ</td>
+                                        <td>{{ $order->created_at->format('d/m/Y H:i') }}</td>
                                         <td>
                                             @php
                                                 $statusColor = [
