@@ -17,10 +17,10 @@
                             </div>
                         </div>
                     </form>
-                    
-                    
+
+
                 </div>
-                
+
                 <div class="table-responsive">
                     <table class="table mb-0">
                         <thead class="small text-uppercase bg-body text-muted">
@@ -30,6 +30,7 @@
                                 <th>Khách hàng</th>
                                 <th>Tổng tiền</th>
                                 <th>Trạng thái</th>
+                                <th>Ngày Tạo</th>
                                 <th class="text-end">Hành động</th>
                             </tr>
                         </thead>
@@ -53,6 +54,8 @@
                                             {{ ucfirst($order->status) }}
                                         </span>
                                     </td>
+                                    <td>{{ $order->created_at->format('d/m/Y H:i') }}</td>
+
                                     <td class="text-end">
                                         <div class="dropdown">
                                             <a data-bs-toggle="dropdown" href="#" class="btn p-1">
@@ -73,7 +76,7 @@
                         </tbody>
                     </table>
                 </div>
-                
+
                 <div class="d-flex justify-content-center mt-3">
                     {{ $orders->links() }}
                 </div>
