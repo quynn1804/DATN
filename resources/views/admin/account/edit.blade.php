@@ -45,10 +45,8 @@
 
         <!-- Main content -->
         <section class="content">
-            <h1 class="text-center">Thêm mới người dùng</h1>
-
             <div class="container mt-4">
-                <h2 class="mb-4">Chỉnh sửa tài khoản</h2>
+                <h1 class="text-center">Chỉnh sửa tài khoản</h2>
 
                 @if (session('success'))
                     <div class="alert alert-success">{{ session('success') }}</div>

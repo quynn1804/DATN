@@ -34,7 +34,9 @@
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
+
                             <li class="breadcrumb-item"><a href="{{ route('admin.account.index') }}">Home</a></li>
+
                             <li class="breadcrumb-item active">Quản lí tài khoản</li>
                         </ol>
                     </div><!-- /.col -->
@@ -45,6 +47,7 @@
 
         <!-- Main content -->
         <section class="content">
+
             <div class="bg-white rounded-lg shadow-md" style="margin-left: 50px;margin-right: 50px; border-radius: 2px">
                 <div class="card-header mb-4" style="background:#ebe8ff;border-radius: 2px; height: 55px;">
                     <h4 class="text-center" style="font-weight: 400; ">Thêm mới người dùng</h4>
@@ -64,7 +67,9 @@
                                 <input type="text" class="form-control" value="{{ old('name') }}" id="name"
                                     name="name" required>
                             </div>
+
                         </div>
+
 
                         <div class="col-6">
                             <div class="mb-3">
@@ -75,6 +80,7 @@
                                     <option value="Khac">Khác</option>
                                 </select>
                             </div>
+
                         </div>
 
                         <div class="col-6">
@@ -84,9 +90,15 @@
                                     name="email" required>
                             </div>
 
+
+                    <div class="col-6">
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Mật khẩu</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+
                         </div>
 
-                        <div class="col-6">
+ <div class="col-6">
                             <div class="mb-3">
                                 <label for="phone" class="form-label">Số điện thoại <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" value="{{ old('phone') }}" id="phone"
@@ -102,21 +114,57 @@
                                     <option value="2">Admin</option>
                                 </select>
                             </div>
+
+                    <div class="col-6">
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Xác nhận mật khẩu</label>
+                            <input type="password" class="form-control" value="{{ old('password') }}"
+                                id="password_confirmation" name="password_confirmation" required>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" value="{{ old('email') }}" id="email"
+                                name="email" required>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <div class="mb-3">
+                            <label for="gender" class="form-label">Giới tính</label>
+                            <select id="gender" name="gender" class="form-control" required>
+                                <option value="Nam">Nam</option>
+                                <option value="Nu">Nữ</option>
+                                <option value="Khac">Khác</option>
+                            </select>
+
                         </div>
 
-                        <div class="col-6">
-                            <div class="mb-3">
-                                <label for="image" class="form-label">Ảnh <span class="text-danger">*</span></label>
-                                <input type="file" class="form-control" id="image" name="image" required>
-                            </div>
+
+
+                    <div class="col-6">
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Số điện thoại</label>
+                            <input type="text" class="form-control" value="{{ old('phone') }}" id="phone"
+
                         </div>
+
 
                         <div class="col-6">
                             <div class="mb-3">
                                 <label for="password" class="form-label">Mật khẩu <span class="text-danger">*</span></label>
                                 <input type="password" class="form-control" id="password" name="password" required>
                             </div>
+
+                    <div class="col-6">
+                        <div class="mb-3">
+                            <label for="image" class="form-label">Ảnh</label>
+                            <input type="file" class="form-control" id="image" name="image" required>
+
                         </div>
+
 
                         <div class="col-6">
                             <div class="mb-3">
@@ -126,7 +174,19 @@
                                     <option value="0" {{ old('status') == '0' ? 'selected' : '' }}>Tạm dừng</option>
                                 </select>
                             </div>
+
+                    <div class="col-6">
+                        <div class="mb-3">
+                            <label for="status" class="form-label">Trạng thái</label>
+                            <select id="status" name="status" class="form-control" required>
+                                <option value="1" {{ old('status') == '1' ? 'selected' : '' }}>Hoạt động
+                                </option>
+                                <option value="0" {{ old('status') == '0' ? 'selected' : '' }}>Tạm dừng
+                                </option>
+                            </select>
+
                         </div>
+
 
                         <div class="col-6">
                             <div class="mb-3">
@@ -151,7 +211,13 @@
                             <div class="text-end">
                                 <button type="submit" class="btn btn-primary" style="margin: 50px;">Thêm mới</button>
                             </div>
+
+                    <div class="col-lg-6">
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-primary">Thêm mới</button>
                         </div>
+
+
                     </div>
                 </form>
 
