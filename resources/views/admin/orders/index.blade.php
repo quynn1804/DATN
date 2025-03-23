@@ -14,73 +14,35 @@
                                         placeholder="Nhập mã đơn hàng hoặc tên khách hàng..."
                                         value="{{ request('search') }}">
                                 </div>
-
                                 <div class="col-md-2 mb-2">
                                     <input type="date" name="date" class="form-control" value="{{ request('date') }}">
                                 </div>
-
                                 <div class="col-md-2 mb-2">
                                     <select name="month" class="form-control">
                                         <option value="">Chọn tháng</option>
                                         @for ($i = 1; $i <= 12; $i++)
-                                            <option value="{{ $i }}"
-                                                {{ request('month') == $i ? 'selected' : '' }}>Tháng {{ $i }}
+                                            <option value="{{ $i }}" {{ request('month') == $i ? 'selected' : '' }}>
+                                                Tháng {{ $i }}
                                             </option>
                                         @endfor
                                     </select>
                                 </div>
-
                                 <div class="col-md-2 mb-2">
                                     <select name="year" class="form-control">
                                         <option value="">Chọn năm</option>
-
-                                        @php
-                                            $currentYear = date('Y');
-                                        @endphp
-
-                                        <span class="badge {{ $statusColor[$order->status] ?? 'badge-secondary' }}">
-                                            {{ ucfirst($order->status) }}
-                                        </span>
-                                    </td>
-                                    <td>{{ $order->created_at->format('d/m/Y H:i') }}</td>
-
-                                    <td class="text-end">
-                                        <div class="dropdown">
-                                            <a data-bs-toggle="dropdown" href="#" class="btn p-1">
-                                                <i class="fa fa-bars" aria-hidden="true"></i>
-                                            </a>
-                                            <div class="dropdown-menu dropdown-menu-end">
-                                                <a href="{{ route('admin.orders.show', $order->id) }}" class="dropdown-item">Chi tiết</a>
-                                                <form action="{{ route('admin.orders.destroy', $order->id) }}" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn xóa đơn hàng này?');">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="dropdown-item text-danger">Xóa</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="d-flex justify-content-center mt-3">
-                    {{ $orders->links() }}
-
+                                        @php $currentYear = date('Y'); @endphp
                                         @for ($i = $currentYear; $i >= $currentYear - 5; $i--)
-                                            <option value="{{ $i }}"
-                                                {{ request('year') == $i ? 'selected' : '' }}>{{ $i }}</option>
+                                            <option value="{{ $i }}" {{ request('year') == $i ? 'selected' : '' }}>
+                                                {{ $i }}
+                                            </option>
                                         @endfor
                                     </select>
                                 </div>
-
                                 <div class="col-md-3 mb-2">
                                     <button type="submit" class="btn btn-primary">Tìm kiếm</button>
                                 </div>
                             </div>
                         </form>
-
                     </div>
 
                     <div class="table-responsive">
@@ -90,6 +52,13 @@
                                 'processing' => 'Đang xử lý',
                                 'completed' => 'Hoàn thành',
                                 'cancelled' => 'Đã hủy',
+                            ];
+
+                            $statusColor = [
+                                'pending' => 'badge-warning',
+                                'processing' => 'badge-primary',
+                                'completed' => 'badge-success',
+                                'cancelled' => 'badge-danger',
                             ];
                         @endphp
                         <table class="table mb-0">
@@ -113,18 +82,9 @@
                                         <td>{{ number_format($order->total_money, 0, ',', '.') }} đ</td>
                                         <td>{{ $order->created_at->format('d/m/Y H:i') }}</td>
                                         <td>
-                                            @php
-                                                $statusColor = [
-                                                    'pending' => 'badge-warning',
-                                                    'processing' => 'badge-primary',
-                                                    'completed' => 'badge-success',
-                                                    'cancelled' => 'badge-danger',
-                                                ];
-                                            @endphp
                                             <span class="badge {{ $statusColor[$order->status] ?? 'badge-secondary' }}">
                                                 {{ $statusMapping[$order->status] ?? 'Không xác định' }}
                                             </span>
-
                                         </td>
                                         <td class="text-end">
                                             <div class="dropdown">
@@ -132,15 +92,12 @@
                                                     <i class="fa fa-bars" aria-hidden="true"></i>
                                                 </a>
                                                 <div class="dropdown-menu dropdown-menu-end">
-                                                    <a href="{{ route('admin.orders.show', $order->id) }}"
-                                                        class="dropdown-item">Chi tiết</a>
-                                                    <form action="{{ route('admin.orders.destroy', $order->id) }}"
-                                                        method="POST"
+                                                    <a href="{{ route('admin.orders.show', $order->id) }}" class="dropdown-item">Chi tiết</a>
+                                                    <form action="{{ route('admin.orders.destroy', $order->id) }}" method="POST"
                                                         onsubmit="return confirm('Bạn có chắc chắn muốn xóa đơn hàng này?');">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit"
-                                                            class="dropdown-item text-danger">Xóa</button>
+                                                        <button type="submit" class="dropdown-item text-danger">Xóa</button>
                                                     </form>
                                                 </div>
                                             </div>
@@ -169,14 +126,7 @@
             box-shadow: 0 20px 27px 0 rgb(0 0 0 / 5%);
         }
 
-        .avatar.sm {
-            width: 2.25rem;
-            height: 2.25rem;
-            font-size: .818125rem;
-        }
-
-        .table-nowrap .table td,
-        .table-nowrap .table th {
+        .table-nowrap .table td, .table-nowrap .table th {
             white-space: nowrap;
         }
 
