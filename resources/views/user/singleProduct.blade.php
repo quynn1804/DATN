@@ -19,7 +19,7 @@
                     <div class="sp-img_area">
                         <div class="sp-img_slider">
                             <div class="single-slide">
-                                <img src="{{ asset('assets/images/' . $product->image) }}" alt="{{ $product->name }}">
+                                <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}">
                             </div>
                         </div>
                     </div>

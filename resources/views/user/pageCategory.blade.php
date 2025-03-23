@@ -88,10 +88,10 @@
                                         <div class="product-img" style="width: 213.4px; height: 213.4px;">
                                             <a href="{{ route('singleProduct', ['id' => $product->id]) }}">
                                                 <img class="primary-img"
-                                                    src="{{ asset('assets/images/' . $product->image) }}"
+                                                    src="{{ asset('storage/' . $product->image) }}"
                                                     alt="{{ $product->name }}">
                                                 <img class="secondary-img"
-                                                    src="{{ asset('assets/images/' . $product->image) }}"
+                                                    src="{{ asset('storage/' . $product->image) }}"
                                                     alt="{{ $product->name }}">
                                             </a>
 
@@ -118,7 +118,7 @@
                                         <div class="product-img">
                                             <a href="{{ route('singleProduct', ['id' => $product->id]) }}">
                                                 <img class="primary-img"
-                                                    src="{{ asset('assets/images/' . $product->image) }}" width="300px"
+                                                    src="{{ asset('storage/' . $product->image) }}" width="300px"
                                                     height="250px" alt="{{ $product->name }}">
                                             </a>
                                         </div>

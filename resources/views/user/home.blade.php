@@ -154,17 +154,16 @@
                     </div>
                 </div>
                 <div class="col-lg-12">
-                    <div class="kenne-element-carousel product-slider slider-nav"
-                        data-slick-options='{
+                    <div class="kenne-element-carousel product-tab_slider slider-nav product-tab_arrow"
+                    data-slick-options='{
                         "slidesToShow": 4,
                         "slidesToScroll": 1,
                         "infinite": false,
                         "arrows": true,
                         "dots": false,
-                        "spaceBetween": 30,
-                        "appendArrows": ".product-arrow"
+                        "spaceBetween": 30
                         }'
-                        data-slick-responsive='[
+                    data-slick-responsive='[
                         {"breakpoint":992, "settings": {
                         "slidesToShow": 3
                         }},
@@ -183,7 +182,7 @@
                                 <div class="single-product">
                                     <div class="product-img">
                                         <a href="{{ route('singleProduct', ['id' => $product->id]) }}">
-                                            <img class="primary-img" src="{{ asset('assets/images/' . $product->image) }}"
+                                            <img class="primary-img" src="{{ asset('storage/' . $product->image) }}"
                                                 style="width: 200px; height: 250px; object-fit: cover;"
                                                 alt="{{ $product->name }}">
                                         </a>
@@ -237,17 +236,16 @@
                     </div>
                 </div>
                 <div class="col-lg-12">
-                    <div class="kenne-element-carousel product-slider slider-nav"
-                        data-slick-options='{
+                    <div class="kenne-element-carousel product-tab_slider slider-nav product-tab_arrow"
+                    data-slick-options='{
                         "slidesToShow": 4,
                         "slidesToScroll": 1,
                         "infinite": false,
                         "arrows": true,
                         "dots": false,
-                        "spaceBetween": 30,
-                        "appendArrows": ".product-arrow"
+                        "spaceBetween": 30
                         }'
-                        data-slick-responsive='[
+                    data-slick-responsive='[
                         {"breakpoint":992, "settings": {
                         "slidesToShow": 3
                         }},
@@ -265,7 +263,7 @@
                                     <div class="product-img">
                                         <a href="{{ route('singleProduct', ['id' => $product->id]) }}">
                                             <img class="primary-img"
-                                                src="{{ asset('assets/images/' . $product->image) }}"
+                                                src="{{ asset('storage/' . $product->image) }}"
                                                 style="width: 200px; height: 250px; object-fit: cover;"
                                                 alt="{{ $product->name }}">
                                         </a>
@@ -364,7 +362,7 @@
                                             <div class="product-img">
                                                 <a href="{{ route('singleProduct', ['id' => $product->id]) }}">
                                                     <img class="primary-img"
-                                                        src="{{ asset('assets/images/' . $product->image) }}"
+                                                        src="{{ asset('storage/' . $product->image) }}"
                                                         style="width: 200px; height: 250px; object-fit: cover;"
                                                         alt="{{ $product->name }}">
                                                 </a>
