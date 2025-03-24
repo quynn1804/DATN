@@ -3,7 +3,8 @@
     <a href="{{ route('admin.dashboard') }}" class="brand-link">
 
 
-        <img src="{{ asset('assets/images/p.png') }}" alt="Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+        <img src="{{ asset('assets/images/p.png') }}" alt="Logo" class="brand-image img-circle elevation-3"
+            style="opacity: .8">
         <span class="brand-text font-weight-light">Pina store</span>
     </a>
 
@@ -21,7 +22,8 @@
 
         <!-- Sidebar Menu -->
         <nav class="mt-2">
-            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
+                data-accordion="false">
                 <li class="nav-item">
                     <a href="{{ route('admin.statistic.index') }}" class="nav-link">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -52,16 +54,30 @@
                 </li>
 
                 <li class="nav-item">
-                    <a href="{{route('admin.orders.index')}}" class="nav-link">
+                    <a href="{{ route('admin.orders.index') }}" class="nav-link">
                         <i class="nav-icon fas fa-tasks"></i>
                         <p>Đơn hàng</p>
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a href="{{route('admin.comments.index')}}" class="nav-link">
+                    <a href="{{ route('admin.comments.index') }}" class="nav-link">
                         <i class="nav-icon far fa-comment-dots"></i>
                         <p>Bình luận</p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{{ route('admin.contacts.index') }}" class="nav-link">
+                        <i class="nav-icon fas fa-phone"></i>
+                        <p>Liên Hệ</p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{{ route('admin.vouchers.index') }}" class="nav-link">
+                        <i class="nav-icon fas fa-barcode"></i>
+                        <p>Mã Giảm Giá</p>
                     </a>
                 </li>
 

@@ -101,7 +101,7 @@
                                                     <ul class="kenne-dropdown">
                                                         @foreach ($categories->take(5) as $category)
                                                             <li>
-                                                                <a href="#"> {{ $category->name }}</a>
+                                                                <a href="{{ route('products.filter', ['category_id' => $category->id]) }}"> {{ $category->name }}</a>
                                                             </li>
                                                         @endforeach
                                                     </ul>

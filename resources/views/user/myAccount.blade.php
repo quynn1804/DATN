@@ -121,12 +121,6 @@
                                     <p>Các địa chỉ sau đây sẽ được sử dụng trên trang thanh toán theo mặc định.</p>
                                     <div class="row">
                                         <div class="col">
-                                            <h4 class="small-title">Địa chỉ thanh toán</h4>
-                                            <address>
-                                                1234 Heaven Stress, Beverly Hill OldYork UnitedState of Lorem
-                                            </address>
-                                        </div>
-                                        <div class="col">
                                             <h4 class="small-title">Địa chỉ giao hàng</h4>
                                             <address>
                                                 1234 Heaven Stress, Beverly Hill OldYork UnitedState of Lorem
