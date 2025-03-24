@@ -147,7 +147,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="section-title">
-                        <h3>Sản phẩm nôi bật
+                        <h3>SẢN PHẨM NỔI BẬT
                         </h3>
 
                         <div class="product-arrow"></div>
@@ -176,7 +176,7 @@
                     ]'>
 
 
-                        @foreach ($products as $product)
+                        @foreach ($topProducts as $product)
                             <div class="product-item">
 
                                 <div class="single-product">
@@ -231,7 +231,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="section-title">
-                        <h3>Sản phẩm mới</h3>
+                        <h3>SẢN PHẨM MỚI</h3>
                         <div class="product-arrow"></div>
                     </div>
                 </div>
@@ -256,7 +256,7 @@
                         "slidesToShow": 1
                         }}
                     ]'>
-                        @foreach ($products as $product)
+                        @foreach ($newProducts as $product)
                             <div class="product-item">
 
                                 <div class="single-product">
@@ -329,7 +329,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="section-title">
-                        <h3>Tất cả sản phẩm</h3>
+                        <h3>TẤT CẢ SẢN PHẨM</h3>
                     </div>
                 </div>
                 <div class="col-lg-12">

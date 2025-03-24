@@ -53,7 +53,7 @@
                                             <a href="{{ route('singleProduct', ['id' => $product->id]) }}">
                                                 <img class="primary-img"
                                                     src="{{ asset('storage/' . $product->image) }}"
-                                                    style="width: 200px; height: 150px; object-fit: cover;"
+                                                    style="width: 200px; height: 250px; object-fit: cover;"
                                                     alt="{{ $product->name }}">
                                             </a>
                                             <span class="sticker">Hot</span>

@@ -37,16 +37,15 @@ class AccountController extends Controller
             'password' => 'required|string|min:6',
             'gender' => 'required|in:Nam,Nữ,Khác',
             'phone' => 'nullable|numeric|digits_between:10,15',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'required|image|mimes:jpg,png,jpeg,gif,webp,bmp|max:5120',
             'status' => 'required|boolean',
             'role_id' => 'required|exists:roles,id',
         ]);
 
+        $imageName = null;
         if ($request->hasFile('image')) {
             $imageName = time() . '.' . $request->image->extension();
             $request->image->move(public_path('assets/images'), $imageName);
-        } else {
-            $imageName = null;
         }
 
         User::create([

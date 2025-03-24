@@ -1,5 +1,6 @@
 <?php
 // use App\Http\Controllers\CommentController;
+use App\Http\Controllers\admin\ContactController;
 use App\Http\Controllers\Admin\StatisticController;
 use App\Http\Controllers\User\CartController;
 use App\Http\Controllers\Admin\AccountController;
@@ -25,8 +26,13 @@ Route::get('/pageCategory', [UserController::class, 'pageCategory'])->name('page
 // Route::get('/cart', [UserController::class, 'cart'])->name('cart');
 Route::get('/about', [UserController::class, 'about'])->name('about');
 Route::get('/contact', [UserController::class, 'contact'])->name('contact');
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 Route::get('/myAccount', [UserController::class, 'myAccount'])->name('myAccount')->middleware('auth');
 Route::get('/product/{id}', [UserController::class, 'singleProduct'])->name('singleProduct');
+//sản phẩm theo danh mục
+Route::get('/products/filter', [UserController::class, 'pageCategory'])->name('products.filter');
+//top 10 sp
+Route::get('/top-favorite-products', [ProductController::class, 'topFavorites'])->name('products.topFavorites');
 
 // search sp
 Route::get('/search', [UserController::class, 'search'])->name('search');
@@ -50,7 +56,7 @@ Route::middleware('auth')->group(function () {
             return redirect()->route('admin.statistic.index');
         })->name('dashboard');
         Route::resource('statistic', StatisticController::class);
-
+        Route::resource('contacts', ContactController::class)->except(['create', 'store']);
         Route::resource('account', AccountController::class);
         Route::resource('comments', CommentController::class)->only(['index', 'destroy', 'show']);
         Route::resource('vouchers', VoucherController::class);
@@ -84,7 +90,6 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/checkout/apply-voucher', [CartController::class, 'applyVoucher'])
         ->name('checkout.applyVoucher');
-    Route::get('/top-favorite-products', [ProductController::class, 'topFavorites'])->name('products.topFavorites');
     Route::get('user/orders/{order}', [UserOrderController::class, 'show'])
         ->middleware('auth')
         ->name('user.order.detail');

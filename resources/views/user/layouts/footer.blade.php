@@ -38,10 +38,11 @@
                                    </div>
                                    <div class="footer-widgets">
                                        <ul>
-                                           <li><a href="{{route('pageCategory')}}">Sản Phẩm</a></li>
-                                           <li><a href="#">Giỏ hàng của tôi</a></li>
-                                           <li><a href="#">Danh sách mong muốn</a></li>
-                                           <li><a href="#">Giỏ hàng</a></li>
+                                           <li><a href="{{ route('pageCategory') }}">Sản Phẩm</a></li>
+                                           <li><a href="{{ route('cart') }}">Giỏ hàng của tôi</a></li>
+                                           <li><a href="{{ route('products.topFavorites') }}">Danh sách mong muốn</a>
+                                           </li>
+                                           <li><a href="{{ route('cart') }}">Giỏ hàng</a></li>
                                        </ul>
                                    </div>
                                </div>
@@ -51,10 +52,10 @@
                                    </div>
                                    <div class="footer-widgets">
                                        <ul>
-                                           <li><a href="#">Đăng Nhập</a></li>
-                                           <li><a href="#">Đăng kí</a></li>
-                                           <li><a href="#">Giúp đỡ</a></li>
-                                           <li><a href="#">Ủng hộ</a></li>
+                                           <li><a href="{{ route('login') }}">Đăng Nhập</a></li>
+                                           <li><a href="{{ route('register') }}">Đăng kí</a></li>
+                                           <li><a href="{{ route('contact') }}">Giúp đỡ</a></li>
+                                           <li><a href="{{ route('contact') }}">Ủng hộ</a></li>
                                        </ul>
                                    </div>
                                </div>
@@ -63,13 +64,14 @@
                                        <h4>Danh mục sản phẩm</h4>
                                    </div>
                                    <div class="footer-widgets">
-                                       <ul>
-                                           <li><a href="#">IPHONE</a></li>
-                                           <li><a href="#">OPPO</a></li>
-                                           <li><a href="#">SAMSUNG</a></li>
-                                           <li><a href="#">HUAWEI</a></li>
-                                       </ul>
-                                   </div>
+                                    @foreach ($categories as $category)
+                                        <div>
+                                            <a href="{{ route('products.filter', ['category_id' => $category->id]) }}">
+                                                {{ $category->name }}
+                                            </a>
+                                        </div>
+                                    @endforeach
+                                </div>
                                </div>
                            </div>
                        </div>
@@ -86,7 +88,8 @@
                        </div>
                        <div class="col-md-6">
                            <div class="payment">
-                               <img src="{{asset('assets/images/footer/logo/2.png')}}" width="80px" alt="Pina Store">
+                               <img src="{{ asset('assets/images/footer/logo/2.png') }}" width="80px"
+                                   alt="Pina Store">
                            </div>
                        </div>
                    </div>
