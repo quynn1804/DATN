@@ -17,37 +17,37 @@ class CommentController extends Controller
         return view('user.single-product', compact('product', 'comments'));
     }
 
-    public function store(Request $request, $orderId)
-    {
-        $request->validate([
-            'rating' => 'required|integer|min:1|max:5',
-            'content' => 'required|string',
-            'product_id' => 'required|exists:products,id',
-        ]);
 
-        // Kiểm tra xem người dùng đã bình luận trong đơn hàng này chưa
-        $hasCommented = Comment::where('user_id', Auth::id())
-            ->where('product_id', $request->product_id)
-            ->whereHas('product.orderDetails.order', function ($query) use ($orderId) {
-                $query->where('id', $orderId);
-            })
-            ->exists();
+public function store(Request $request)
+{
+    $request->validate([
+        'order_id' => 'required|exists:orders,id',
+        'product_id' => 'required|exists:products,id',
+        'rating' => 'required|integer|min:1|max:5',
+        'content' => 'required|string',
+    ]);
 
-        if ($hasCommented) {
-            return redirect()->back()->with('error', 'Bạn đã bình luận cho đơn hàng này rồi.');
-        }
+    // Kiểm tra xem bình luận đã tồn tại chưa
+    $existingComment = Comment::where('order_id', $request->order_id)
+        ->where('product_id', $request->product_id)
+        ->where('user_id', auth()->id())
+        ->first();
 
-        // Lưu bình luận mới
-        Comment::create([
-            'product_id' => $request->product_id,
-            'user_id' => Auth::id(),
-            'rating' => $request->rating,
-            'content' => $request->content,
-        ]);
-
-        return redirect()->route('products.show', $request->product_id)->with('success', 'Bình luận đã được thêm.');
+    if ($existingComment) {
+        return response()->json(['message' => 'Bạn đã bình luận cho sản phẩm này trong đơn hàng này.'], 400);
     }
 
+    // Lưu bình luận mới
+    Comment::create([
+        'order_id' => $request->order_id,
+        'product_id' => $request->product_id,
+        'user_id' => auth()->id(),
+        'rating' => $request->rating,
+        'content' => $request->content,
+    ]);
+
+    return response()->json(['message' => 'Bình luận đã được thêm thành công!']);
+}
     public function show($id)
     {
         $product = Product::with('comments.user')->findOrFail($id);

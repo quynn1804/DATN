@@ -13,6 +13,7 @@ use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\User\UserOrderController;
 use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\AuthController;
+
 use App\Http\Controllers\Admin\ApplyVoucherController;
 use App\Http\Controllers\User\PaymentController;
 use App\Models\Cart;
@@ -43,7 +44,7 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-Route::post('products/{id}/comments', [CommentController::class, 'store'])->middleware('auth')->name('comments.store');
+// Route::post('products/{id}/comments', [CommentController::class, 'store'])->middleware('auth')->name('comments.store');
 
 // Dashboard (yêu cầu đăng nhập)
 Route::middleware('auth')->group(function () {
@@ -71,7 +72,8 @@ Route::middleware('auth')->group(function () {
 
     // Giỏ hàng (yêu cầu đăng nhập)
     Route::middleware('auth')->group(function () {
-        Route::post('products/{id}/comments', [CommentController::class, 'store'])->name('comments.store');
+        Route::post('/orders/{order}/comment', [CommentController::class, 'store'])
+            ->name('comments.store');
         Route::post('products/{id}/cart', [CartController::class, 'store'])->name('cart.store');
         Route::get('/cart', [CartController::class, 'index'])->name('cart');
         Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
@@ -93,7 +95,4 @@ Route::middleware('auth')->group(function () {
     Route::get('user/orders/{order}', [UserOrderController::class, 'show'])
         ->middleware('auth')
         ->name('user.order.detail');
-    Route::post('user/orders/{order}/comment', [CommentController::class, 'store'])
-        ->middleware('auth')
-        ->name('comments.store');
 });
