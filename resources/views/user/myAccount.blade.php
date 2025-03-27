@@ -39,7 +39,7 @@
                                     khoản</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="account-logout-tab" href="login-register.html" role="tab"
+                                <a class="nav-link" id="account-logout-tab" href="l#" role="tab"
                                     aria-selected="false">
                                     <form action="{{ route('logout') }}" method="POST">
                                         @csrf
@@ -107,9 +107,11 @@
                                                                     tiết</span></a></td>
                                                     </tr>
                                                 @endforeach
-
                                             </tbody>
                                         </table>
+                                        <div class="d-flex justify-content-center mt-3">
+                                            {{ $orders->links('pagination::bootstrap-4') }}
+                                        </div>
                                     </div>
                                 </div>
                             </div>

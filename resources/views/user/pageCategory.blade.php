@@ -52,7 +52,7 @@
                         </div>
                         <div class="kenne-sidebar_categories category-module">
                             <div class="kenne-categories_title">
-                                <h5>DUNG LƯỢNG</h5>
+                                <h5>MÀU SẮC</h5>
                             </div>
 
                             <div class="sidebar-categories_menu">
