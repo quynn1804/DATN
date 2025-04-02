@@ -15,7 +15,7 @@ class CategoryController extends Controller
 
         $categories = Category::paginate(10);
 
-        return view('admin.categories.list', compact('categories'));
+        return view('admin.categories.list', ['title' => 'Quản lý danh mục'], compact('categories'));
     }
 
     /**

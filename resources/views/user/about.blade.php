@@ -1,4 +1,7 @@
 @extends('user.layouts.main')
+@section('title')
+    Giới thiệu
+@endsection
 @section('content')
     <!-- Begin Kenne's Breadcrumb Area -->
     <div class="breadcrumb-area">

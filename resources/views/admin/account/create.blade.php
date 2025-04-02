@@ -82,6 +82,9 @@
                                         class="text-danger">*</span></label>
                                 <input type="email" class="form-control" value="{{ old('email') }}" id="email"
                                     name="email" required>
+                                @error('email')
+                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
 
@@ -89,6 +92,9 @@
                             <div class="mb-3">
                                 <label for="password" class="form-label">Mật khẩu</label>
                                 <input type="password" class="form-control" id="password" name="password" required>
+                                @error('password')
+                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
 
@@ -97,6 +103,9 @@
                                 <label for="password" class="form-label">Xác nhận mật khẩu</label>
                                 <input type="password" class="form-control" id="password_confirmation"
                                     name="password_confirmation" required>
+                                @error('password_confirmation')
+                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
 
@@ -114,8 +123,8 @@
                                 <label for="role_id" class="form-label">Vai trò <span
                                         class="text-danger">*</span></label>
                                 <select id="role_id" name="role_id" class="form-control" required>
-                                    <option value="1">User</option>
-                                    <option value="2">Admin</option>
+                                    <option value="2">User</option>
+                                    <option value="1">Admin</option>
                                 </select>
                             </div>
                         </div>
