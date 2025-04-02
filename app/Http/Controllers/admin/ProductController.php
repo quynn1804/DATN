@@ -23,7 +23,7 @@ class ProductController extends Controller
         $products = $query->with('category')->paginate(10);
         $categories = Category::all();
 
-        return view('admin.products.index', compact('products', 'categories'));
+        return view('admin.products.index', ['title' => 'Quản lý sản phẩm'], compact('products', 'categories'));
     }
 
     public function show($id)

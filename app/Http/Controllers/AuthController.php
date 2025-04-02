@@ -19,26 +19,37 @@ class AuthController extends Controller
     /** Xử lý đăng ký người dùng */
     public function register(Request $request)
     {
-        $validatedData = $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:6|confirmed', // xác nhận mật khẩu
+            'gender' => 'required|in:Nam,Nữ,Khác',
+            'phone' => 'nullable|numeric|digits_between:10,15',
+            'image' => 'nullable|image|mimes:jpg,png,jpeg,gif,webp,bmp|max:5120',
         ]);
 
         // Lấy role_id của role 'users'
-        $userRole = Role::where('name', 'user')->first();
+        $userRole = Role::where('name', 'User')->first();
 
         if (!$userRole) {
             return back()->withErrors(['role' => 'Vai trò mặc định không tồn tại.']);
         }
 
+        $imageName = null;
+        if ($request->hasFile('image')) {
+            $imageName = time() . '.' . $request->image->extension();
+            $request->image->move(public_path('assets/images'), $imageName);
+        }
+
         // Tạo người dùng mới với role 'users' mặc định
         $user = User::create([
-            'name' => $validatedData['name'],
-            'email' => $validatedData['email'],
-            'password' => Hash::make($validatedData['password']),
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => bcrypt($validated['password']),
+            'gender' => $validated['gender'],
+            'phone' => $validated['phone'],
+            'image' => $imageName,
             'role_id' => $userRole->id,
-            'status' => 1,
         ]);
 
         // Đăng nhập người dùng ngay sau khi đăng ký

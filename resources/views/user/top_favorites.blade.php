@@ -1,5 +1,7 @@
 @extends('user.layouts.main')
-
+@section('title')
+    Top 10 sản phẩm yêu thích
+@endsection
 @section('content')
 <style>
     .top-products-table th {

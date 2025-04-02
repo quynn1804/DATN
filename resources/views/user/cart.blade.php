@@ -1,5 +1,7 @@
 @extends('user.layouts.main')
-
+@section('title')
+    Giỏ hàng
+@endsection
 @section('content')
     <div class="breadcrumb-area">
         <div class="container">

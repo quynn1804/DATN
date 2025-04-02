@@ -29,6 +29,7 @@ Route::get('/about', [UserController::class, 'about'])->name('about');
 Route::get('/contact', [UserController::class, 'contact'])->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 Route::get('/myAccount', [UserController::class, 'myAccount'])->name('myAccount')->middleware('auth');
+Route::post('/myAccount/update', [UserController::class, 'updateAccount'])->name('user.account.update');
 Route::get('/product/{id}', [UserController::class, 'singleProduct'])->name('singleProduct');
 //sản phẩm theo danh mục
 Route::get('/products/filter', [UserController::class, 'pageCategory'])->name('products.filter');
