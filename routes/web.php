@@ -83,6 +83,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/vnpay_payment', [PaymentController::class, 'vnpay_payment']);
         Route::get('/vnpay/return', [PaymentController::class, 'vnpayReturn'])->name('vnpay.return');
         Route::post('/momo_payment', [PaymentController::class, 'momo_payment']);
+        Route::post('/momoQr_payment', [PaymentController::class, 'momoQr_payment']);
+        Route::get('/momo-callback', [PaymentController::class, 'momoCallback'])->name('momo.callback');
     });
 
     Route::get('/checkout', [PaymentController::class, 'checkout'])->name('checkout');

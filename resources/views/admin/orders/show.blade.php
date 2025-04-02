@@ -8,7 +8,7 @@
         <p><strong>Địa chỉ:</strong> {{ $order->address }}</p>
         <p><strong>Số điện thoại:</strong> {{ $order->phone }}</p>
         <p><strong>Trạng thái:</strong>
-            <span class="badge badge-{{ $order->status == 'pending' ? 'warning' : ($order->status == 'processing' ? 'primary' : ($order->status == 'shippingshipping' ? 'info' : ($order->status == 'completed' ? 'success' : 'danger')) }}">
+            <span class="badge badge-{{ $order->status == 'pending' ? 'warning' : ($order->status == 'processing' ? 'primary' : ($order->status == 'shipping' ? 'info' : ($order->status == 'completed' ? 'success' : 'danger'))) }}">
                 {{ ucfirst($order->status) }}
             </span>
         </p>

@@ -100,6 +100,10 @@
                                     <label class="form-check-label" for="momo">Thanh toán qua Momo</label>
                                 </div>
                                 <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="payment_method" value="momoQr" id="momoQr" required>
+                                    <label class="form-check-label" for="momoQr">Thanh toán qua MomoQr</label>
+                                </div>
+                                <div class="form-check">
                                     <input class="form-check-input" type="radio" name="payment_method" value="vnpay" id="vnpay">
                                     <label class="form-check-label" for="vnpay">Thanh toán qua VNPay</label>
                                 </div>
