@@ -1,6 +1,25 @@
 @extends('admin.layouts.index')
 
 @section('content')
+@if(session('error'))
+    <div id="alert-error" class="alert alert-danger alert-dismissible fade show">
+        {{ session('error') }}
+    </div>
+@endif
+
+@if(session('success'))
+    <div id="alert-success" class="alert alert-success alert-dismissible fade show">
+        {{ session('success') }}
+    </div>
+@endif
+
+<script>
+    // Chờ 4 giây rồi ẩn thông báo
+    setTimeout(function() {
+        document.getElementById('alert-error')?.classList.add('d-none');
+        document.getElementById('alert-success')?.classList.add('d-none');
+    }, 4000);
+</script>
     <div class="container">
         <div class="row">
             <div class="col-12 mb-3 mb-lg-5">
@@ -50,6 +69,7 @@
                             $statusMapping = [
                                 'pending' => 'Đang chờ xử lý',
                                 'processing' => 'Đang xử lý',
+                                'shipping' => 'Đang giao hàng',
                                 'completed' => 'Hoàn thành',
                                 'cancelled' => 'Đã hủy',
                             ];
@@ -57,6 +77,7 @@
                             $statusColor = [
                                 'pending' => 'badge-warning',
                                 'processing' => 'badge-primary',
+                                'shipping' => 'badge-info',
                                 'completed' => 'badge-success',
                                 'cancelled' => 'badge-danger',
                             ];

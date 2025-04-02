@@ -105,6 +105,8 @@
                                                                     Đang chờ xử lý
                                                                 @elseif($order->status === 'processing')
                                                                     Đang xử lý
+                                                                @elseif($order->status === 'shipping')
+                                                                    Đang giao hàng
                                                                 @elseif($order->status === 'completed')
                                                                     Hoàn thành
                                                                 @elseif($order->status === 'cancelled')
