@@ -15,7 +15,7 @@ class VoucherController extends Controller
             return $query->where('code', 'like', "%$search%");
         })->orderBy('id', 'desc')->paginate(10);
 
-        return view('admin.vouchers.index', compact('vouchers', 'search'));
+        return view('admin.vouchers.index', ['title' => 'Quản lý Voucher'],compact('vouchers', 'search'));
     }
 
     public function create()

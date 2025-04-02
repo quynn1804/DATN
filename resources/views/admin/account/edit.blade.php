@@ -123,9 +123,9 @@
                     <div class="mb-3">
                         <label for="role_id" class="form-label">Quyền</label>
                         <select id="role_id" name="role_id" class="form-control" required>
-                            <option value="1" {{ old('role_id', $account->role_id) == 1 ? 'selected' : '' }}>User
+                            <option value="1" {{ old('role_id', $account->role_id) == 1 ? 'selected' : '' }}>Admin
                             </option>
-                            <option value="2" {{ old('role_id', $account->role_id) == 2 ? 'selected' : '' }}>Admin
+                            <option value="2" {{ old('role_id', $account->role_id) == 2 ? 'selected' : '' }}>User
                             </option>
                         </select>
                     </div>

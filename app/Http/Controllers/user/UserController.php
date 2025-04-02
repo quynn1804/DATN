@@ -115,18 +115,44 @@ class UserController extends Controller
         return view('user.myAccount', compact('user', 'orders'));
     }
 
+    public function updateAccount(Request $request)
+    {
+        $user = Auth::user();
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'password' => 'nullable|string|min:6|confirmed',
+        ]);
+
+        // Cập nhật thông tin người dùng
+        $user->name = $validated['name'];
+        $user->email = $validated['email'];
+
+        // Nếu có mật khẩu mới, cập nhật mật khẩu
+        if (!empty($validated['password'])) {
+            $user->password = bcrypt($validated['password']);
+        }
+
+        $user->save();
+
+        return redirect()->back()->with('success', 'Cập nhật tài khoản thành công!');
+    }
 
 
     public function singleProduct($id)
     {
         $product = Product::with(['variants.color', 'variants.capacity'])->findOrFail($id);
         $productt = Product::all();
+        $relatedProducts = Product::where('category_id', $product->category_id)
+        ->where('id', '!=', $id)
+        ->get();
         // Lấy danh sách màu sắc và dung lượng
         $colors = $product->variants->pluck('color')->unique('id');
         $capacities = $product->variants->pluck('capacity')->unique('id');
 
 
-        return view('user.singleProduct', compact('product', 'colors', 'capacities', 'productt'));
+        return view('user.singleProduct', compact('product', 'colors', 'capacities', 'productt','relatedProducts'));
 
     }
 

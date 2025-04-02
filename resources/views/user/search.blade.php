@@ -1,4 +1,7 @@
 @extends('user.layouts.main')
+@section('title')
+    Tìm kiếm
+@endsection
 @section('content')
     <h2>Kết quả tìm kiếm cho: "{{ $keyword }}"</h2>
 

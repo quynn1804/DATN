@@ -1,4 +1,7 @@
 @extends('user.layouts.main')
+@section('title')
+    Tài khoản của tôi
+@endsection
 @section('content')
     <!-- Begin Kenne's Breadcrumb Area -->
     <div class="breadcrumb-area">
@@ -12,6 +15,9 @@
             </div>
         </div>
     </div>
+    @if (session('success'))
+    <div class="alert alert-success">{{ session('success') }}</div>
+@endif
     <!-- Kenne's Breadcrumb Area End Here -->
     <!-- Begin Kenne's Page Content Area -->
     <main class="page-content">
@@ -29,10 +35,10 @@
                                 <a class="nav-link" id="account-orders-tab" data-bs-toggle="tab" href="#account-orders"
                                     role="tab" aria-controls="account-orders" aria-selected="false">Đơn Hàng</a>
                             </li>
-                            <li class="nav-item">
+                            {{-- <li class="nav-item">
                                 <a class="nav-link" id="account-address-tab" data-bs-toggle="tab" href="#account-address"
                                     role="tab" aria-controls="account-address" aria-selected="false">Địa Chỉ</a>
-                            </li>
+                            </li> --}}
                             <li class="nav-item">
                                 <a class="nav-link" id="account-details-tab" data-bs-toggle="tab" href="#account-details"
                                     role="tab" aria-controls="account-details" aria-selected="false">Chi tiết tài
@@ -74,48 +80,55 @@
                             </div>
                             <div class="tab-pane fade" id="account-orders" role="tabpanel"
                                 aria-labelledby="account-orders-tab">
-                                <div class="myaccount-orders">
-                                    <h4 class="small-title">ĐƠN HÀNG CỦA TÔI</h4>
-                                    <div class="table-responsive">
-                                        <table class="table table-bordered table-hover">
-                                            <tbody>
-                                                <tr>
-                                                    <th>Mã Đơn Hàng</th>
-                                                    <th>Ngày Mua</th>
-                                                    <th>Trạng Thái Đơn Hàng</th>
-                                                    <th>Tổng Tiền</th>
-                                                    <th></th>
-                                                </tr>
-                                                @foreach ($orders as $order)
+                                @if ($orders->isEmpty())
+                                    <p class="text-danger text-center">Bạn chưa có đơn hàng nào.</p>
+                                @else
+                                    <div class="myaccount-orders">
+                                        <h4 class="small-title">ĐƠN HÀNG CỦA TÔI</h4>
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered table-hover">
+                                                <tbody>
                                                     <tr>
-                                                        <td><a class="account-order-id"
-                                                                href="#">{{ $order->order_code }}</a></td>
-                                                        <td>{{ $order->created_at->format('d-m-Y') }}</td>
-                                                        <td>
-                                                            @if ($order->status === 'pending')
-                                                                Đang chờ xử lý
-                                                            @elseif($order->status === 'processing')
-                                                                Đang xử lý
-                                                            @elseif($order->status === 'completed')
-                                                                Hoàn thành
-                                                            @elseif($order->status === 'cancelled')
-                                                                Đã hủy
-                                                            @endif
-                                                        </td>
-                                                        <td>{{ number_format($order->total_money, 0, ',', '.') }} VNĐ</td>
-                                                        <td><a href="{{ route('user.order.detail', $order) }}" class="kenne-btn kenne-btn_sm"><span>Chi
-                                                                    tiết</span></a></td>
+                                                        <th>Mã Đơn Hàng</th>
+                                                        <th>Ngày Mua</th>
+                                                        <th>Trạng Thái Đơn Hàng</th>
+                                                        <th>Tổng Tiền</th>
+                                                        <th></th>
                                                     </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                        <div class="d-flex justify-content-center mt-3">
-                                            {{ $orders->links('pagination::bootstrap-4') }}
+                                                    @foreach ($orders as $order)
+                                                        <tr>
+                                                            <td><a class="account-order-id"
+                                                                    href="#">{{ $order->order_code }}</a></td>
+                                                            <td>{{ $order->created_at->format('d-m-Y') }}</td>
+                                                            <td>
+                                                                @if ($order->status === 'pending')
+                                                                    Đang chờ xử lý
+                                                                @elseif($order->status === 'processing')
+                                                                    Đang xử lý
+                                                                @elseif($order->status === 'completed')
+                                                                    Hoàn thành
+                                                                @elseif($order->status === 'cancelled')
+                                                                    Đã hủy
+                                                                @endif
+                                                            </td>
+                                                            <td>{{ number_format($order->total_money, 0, ',', '.') }} VNĐ
+                                                            </td>
+                                                            <td><a href="{{ route('user.order.detail', $order) }}"
+                                                                    class="kenne-btn kenne-btn_sm"><span>Chi
+                                                                        tiết</span></a></td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                            <div class="d-flex justify-content-center mt-3">
+                                                {{ $orders->links('pagination::bootstrap-4') }}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                @endif
+
                             </div>
-                            <div class="tab-pane fade" id="account-address" role="tabpanel"
+                            {{-- <div class="tab-pane fade" id="account-address" role="tabpanel"
                                 aria-labelledby="account-address-tab">
                                 <div class="myaccount-address">
                                     <p>Các địa chỉ sau đây sẽ được sử dụng trên trang thanh toán theo mặc định.</p>
@@ -128,15 +141,22 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="tab-pane fade" id="account-details" role="tabpanel"
                                 aria-labelledby="account-details-tab">
                                 <div class="myaccount-details">
-                                    @if (session('success'))
-                                        <div class="alert alert-success">{{ session('success') }}</div>
-                                    @endif
 
-                                    <form action="#" method="POST" class="kenne-form">
+                                    {{-- @if ($errors->any())
+                                        <div class="alert alert-danger">
+                                            <ul>
+                                                @foreach ($errors->all() as $error)
+                                                    <li>{{ $error }}</li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    @endif --}}
+
+                                    <form action="{{ route('user.account.update') }}" method="POST" class="kenne-form">
                                         @csrf
                                         <div class="kenne-form-inner">
                                             <div class="single-input single-input-half">
@@ -149,12 +169,18 @@
                                                 <label for="account-details-email">Email</label>
                                                 <input type="email" id="account-details-email" name="email"
                                                     value="{{ $user->email }}" required>
+                                                @error('email')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
 
                                             <div class="single-input">
                                                 <label for="account-details-oldpass">Mật khẩu mới (để trống nếu không thay
                                                     đổi)</label>
                                                 <input type="password" id="account-details-oldpass" name="password">
+                                                @error('password')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
 
                                             <div class="single-input">

@@ -15,7 +15,7 @@ class AccountController extends Controller
 
         $data = User::all();
 
-        return view('admin.account.show', compact('data'));
+        return view('admin.account.show', ['title' => 'Quản lý tài khoản'],compact('data'));
     }
 
     /**
@@ -34,12 +34,15 @@ class AccountController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:6',
+            'password' => 'required|string|min:6|confirmed',
             'gender' => 'required|in:Nam,Nữ,Khác',
             'phone' => 'nullable|numeric|digits_between:10,15',
             'image' => 'required|image|mimes:jpg,png,jpeg,gif,webp,bmp|max:5120',
             'status' => 'required|boolean',
             'role_id' => 'required|exists:roles,id',
+        ], [
+            'password.confirmed' => 'Mật khẩu và xác nhận mật khẩu không trùng khớp.',
+            'email.unique' => 'Email này đã được sử dụng, vui lòng chọn email khác.',
         ]);
 
         $imageName = null;
@@ -56,7 +59,7 @@ class AccountController extends Controller
             'phone' => $validated['phone'],
             'image' => $imageName,
             'status' => $validated['status'],
-            'role_id' => $validated['role_id'] ?? 1,
+            'role_id' => $validated['role_id'] ?? 2,
         ]);
 
         return redirect()->route('admin.account.index')->with('success', 'Người dùng đã được thêm thành công.');

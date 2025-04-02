@@ -1,5 +1,7 @@
 @extends('user.layouts.main')
-
+@section('title')
+    Trang thanh toán
+@endsection
 @section('content')
 
 

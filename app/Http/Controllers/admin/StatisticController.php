@@ -32,7 +32,7 @@ class StatisticController extends Controller
         // Tính phần trăm thay đổi
         $percentageChange = $lastMonthRevenue == 0 ? 0 : round((($currentMonthRevenue - $lastMonthRevenue) / $lastMonthRevenue) * 100, 2);
 
-        return view('admin.statistic.index', compact('todayRevenue', 'currentMonthRevenue', 'lastMonthRevenue', 'percentageChange', 'currentDate'));
+        return view('admin.statistic.index', ['title' => 'Trang chủ'],compact('todayRevenue', 'currentMonthRevenue', 'lastMonthRevenue', 'percentageChange', 'currentDate'));
     }
 
 }
