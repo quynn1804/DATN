@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
@@ -16,5 +17,19 @@ class UserOrderController extends Controller
             ->firstOrFail();
 
         return view('user.order_detail', compact('order'));
+    }
+    public function cancel($id)
+    {
+        $order = Order::findOrFail($id);
+
+        // Chỉ cho phép hủy nếu trạng thái là 'pending' hoặc 'processing'
+        if (!in_array($order->status, ['pending', 'processing'])) {
+            return back()->with('error', 'Bạn không thể hủy đơn hàng này.');
+        }
+
+        $order->status = 'cancelled';
+        $order->save();
+
+        return redirect()->route('myAccount')->with('success', 'Đơn hàng đã được hủy.');
     }
 }
