@@ -41,7 +41,7 @@ class OrderController extends Controller
         }
 
         $orders = $query->orderBy('created_at', 'desc')->paginate(10);
-        return view('admin.orders.index', compact('orders'));
+        return view('admin.orders.index', ['title' => 'Quản lý đơn hàng'],compact('orders'));
     }
 
     /**
@@ -64,7 +64,7 @@ class OrderController extends Controller
             'phone' => 'required|string|max:15',
             'address' => 'required|string',
             'total_money' => 'required|numeric|min:0',
-            'status' => 'required|in:pending,processing,completed,cancelled',
+            'status' => 'required|in:pending,processing,shipping,completed,cancelled',
             'payment_method' => 'nullable|string',
             'note' => 'nullable|string',
         ]);
@@ -80,9 +80,31 @@ class OrderController extends Controller
     public function update(Request $request, $id)
     {
         $order = Order::findOrFail($id);
+        // Danh sách trạng thái hợp lệ
+        $validStatuses = ['pending', 'processing', 'shipping', 'completed', 'cancelled'];
         $request->validate([
-            'status' => 'required|in:pending,processing,completed,cancelled',
+            'status' => 'required|in:pending,processing,shipping,completed,cancelled',
         ]);
+        $newStatus = $request->status;
+        $currentStatus = $order->status;
+
+        // Nếu đơn hàng đã bị hủy, không cho cập nhật nữa
+        if ($currentStatus === 'cancelled') {
+            return redirect()->route('admin.orders.index')->with('error', 'Đơn hàng đã bị hủy, không thể thay đổi trạng thái!');
+        }
+
+        // Nếu đơn hàng đã hoàn thành, không cho chỉnh sửa nữa
+        if ($currentStatus === 'completed') {
+            return redirect()->route('admin.orders.index')->with('error', 'Đơn hàng đã hoàn thành, không thể thay đổi trạng thái!');
+        }
+
+        // Chỉ cho phép cập nhật lên trạng thái tiếp theo (trừ "Đã hủy" có thể chọn bất kỳ lúc nào)
+        $statusOrder = array_flip($validStatuses); // Tạo danh sách thứ tự trạng thái
+
+        if ($newStatus !== 'cancelled' && $statusOrder[$newStatus] <= $statusOrder[$currentStatus]) {
+            return redirect()->route('admin.orders.index')->with('error', 'Không thể quay lại trạng thái trước đó!');
+        }
+
 
         $order->update(['status' => $request->status]);
 

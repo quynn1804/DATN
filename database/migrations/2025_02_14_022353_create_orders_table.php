@@ -16,7 +16,7 @@ class CreateOrdersTable extends Migration
             $table->string('phone');
             $table->text('address');
             $table->decimal('total_money', 10, 2);
-            $table->string('status')->default('pending'); // pending, processing, completed, cancelled
+            $table->string('status')->default('pending'); // pending, processing, shipping, completed, cancelled
             $table->string('payment_method')->nullable(); // cash, bank_transfer, e-wallet
             $table->text('note')->nullable();
             $table->timestamps();

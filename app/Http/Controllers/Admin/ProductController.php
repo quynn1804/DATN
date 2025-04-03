@@ -19,10 +19,6 @@ class ProductController extends Controller
         if ($request->has('search')) {
             $query->where('name', 'like', '%' . $request->search . '%');
         }
-           // tìm kiếm sp theo danh mục
-           if ($request->has('category_id') && $request->category_id != '') {
-            $query->where('category_id', $request->category_id);
-        }
 
         $products = $query->with('category')->paginate(10);
         $categories = Category::all();
@@ -145,7 +141,7 @@ class ProductController extends Controller
 
     public function topFavorites()
     {
-
+        
         $topProducts = Product::topFavoriteProducts();
         return view('user.top_favorites', compact('topProducts'));
     }

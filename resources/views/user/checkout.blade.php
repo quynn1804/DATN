@@ -1,5 +1,7 @@
 @extends('user.layouts.main')
-
+@section('title')
+    Trang thanh toán
+@endsection
 @section('content')
 
 
@@ -96,6 +98,10 @@
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="payment_method" value="momo" id="momo" required>
                                     <label class="form-check-label" for="momo">Thanh toán qua Momo</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="payment_method" value="momoQr" id="momoQr" required>
+                                    <label class="form-check-label" for="momoQr">Thanh toán qua MomoQr</label>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="payment_method" value="vnpay" id="vnpay">

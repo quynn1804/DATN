@@ -1,4 +1,7 @@
 @extends('user.layouts.main')
+@section('title')
+    Đăng nhập
+@endsection
 @section('content')
 <div class="main-wrapper">
 

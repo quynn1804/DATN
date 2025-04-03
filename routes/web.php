@@ -29,6 +29,7 @@ Route::get('/about', [UserController::class, 'about'])->name('about');
 Route::get('/contact', [UserController::class, 'contact'])->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 Route::get('/myAccount', [UserController::class, 'myAccount'])->name('myAccount')->middleware('auth');
+Route::post('/myAccount/update', [UserController::class, 'updateAccount'])->name('user.account.update');
 Route::get('/product/{id}', [UserController::class, 'singleProduct'])->name('singleProduct');
 //sản phẩm theo danh mục
 Route::get('/products/filter', [UserController::class, 'pageCategory'])->name('products.filter');
@@ -82,6 +83,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/vnpay_payment', [PaymentController::class, 'vnpay_payment']);
         Route::get('/vnpay/return', [PaymentController::class, 'vnpayReturn'])->name('vnpay.return');
         Route::post('/momo_payment', [PaymentController::class, 'momo_payment']);
+        Route::post('/momoQr_payment', [PaymentController::class, 'momoQr_payment']);
+        Route::get('/momo-callback', [PaymentController::class, 'momoCallback'])->name('momo.callback');
     });
 
     Route::get('/checkout', [PaymentController::class, 'checkout'])->name('checkout');

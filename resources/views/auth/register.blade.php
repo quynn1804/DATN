@@ -16,15 +16,6 @@
         <div class="flex items-center justify-center min-h-screen">
             <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
                 <h2 class="text-2xl font-bold text-center mb-6 text-gray-700">Đăng ký tài khoản khách hàng</h2>
-
-                @if ($errors->any())
-                    <div class="mb-4">
-                        @foreach ($errors->all() as $error)
-                            <p class="text-red-500 text-sm">{{ $error }}</p>
-                        @endforeach
-                    </div>
-                @endif
-
                 <form action="{{ route('register') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
                     @csrf
                     <div>
@@ -34,14 +25,23 @@
                     <div>
                         <input type="email" name="email" placeholder="Email" required
                             class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            @error('email')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
                     <div>
                         <input type="password" name="password" placeholder="Mật khẩu" required
                             class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            @error('password')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
                     <div>
                         <input type="password" name="password_confirmation" placeholder="Xác nhận mật khẩu" required
                             class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            @error('password_confirmation')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
                     <div>
                         <select name="gender" required

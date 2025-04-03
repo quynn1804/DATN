@@ -1,4 +1,7 @@
 @extends('user.layouts.main')
+@section('title')
+    Chi tiết đơn hàng
+@endsection
 @section('content')
     <div class="breadcrumb-area">
         <div class="container">
@@ -24,6 +27,8 @@
                                 Đang chờ xử lý
                             @elseif($order->status === 'processing')
                                 Đang xử lý
+                            @elseif($order->status === 'shipping')
+                                Đang giao hàng
                             @elseif($order->status === 'completed')
                                 Hoàn thành
                             @elseif($order->status === 'cancelled')

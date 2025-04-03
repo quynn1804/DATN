@@ -1,4 +1,7 @@
 @extends('user.layouts.main')
+@section('title')
+    Chi tiết sản phẩm
+@endsection
 @section('content')
     <div class="breadcrumb-area">
         <div class="container">
@@ -137,6 +140,147 @@
                     <p>{{ $comment->content }}</p>
                 </div>
             @endforeach
+        </div>
+    </div>
+    <div class="product-tab_area">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="section-title">
+                        <h3>SẢN PHẨM LIÊN QUAN</h3>
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="tab-content kenne-tab_content">
+                        <div id="related-products" class="tab-pane active show" role="tabpanel">
+                            <div class="kenne-element-carousel product-tab_slider slider-nav product-tab_arrow"
+                                data-slick-options='{
+                                    "slidesToShow": 4,
+                                    "slidesToScroll": 1,
+                                    "infinite": false,
+                                    "arrows": true,
+                                    "dots": false,
+                                    "spaceBetween": 30
+                                    }'
+                                data-slick-responsive='[
+                                    {"breakpoint":992, "settings": {"slidesToShow": 3}},
+                                    {"breakpoint":768, "settings": {"slidesToShow": 2}},
+                                    {"breakpoint":575, "settings": {"slidesToShow": 1}}
+                                ]'>
+    
+                                @foreach ($relatedProducts as $related)
+                                    <div class="product-item">
+                                        <div class="single-product">
+                                            <div class="product-img">
+                                                <a href="{{ route('singleProduct', ['id' => $related->id]) }}">
+                                                    <img class="primary-img"
+                                                        src="{{ asset('storage/' . $related->image) }}"
+                                                        style="width: 200px; height: 250px; object-fit: cover;"
+                                                        alt="{{ $related->name }}">
+                                                </a>
+                                                <span class="sticker">Mới</span>
+                                            </div>
+                                            <div class="product-content">
+                                                <div class="product-desc_info">
+                                                    <h3 class="product-name">
+                                                        <a href="{{ route('singleProduct', ['id' => $related->id]) }}">
+                                                            {{ $related->name }}
+                                                        </a>
+                                                    </h3>
+                                                    <div class="price-box">
+                                                        <span class="new-price">
+                                                            {{ number_format($related->price, 0, ',', '.') }}đ 
+                                                        </span>
+                                                        <span class="old-price">
+                                                            {{ number_format($related->old_price, 0, ',', '.') }}đ 
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+    
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="product-tab_area">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="section-title">
+                        <h3>TẤT CẢ SẢN PHẨM</h3>
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="tab-content kenne-tab_content">
+                        <div id="bag" class="tab-pane active show" role="tabpanel">
+                            <div class="kenne-element-carousel product-tab_slider slider-nav product-tab_arrow"
+                                data-slick-options='{
+                                    "slidesToShow": 4,
+                                    "slidesToScroll": 1,
+                                    "infinite": false,
+                                    "arrows": true,
+                                    "dots": false,
+                                    "spaceBetween": 30
+                                    }'
+                                data-slick-responsive='[
+                                    {"breakpoint":992, "settings": {
+                                    "slidesToShow": 3
+                                    }},
+                                    {"breakpoint":768, "settings": {
+                                    "slidesToShow": 2
+                                    }},
+                                    {"breakpoint":575, "settings": {
+                                    "slidesToShow": 1
+                                    }}
+                                ]'>
+                                @foreach ($productt as $product)
+                                    <div class="product-item">
+
+                                        <div class="single-product">
+                                            <div class="product-img">
+                                                <a href="{{ route('singleProduct', ['id' => $product->id]) }}">
+                                                    <img class="primary-img"
+                                                        src="{{ asset('storage/' . $product->image) }}"
+                                                        style="width: 200px; height: 250px; object-fit: cover;"
+                                                        alt="{{ $product->name }}">
+                                                </a>
+                                                <span class="sticker">Mới</span>
+                                                <div class="add-actions">
+                                                </div>
+                                            </div>
+                                            <div class="product-content">
+                                                <div class="product-desc_info">
+                                                    <h3 class="product-name"><a
+                                                            href="{{ route('singleProduct', ['id' => $product->id]) }}">
+                                                            {{ $product->name }} </a>
+                                                    </h3>
+                                                    <div class="price-box">
+                                                        <span class="new-price">
+                                                            {{ number_format($product->price, 0, ',', '.') }}đ </span>
+                                                        <span class="old-price">
+                                                            {{ number_format($product->old_price, 0, ',', '.') }}đ </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                @endforeach
+
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 @endsection
