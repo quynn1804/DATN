@@ -22,18 +22,60 @@ class UserController extends Controller
 {
     public function index()
     {
+        //tat ca sp
         $products = Product::all();
-        return View('user.home', compact('products'));
+        //sp moi->theo ngay them
+        $newProducts = Product::orderByDesc('created_at')
+            ->limit(10)
+            ->get();
+        //sp noi bat->theo luot ban
+        $topProducts = Product::withSum([
+            'orderDetails as order_items_count' => function ($query) {
+                $query->where('created_at', '>=', now()->subDays(30));
+            }
+        ], 'quantity')
+            ->orderByDesc('order_items_count')
+            ->limit(10)
+            ->get();
+
+        return view('user.home', compact('products', 'newProducts', 'topProducts'));
     }
 
-    public function pageCategory()
+    public function pageCategory(Request $request)
     {
         $categories = Category::all();
-        $products = Product::all();
         $Capacities = Capacity::all();
         $colors = Color::all();
-        return view('user.pageCategory', compact('products','categories','Capacities','colors'));
+
+        $query = Product::query();
+
+        // Lọc theo danh mục
+        if ($request->has('category_id') && $request->category_id) {
+            $query->where('category_id', $request->category_id);
+        }
+
+        // Lọc theo màu sắc
+        if ($request->has('color_id') && $request->color_id) {
+            $query->whereHas('variants', function ($q) use ($request) {
+                $q->where('color_id', $request->color_id);
+            });
+        }
+
+        // Lọc theo dung lượng
+        if ($request->has('capacity_id') && $request->capacity_id) {
+            $query->whereHas('variants', function ($q) use ($request) {
+                $q->where('capacity_id', $request->capacity_id);
+            });
+        }
+
+        // Lấy sản phẩm với phân trang (9 sản phẩm mỗi trang)
+        $products = $query->paginate(9);
+
+        return view('user.pageCategory', compact('products', 'categories', 'Capacities', 'colors'));
     }
+
+
+
 
     public function login()
     {
@@ -66,7 +108,9 @@ class UserController extends Controller
         $user = Auth::user();
 
         // Lấy các đơn hàng của người dùng đang đăng nhập
-        $orders = Order::where('user_id', $user->id)->paginate(5);
+        $orders = Order::where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->paginate(5);
 
         return view('user.myAccount', compact('user', 'orders'));
     }
@@ -82,22 +126,22 @@ class UserController extends Controller
         $capacities = $product->variants->pluck('capacity')->unique('id');
 
 
-        return view('user.singleProduct', compact('product', 'colors', 'capacities','productt'));
+        return view('user.singleProduct', compact('product', 'colors', 'capacities', 'productt'));
 
     }
 
 
     // Hàm tìm kiếm sp
     public function search(Request $request)
-  {
-    $keyword = $request->input('q'); // Lấy từ khóa tìm kiếm từ input
+    {
+        $keyword = $request->input('q'); // Lấy từ khóa tìm kiếm từ input
+        $prd = Product::all();
+        $products = Product::where('name', 'LIKE', "%$keyword%")
+            ->orWhere('description', 'LIKE', "%$keyword%")
+            ->get();
 
-    $products = Product::where('name', 'LIKE', "%$keyword%")
-        ->orWhere('description', 'LIKE', "%$keyword%")
-        ->get();
-
-    return view('user.search', compact('products', 'keyword'));
-   }
+        return view('user.search', compact('products', 'keyword', 'prd'));
+    }
 
 }
 

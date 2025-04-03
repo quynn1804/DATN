@@ -21,7 +21,8 @@
 
   <!-- Theme style -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2.0/dist/css/adminlte.min.css">
-
+  
+  <script src="{{asset('https://cdn.jsdelivr.net/npm/apexcharts')}}"></script>
 
   
 </head>

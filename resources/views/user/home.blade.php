@@ -147,24 +147,23 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="section-title">
-                        <h3>Sản phẩm nôi bật
+                        <h3>SẢN PHẨM NỔI BẬT
                         </h3>
 
                         <div class="product-arrow"></div>
                     </div>
                 </div>
                 <div class="col-lg-12">
-                    <div class="kenne-element-carousel product-slider slider-nav"
-                        data-slick-options='{
+                    <div class="kenne-element-carousel product-tab_slider slider-nav product-tab_arrow"
+                    data-slick-options='{
                         "slidesToShow": 4,
                         "slidesToScroll": 1,
                         "infinite": false,
                         "arrows": true,
                         "dots": false,
-                        "spaceBetween": 30,
-                        "appendArrows": ".product-arrow"
+                        "spaceBetween": 30
                         }'
-                        data-slick-responsive='[
+                    data-slick-responsive='[
                         {"breakpoint":992, "settings": {
                         "slidesToShow": 3
                         }},
@@ -177,13 +176,13 @@
                     ]'>
 
 
-                        @foreach ($products as $product)
+                        @foreach ($topProducts as $product)
                             <div class="product-item">
 
                                 <div class="single-product">
                                     <div class="product-img">
                                         <a href="{{ route('singleProduct', ['id' => $product->id]) }}">
-                                            <img class="primary-img" src="{{ asset('assets/images/' . $product->image) }}"
+                                            <img class="primary-img" src="{{ asset('storage/' . $product->image) }}"
                                                 style="width: 200px; height: 250px; object-fit: cover;"
                                                 alt="{{ $product->name }}">
                                         </a>
@@ -232,22 +231,21 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="section-title">
-                        <h3>Sản phẩm mới</h3>
+                        <h3>SẢN PHẨM MỚI</h3>
                         <div class="product-arrow"></div>
                     </div>
                 </div>
                 <div class="col-lg-12">
-                    <div class="kenne-element-carousel product-slider slider-nav"
-                        data-slick-options='{
+                    <div class="kenne-element-carousel product-tab_slider slider-nav product-tab_arrow"
+                    data-slick-options='{
                         "slidesToShow": 4,
                         "slidesToScroll": 1,
                         "infinite": false,
                         "arrows": true,
                         "dots": false,
-                        "spaceBetween": 30,
-                        "appendArrows": ".product-arrow"
+                        "spaceBetween": 30
                         }'
-                        data-slick-responsive='[
+                    data-slick-responsive='[
                         {"breakpoint":992, "settings": {
                         "slidesToShow": 3
                         }},
@@ -258,14 +256,14 @@
                         "slidesToShow": 1
                         }}
                     ]'>
-                        @foreach ($products as $product)
+                        @foreach ($newProducts as $product)
                             <div class="product-item">
 
                                 <div class="single-product">
                                     <div class="product-img">
                                         <a href="{{ route('singleProduct', ['id' => $product->id]) }}">
                                             <img class="primary-img"
-                                                src="{{ asset('assets/images/' . $product->image) }}"
+                                                src="{{ asset('storage/' . $product->image) }}"
                                                 style="width: 200px; height: 250px; object-fit: cover;"
                                                 alt="{{ $product->name }}">
                                         </a>
@@ -331,7 +329,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="section-title">
-                        <h3>Tất cả sản phẩm</h3>
+                        <h3>TẤT CẢ SẢN PHẨM</h3>
                     </div>
                 </div>
                 <div class="col-lg-12">
@@ -364,7 +362,7 @@
                                             <div class="product-img">
                                                 <a href="{{ route('singleProduct', ['id' => $product->id]) }}">
                                                     <img class="primary-img"
-                                                        src="{{ asset('assets/images/' . $product->image) }}"
+                                                        src="{{ asset('storage/' . $product->image) }}"
                                                         style="width: 200px; height: 250px; object-fit: cover;"
                                                         alt="{{ $product->name }}">
                                                 </a>

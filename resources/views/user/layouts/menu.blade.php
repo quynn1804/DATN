@@ -92,7 +92,7 @@
                                     <div class="main-menu_area position-relative">
                                         <nav class="main-nav d-flex justify-content-center">
                                             <ul>
-                                                <li class="dropdown-holder"><a href="{{ route('home') }}">Trang chủ</a>
+                                                <li class="dropdown-holder"><a href="{{ route('home') }}">Trang Chủ</a>
 
                                                 </li>
                                                 <li class="megamenu-holder position-static"><a
@@ -101,7 +101,7 @@
                                                     <ul class="kenne-dropdown">
                                                         @foreach ($categories->take(5) as $category)
                                                             <li>
-                                                                <a href="#"> {{ $category->name }}</a>
+                                                                <a href="{{ route('products.filter', ['category_id' => $category->id]) }}"> {{ $category->name }}</a>
                                                             </li>
                                                         @endforeach
                                                     </ul>

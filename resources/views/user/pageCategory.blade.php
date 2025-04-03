@@ -6,7 +6,7 @@
             <div class="breadcrumb-content">
                 <h2>Trang sản phẩm</h2>
                 <ul>
-                    <li><a href="{{route('home')}}">Trang chủ</a></li>
+                    <li><a href="{{ route('home') }}">Trang chủ</a></li>
                     <li class="active">sản phẩm</li>
                 </ul>
             </div>
@@ -28,9 +28,11 @@
                             <div class="sidebar-categories_menu">
                                 <ul>
                                     @foreach ($categories->take(5) as $category)
-                                    <li>
-                                        <a href="#"> {{$category->name}}</a>
-                                    </li>
+                                        <li>
+                                        <li><a
+                                                href="{{ route('products.filter', ['category_id' => $category->id]) }}">{{ $category->name }}</a>
+                                        </li>
+                                        </li>
                                     @endforeach
                                 </ul>
                             </div>
@@ -43,9 +45,11 @@
                             <div class="sidebar-categories_menu">
                                 <ul>
                                     @foreach ($Capacities->take(5) as $Capacity)
-                                    <li>
-                                        <a href="#"> {{$Capacity->name}}</a>
-                                    </li>
+                                        <li>
+                                        <li><a
+                                                href="{{ route('products.filter', ['capacity_id' => $Capacity->id]) }}">{{ $Capacity->name }}</a>
+                                        </li>
+                                        </li>
                                     @endforeach
                                 </ul>
                             </div>
@@ -58,9 +62,11 @@
                             <div class="sidebar-categories_menu">
                                 <ul>
                                     @foreach ($colors->take(5) as $color)
-                                    <li>
-                                        <a href="#"> {{$color->name}}</a>
-                                    </li>
+                                        <li>
+                                        <li><a
+                                                href="{{ route('products.filter', ['color_id' => $color->id]) }}">{{ $color->name }}</a>
+                                        </li>
+                                        </li>
                                     @endforeach
                                 </ul>
                             </div>
@@ -80,18 +86,16 @@
 
 
                     </div>
-                        <div class="shop-product-wrap grid gridview-3 row">
-                    @foreach ($products as $product)
-                    <div class="col-lg-4 col-md-4 col-sm-6">
+                    <div class="shop-product-wrap grid gridview-3 row">
+                        @foreach ($products as $product)
+                            <div class="col-lg-4 col-md-4 col-sm-6">
                                 <div class="product-item">
                                     <div class="single-product" style="width: 255px; height: 360px;">
                                         <div class="product-img" style="width: 213.4px; height: 213.4px;">
                                             <a href="{{ route('singleProduct', ['id' => $product->id]) }}">
-                                                <img class="primary-img"
-                                                    src="{{ asset('assets/images/' . $product->image) }}"
+                                                <img class="primary-img" src="{{ asset('storage/' . $product->image) }}"
                                                     alt="{{ $product->name }}">
-                                                <img class="secondary-img"
-                                                    src="{{ asset('assets/images/' . $product->image) }}"
+                                                <img class="secondary-img" src="{{ asset('storage/' . $product->image) }}"
                                                     alt="{{ $product->name }}">
                                             </a>
 
@@ -99,7 +103,9 @@
 
                                         <div class="product-content">
                                             <div class="product-desc_info">
-                                                <h3 class="product-name"><a href="{{ route('singleProduct', ['id' => $product->id]) }}">{{ $product->name }}</a></h3>
+                                                <h3 class="product-name"><a
+                                                        href="{{ route('singleProduct', ['id' => $product->id]) }}">{{ $product->name }}</a>
+                                                </h3>
                                                 <div class="price-box">
                                                     <span
                                                         class="new-price">{{ number_format($product->price, 0, ',', '.') }}đ</span>
@@ -117,9 +123,8 @@
                                     <div class="single-product">
                                         <div class="product-img">
                                             <a href="{{ route('singleProduct', ['id' => $product->id]) }}">
-                                                <img class="primary-img"
-                                                    src="{{ asset('assets/images/' . $product->image) }}" width="300px"
-                                                    height="250px" alt="{{ $product->name }}">
+                                                <img class="primary-img" src="{{ asset('storage/' . $product->image) }}"
+                                                    width="300px" height="250px" alt="{{ $product->name }}">
                                             </a>
                                         </div>
                                         <div class="product-content">
@@ -131,7 +136,11 @@
                                                         class="old-price">{{ number_format($product->old_price, 0, ',', '.') }}đ</span>
                                                 </div>
                                                 <h6 class="product-name"><a
-                                                        href="{{ route('singleProduct', ['id' => $product->id]) }}">{{ $product->name }}</a></h6>
+                                                        href="{{ route('singleProduct', ['id' => $product->id]) }}">{{ $product->name }}</a>
+                                                </h6>
+                                                <div class="product-short_desc">
+                                                    <p>Danh Mục: {{ $product->category->name }}</p>
+                                                </div>
                                                 <div class="product-short_desc">
                                                     <p>{{ $product->description }}</p>
                                                 </div>
@@ -140,23 +149,46 @@
                                     </div>
                                 </div>
                             </div>
-                    @endforeach
-                </div>
-
+                        @endforeach
+                    </div>
+                    {{-- Phân trnag --}}
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="kenne-paginatoin-area">
                                 <div class="row">
                                     <div class="col-lg-12">
-                                        <ul class="kenne-pagination-box primary-color">
-                                            <!-- Phân trang các trang số -->
-
-                                        </ul>
+                                        @if ($products->hasPages())
+                                            <ul class="kenne-pagination-box primary-color">
+                                                
+                                                @if ($products->onFirstPage())
+                                                    <li class="disabled"><span>Trước</span></li>
+                                                @else
+                                                    <li><a href="{{ $products->previousPageUrl() }}">Trước</a></li>
+                                                @endif
+                    
+                                                
+                                                @foreach ($products->links()->elements[0] as $page => $url)
+                                                    @if ($page == $products->currentPage())
+                                                        <li class="active"><a href="#">{{ $page }}</a></li>
+                                                    @else
+                                                        <li><a href="{{ $url }}">{{ $page }}</a></li>
+                                                    @endif
+                                                @endforeach
+                    
+                                                
+                                                @if ($products->hasMorePages())
+                                                    <li><a class="Next" href="{{ $products->nextPageUrl() }}">Sau</a></li>
+                                                @else
+                                                    <li class="disabled"><span>Sau</span></li>
+                                                @endif
+                                            </ul>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
