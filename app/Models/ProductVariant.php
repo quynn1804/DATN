@@ -10,12 +10,20 @@ class ProductVariant extends Model
     use HasFactory;
 
     protected $fillable = [
-        'product_id', 'color_id', 'capacity_id', 'price', 'stock'
+        'product_id', 'color_id', 'capacity_id', 'price', 'stock', 'description', 'images'
     ];
+
+    // protected $casts = [
+    //     'images' => 'array',
+    // ];
 
     public function product()
     {
         return $this->belongsTo(Product::class);
+    }
+    public function thumbnails()
+    {
+    return $this->morphMany(Thumbnail::class, 'thumbnailable');
     }
 
     public function color()
@@ -29,9 +37,9 @@ class ProductVariant extends Model
     }
 
     public function orderDetails()
-    {
-        return $this->hasMany(OrderDetail::class);
-    }
+{
+    return $this->hasManyThrough(OrderDetail::class, ProductVariant::class);
+}
 
     public function carts()
     {

@@ -11,9 +11,16 @@ class Product extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'price', 'description', 'image', 'quantity', 'status'
-        ,'category_id'];
+        'name', 'price', 'description', 'images', 'quantity', 'status'
+        ,'category_id','product_type'];
 
+    // protected $casts = [
+    //         'images' => 'array',
+    //     ];
+    public function thumbnails()
+    {
+    return $this->morphMany(Thumbnail::class, 'thumbnailable');
+    }
     public function variants()
     {
         return $this->hasMany(ProductVariant::class);
@@ -36,7 +43,7 @@ class Product extends Model
         return self::withCount(['orderDetails' => function ($query) {
             $query->where('created_at', '>=', Carbon::now()->subDays(30));
         }])
-        
+
         ->orderByDesc('order_details_count')
         ->limit($limit)
         ->get();

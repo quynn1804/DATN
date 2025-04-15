@@ -1,4 +1,4 @@
-@extends('admin.layouts.index ')
+@extends('admin.layouts.index')
 
 @section('title', 'Thêm sản phẩm mới')
 
@@ -59,10 +59,6 @@
                         <label for="quantity" class="form-label">Số lượng</label>
                         <input type="number" name="quantity" id="quantity" class="form-control" value="{{ old('quantity') }}">
                     </div>
-                    <div class="mb-3">
-                        <label for="images" class="form-label">Hình ảnh sản phẩm</label>
-                        <input type="file" name="images[]" id="images" class="form-control" multiple>
-                    </div>
                 </div>
 
                 <div id="variant-fields" style="display: {{ old('product_type') === 'variant' ? 'block' : 'none' }};">
@@ -70,23 +66,13 @@
                     <div id="variant-container">
                         <div class="variant-item border p-3 rounded mb-3 bg-white shadow-sm">
                             <div class="row g-3">
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <label class="form-label">Màu sắc</label>
-                                    <select name="variants[0][color_id]" class="form-select">
-                                        <option value="">-- Chọn màu --</option>
-                                        @foreach($colors as $color)
-                                            <option value="{{ $color->id }}">{{ $color->name }}</option>
-                                        @endforeach
-                                    </select>
+                                    <input type="text" name="variants[0][color]" class="form-control">
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <label class="form-label">Dung lượng</label>
-                                    <select name="variants[0][capacity_id]" class="form-select">
-                                        <option value="">-- Chọn dung lượng --</option>
-                                        @foreach($capacities as $capacity)
-                                            <option value="{{ $capacity->id }}">{{ $capacity->name }}</option>
-                                        @endforeach
-                                    </select>
+                                    <input type="text" name="variants[0][capacity]" class="form-control">
                                 </div>
                                 <div class="col-md-2">
                                     <label class="form-label">Giá</label>
@@ -96,11 +82,7 @@
                                     <label class="form-label">Số lượng</label>
                                     <input type="number" name="variants[0][stock]" class="form-control">
                                 </div>
-                                <div class="col-md-3">
-                                    <label class="form-label">Ảnh</label>
-                                    <input type="file" name="variants[0][images][]" class="form-control" multiple>
-                                </div>
-                                <div class="col-md-1 d-flex align-items-end">
+                                <div class="col-md-2 d-flex align-items-end">
                                     <button type="button" class="btn btn-danger remove-variant">Xóa</button>
                                 </div>
                             </div>
@@ -112,6 +94,11 @@
                 <div class="mb-3 mt-4">
                     <label for="description" class="form-label">Mô tả</label>
                     <textarea name="description" id="description" class="form-control" rows="4">{{ old('description') }}</textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label for="images" class="form-label">Hình ảnh sản phẩm</label>
+                    <input type="file" name="images[]" id="images" class="form-control" multiple>
                 </div>
 
                 <div class="mb-3">
@@ -162,23 +149,13 @@
             newItem.className = 'variant-item border p-3 rounded mb-3 bg-white shadow-sm';
             newItem.innerHTML = `
                 <div class="row g-3">
-                    <div class="col-md-2">
+                    <div class="col-md-3">
                         <label class="form-label">Màu sắc</label>
-                        <select name="variants[${variantIndex}][color_id]" class="form-select">
-                            <option value="">-- Chọn màu --</option>
-                            @foreach($colors as $color)
-                                <option value="{{ $color->id }}">{{ $color->name }}</option>
-                            @endforeach
-                        </select>
+                        <input type="text" name="variants[${variantIndex}][color]" class="form-control">
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-3">
                         <label class="form-label">Dung lượng</label>
-                        <select name="variants[${variantIndex}][capacity_id]" class="form-select">
-                            <option value="">-- Chọn dung lượng --</option>
-                            @foreach($capacities as $capacity)
-                                <option value="{{ $capacity->id }}">{{ $capacity->name }}</option>
-                            @endforeach
-                        </select>
+                        <input type="text" name="variants[${variantIndex}][capacity]" class="form-control">
                     </div>
                     <div class="col-md-2">
                         <label class="form-label">Giá</label>
@@ -188,11 +165,7 @@
                         <label class="form-label">Số lượng</label>
                         <input type="number" name="variants[${variantIndex}][stock]" class="form-control">
                     </div>
-                    <div class="col-md-3">
-                        <label class="form-label">Ảnh</label>
-                        <input type="file" name="variants[${variantIndex}][images][]" class="form-control" multiple>
-                    </div>
-                    <div class="col-md-1 d-flex align-items-end">
+                    <div class="col-md-2 d-flex align-items-end">
                         <button type="button" class="btn btn-danger remove-variant">Xóa</button>
                     </div>
                 </div>

@@ -14,6 +14,8 @@ class CreateProductVariantsTable extends Migration
             $table->foreignId('color_id')->constrained('colors')->onDelete('cascade');
             $table->foreignId('capacity_id')->constrained('capacities')->onDelete('cascade');
             $table->decimal('price', 10, 2);
+            $table->text('description')->nullable();
+            $table->json('images')->nullable();
             $table->integer('stock');
             $table->timestamps();
         });
