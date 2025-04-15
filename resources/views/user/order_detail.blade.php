@@ -27,6 +27,8 @@
                                 Đang chờ xử lý
                             @elseif($order->status === 'processing')
                                 Đang xử lý
+                            @elseif($order->status === 'shipping')
+                                Đang giao hàng
                             @elseif($order->status === 'completed')
                                 Hoàn thành
                             @elseif($order->status === 'cancelled')
@@ -57,6 +59,14 @@
                                         </tr>
                                     @endforeach
                                 </tbody>
+                                @if (in_array($order->status, ['pending', 'processing']))
+                                    <form id="cancelOrderForm" action="{{ route('orders.cancel', $order->id) }}"
+                                        method="POST">
+                                        @csrf
+                                        @method('POST')
+                                        <button type="submit" class="btn btn-danger">Hủy đơn hàng</button>
+                                    </form>
+                                @endif
                             </table>
                         </div>
                     </div>
@@ -190,4 +200,11 @@
             background: #218838;
         }
     </style>
+    <script>
+        function confirmCancel() {
+            if (confirm("Bạn có chắc chắn muốn hủy đơn hàng này không?")) {
+                document.getElementById('cancelOrderForm').submit();
+            }
+        }
+    </script>
 @endsection

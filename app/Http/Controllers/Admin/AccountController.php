@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Admin;
 
 use App\Models\User;
@@ -15,7 +16,7 @@ class AccountController extends Controller
 
         $data = User::all();
 
-        return view('admin.account.show', ['title' => 'Quản lý tài khoản'],compact('data'));
+        return view('admin.account.show', ['title' => 'Quản lý tài khoản'], compact('data'));
     }
 
     /**
@@ -154,8 +155,4 @@ class AccountController extends Controller
 
         return redirect()->route('admin.account.index')->with('success', 'Người dùng đã được xóa!');
     }
-
-
-
 }
-
