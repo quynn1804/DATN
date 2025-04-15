@@ -225,7 +225,7 @@ class PaymentController extends Controller
         // Lấy giỏ hàng của người dùng từ cơ sở dữ liệu
         $cartItems = \App\Models\Cart::where('user_id', auth()->id())->get();
 
-        // Tính tổng tiền của giỏ hànggit add app/Http/Controllers/User/PaymentController.php
+        // Tính tổng tiền của giỏ hàng
         $cartTotal = $cartItems->sum(function ($item) {
             return $item->price_at_time * $item->quantity;
         });
