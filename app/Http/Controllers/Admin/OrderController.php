@@ -132,7 +132,7 @@ class OrderController extends Controller
         return redirect()->route('admin.orders.index')->with('success', 'Cập nhật đơn hàng thành công.');
     }
     
-    
+
 
     /**
      * Xóa đơn hàng.
