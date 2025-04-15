@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderDetail;
+use App\Models\ProductVariant;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
@@ -40,206 +41,58 @@ class PaymentController extends Controller
     public function momoQr_payment(Request $request){
 
         $cart_Total = $request->all();
-        $endpoint = "https://test-payment.momo.vn/v2/gateway/api/create";
+        $endpoint = "https://test-payment.momo.vn/gw_payment/transactionProcessor";
         $partnerCode = 'MOMOBKUN20180529';
         $accessKey = 'klm05TvNBzhg7h7j';
         $secretKey = 'at67qH6mk8w5Y1nAyMoYKMWACiEi2bsa';
         $orderInfo = "Thanh toán qua MoMo";
-        $amount =  $cart_Total['amount'];
-        $orderId = time() ."";
-        $redirectUrl = route('momo.callback');
-        $ipnUrl = route('momo.callback');
-        $extraData = "";
+        $amount = $cart_Total['amount'];
+        $orderId = time() . "";
+        $returnUrl = "http://localhost:8000/atm/result_atm.php";
+        $notifyurl = "http://localhost:8000/atm/ipn_momo.php";
+        // Lưu ý: link notifyUrl không phải là dạng localhost
+        $bankCode = "";
         $requestId = time() . "";
-        $requestType = "captureWallet";
+        $requestType = "payWithMoMoATM";
+        $extraData = "";
         //before sign HMAC SHA256 signature
-        $rawHash = "accessKey=" . $accessKey . "&amount=" . $amount . "&extraData=" . $extraData . "&ipnUrl=" . $ipnUrl . "&orderId=" . $orderId . "&orderInfo=" . $orderInfo . "&partnerCode=" . $partnerCode . "&redirectUrl=" . $redirectUrl . "&requestId=" . $requestId . "&requestType=" . $requestType;
-        $signature = hash_hmac("sha256", $rawHash,  $secretKey);
-        $data = array('partnerCode' => $partnerCode,
-            'partnerName' => "Test",
-            "storeId" => "MomoTestStore",
+        $rawHashArr = array(
+            'partnerCode' => $partnerCode,
+            'accessKey' => $accessKey,
             'requestId' => $requestId,
             'amount' => $amount,
             'orderId' => $orderId,
             'orderInfo' => $orderInfo,
-            'redirectUrl' => $redirectUrl,
-            'ipnUrl' => $ipnUrl,
-            'lang' => 'vi',
+            'bankCode' => $bankCode,
+            'returnUrl' => $returnUrl,
+            'notifyUrl' => $notifyurl,
+            'extraData' => $extraData,
+            'requestType' => $requestType
+        );
+        // echo $serectkey;die;
+        $rawHash = "partnerCode=" . $partnerCode . "&accessKey=" . $accessKey . "&requestId=" . $requestId . "&bankCode=" . $bankCode . "&amount=" . $amount . "&orderId=" . $orderId . "&orderInfo=" . $orderInfo . "&returnUrl=" . $returnUrl . "&notifyUrl=" . $notifyurl . "&extraData=" . $extraData . "&requestType=" . $requestType;
+        $signature = hash_hmac("sha256", $rawHash, $secretKey);
+
+        $data = array(
+            'partnerCode' => $partnerCode,
+            'accessKey' => $accessKey,
+            'requestId' => $requestId,
+            'amount' => $amount,
+            'orderId' => $orderId,
+            'orderInfo' => $orderInfo,
+            'returnUrl' => $returnUrl,
+            'bankCode' => $bankCode,
+            'notifyUrl' => $notifyurl,
             'extraData' => $extraData,
             'requestType' => $requestType,
-            'signature' => $signature);
+            'signature' => $signature
+        );
         $result = $this->execPostRequest($endpoint, json_encode($data));
         $jsonResult = json_decode($result, true);  // decode json
-
-        if (isset($jsonResult['payUrl'])) {
-            return redirect($jsonResult['payUrl']);
-        } else {
-            return back()->with('error', 'Lỗi khi tạo thanh toán MoMo: ' . json_encode($jsonResult));
-        }
-        }
-
-    public function momoCallback(Request $request)
-    {
-        $orderId = $request->input('orderId');
-        $resultCode = $request->input('resultCode');
-        $amount = $request->input('amount');
-        $data = $request->all();
-
-        Log::info("MomoPay Response Data: ", $data);
-
-        if ($resultCode == 0) {
-            try {
-                $cartItems = Cart::where('user_id', auth()->id())->get();
-                if ($cartItems->isEmpty()) {
-                    return redirect()->route('checkout')->with('error', 'Giỏ hàng trống, không thể tạo đơn hàng.');
-                }
-
-                $fullname = $data['fullname'] ?? 'Khách hàng chưa nhập';
-                $phone = $data['phone'] ?? '0000000000';
-                $address = $data['address'] ?? 'Chưa có địa chỉ';
-
-                // Kiểm tra nếu đơn hàng đã tồn tại (tránh tạo trùng)
-                $order = Order::where('order_code', $orderId)->first();
-
-                if ($order) {
-                    $order->update([
-                        'status' => 'pending', // Cập nhật trạng thái đã thanh toán
-                        'payment_method' => 'MoMo',
-                    ]);
-                } else {
-                    $order = Order::create([
-                        'order_code' => $orderId,
-                        'user_id' => auth()->check() ? auth()->id() : null,
-                        'name' => $fullname,
-                        'phone' => $phone,
-                        'address' => $address,
-                        'total_money' => $amount,
-                        'status' => 'pending',
-                        'payment_method' => 'MoMo',
-                        'note' => $data['voucher'] ?? null,
-                    ]);
-                }
-
-                foreach ($cartItems as $item) {
-                    OrderDetail::create([
-                        'order_id' => $order->id,
-                        'product_variant_id' => $item->product_variant_id,
-                        'quantity' => $item->quantity,
-                        'price_at_time' => $item->price_at_time,
-                        'total_price' => $item->price_at_time * $item->quantity,
-                    ]);
-                }
-
-                Cart::where('user_id', auth()->id())->delete();
-
-                return redirect()->route('checkout')->with('success', 'Thanh toán thành công! Đơn hàng đã được cập nhật.');
-            } catch (\Exception $e) {
-                Log::error("Lỗi khi cập nhật đơn hàng: " . $e->getMessage());
-                return redirect()->route('checkout')->with('error', 'Có lỗi xảy ra khi cập nhật đơn hàng. Vui lòng thử lại.');
-            }
-        } else {
-            return redirect()->route('checkout')->with('error', 'Thanh toán không thành công. Vui lòng thử lại.');
-        }
-    }
-
-    public function momo_payment(Request $request){
-        $cart_Total = $request->all();
-        $endpoint = "https://test-payment.momo.vn/v2/gateway/api/create";
-        $partnerCode = 'MOMOBKUN20180529';
-        $accessKey = 'klm05TvNBzhg7h7j';
-        $secretKey = 'at67qH6mk8w5Y1nAyMoYKMWACiEi2bsa';
-        $orderInfo = "Thanh toán qua MoMo";
-        $amount = $cart_Total['amount'] ;
-        $orderId = time() ."";
-        $redirectUrl = route('momo.callback');
-        $ipnUrl = route('momo.callback');
-        $extraData = "";
-        $requestId = time() . "";
-        $requestType = "payWithATM";
-
-
-    //before sign HMAC SHA256 signature
-    $rawHash = "accessKey=" . $accessKey . "&amount=" . $amount . "&extraData=" . $extraData . "&ipnUrl=" . $ipnUrl . "&orderId=" . $orderId . "&orderInfo=" . $orderInfo . "&partnerCode=" . $partnerCode . "&redirectUrl=" . $redirectUrl . "&requestId=" . $requestId . "&requestType=" . $requestType;
-    $signature = hash_hmac("sha256", $rawHash, $secretKey);
-    $data = array('partnerCode' => $partnerCode,
-        'partnerName' => "Test",
-        "storeId" => "MomoTestStore",
-        'requestId' => $requestId,
-        'amount' => $amount,
-        'orderId' => $orderId,
-        'orderInfo' => $orderInfo,
-        'redirectUrl' => $redirectUrl,
-        'ipnUrl' => $ipnUrl,
-        'lang' => 'vi',
-        'extraData' => $extraData,
-        'requestType' => $requestType,
-        'signature' => $signature);
-    $result = $this->execPostRequest($endpoint, json_encode($data));
-    $jsonResult = json_decode($result, true);
-    if (isset($jsonResult['payUrl'])) {
         return redirect($jsonResult['payUrl']);
-    } else {
-        return back()->with('error', 'Lỗi khi tạo thanh toán MoMo: ' . json_encode($jsonResult));
+
+
     }
-
-}
-
-
-    // public function momo_payment(Request $request)
-    // {
-    //     $cart_Total = $request->all();
-    //     $endpoint = "https://test-payment.momo.vn/gw_payment/transactionProcessor";
-    //     $partnerCode = 'MOMOBKUN20180529';
-    //     $accessKey = 'klm05TvNBzhg7h7j';
-    //     $secretKey = 'at67qH6mk8w5Y1nAyMoYKMWACiEi2bsa';
-    //     $orderInfo = "Thanh toán qua MoMo";
-    //     $amount = $cart_Total['amount'];
-    //     $orderId = time() . "";
-    //     $returnUrl = "http://localhost:8000/atm/result_atm.php";
-    //     $notifyurl = "http://localhost:8000/atm/ipn_momo.php";
-    //     // Lưu ý: link notifyUrl không phải là dạng localhost
-    //     $bankCode = "";
-    //     $requestId = time() . "";
-    //     $requestType = "payWithMoMoATM";
-    //     $extraData = "";
-    //     //before sign HMAC SHA256 signature
-    //     $rawHashArr = array(
-    //         'partnerCode' => $partnerCode,
-    //         'accessKey' => $accessKey,
-    //         'requestId' => $requestId,
-    //         'amount' => $amount,
-    //         'orderId' => $orderId,
-    //         'orderInfo' => $orderInfo,
-    //         'bankCode' => $bankCode,
-    //         'returnUrl' => $returnUrl,
-    //         'notifyUrl' => $notifyurl,
-    //         'extraData' => $extraData,
-    //         'requestType' => $requestType
-    //     );
-    //     // echo $serectkey;die;
-    //     $rawHash = "partnerCode=" . $partnerCode . "&accessKey=" . $accessKey . "&requestId=" . $requestId . "&bankCode=" . $bankCode . "&amount=" . $amount . "&orderId=" . $orderId . "&orderInfo=" . $orderInfo . "&returnUrl=" . $returnUrl . "&notifyUrl=" . $notifyurl . "&extraData=" . $extraData . "&requestType=" . $requestType;
-    //     $signature = hash_hmac("sha256", $rawHash, $secretKey);
-
-    //     $data = array(
-    //         'partnerCode' => $partnerCode,
-    //         'accessKey' => $accessKey,
-    //         'requestId' => $requestId,
-    //         'amount' => $amount,
-    //         'orderId' => $orderId,
-    //         'orderInfo' => $orderInfo,
-    //         'returnUrl' => $returnUrl,
-    //         'bankCode' => $bankCode,
-    //         'notifyUrl' => $notifyurl,
-    //         'extraData' => $extraData,
-    //         'requestType' => $requestType,
-    //         'signature' => $signature
-    //     );
-    //     $result = $this->execPostRequest($endpoint, json_encode($data));
-    //     $jsonResult = json_decode($result, true);  // decode json
-    //     return redirect($jsonResult['payUrl']);
-
-
-    // }
 
 
     public function vnpay_payment(Request $request){
@@ -372,7 +225,7 @@ class PaymentController extends Controller
         // Lấy giỏ hàng của người dùng từ cơ sở dữ liệu
         $cartItems = \App\Models\Cart::where('user_id', auth()->id())->get();
 
-        // Tính tổng tiền của giỏ hàng
+        // Tính tổng tiền của giỏ hànggit add app/Http/Controllers/User/PaymentController.php
         $cartTotal = $cartItems->sum(function ($item) {
             return $item->price_at_time * $item->quantity;
         });
@@ -416,7 +269,25 @@ class PaymentController extends Controller
                         'price_at_time' => $item->price_at_time,
                         'total_price' => $item->price_at_time * $item->quantity,
                     ]);
+
+                    // Lấy biến thể sản phẩm
+                    $variant = ProductVariant::find($item->product_variant_id);
+
+                    if ($variant && $variant->product_id) {
+                        // Lấy sản phẩm chính từ bảng products
+                        $product = \App\Models\Product::find($variant->product_id);
+
+                        if ($product && $product->quantity >= $item->quantity) {
+                            $product->quantity -= $item->quantity;
+                            $product->save();
+                        } else {
+                            // Không đủ hàng trong kho, hủy đơn
+                            $order->delete();
+                            return back()->with('error', 'Một số sản phẩm không đủ số lượng trong kho.');
+                        }
+                    }
                 }
+
 
                 // Xoá giỏ hàng sau khi đặt hàng thành công
                 Cart::where('user_id', auth()->id())->delete();
