@@ -13,10 +13,11 @@ class CreateProductsTable extends Migration
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
             $table->id();
             $table->string('name');
-            $table->decimal('price', 10, 2);
-            $table->text('description');
-            $table->string('image')->nullable();
-            $table->integer('quantity');
+            $table->decimal('price', 10, 2)->nullable();
+            $table->text('description')->nullable();
+            $table->json('images')->nullable(); // up nhiều ảnh dưới dạng jsonjson
+            $table->integer('quantity')->nullable();
+            $table->enum('product_type', ['single', 'variant'])->default('single'); // 'single' hoặc 'variant'
             $table->boolean('status')->default(1);
             $table->timestamps();
         });

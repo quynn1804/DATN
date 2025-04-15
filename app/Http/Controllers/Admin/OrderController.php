@@ -123,7 +123,7 @@ class OrderController extends Controller
         $statusOrder = array_flip($validStatuses); // Tạo danh sách thứ tự trạng thái
 
         if ($newStatus !== 'cancelled' && $statusOrder[$newStatus] <= $statusOrder[$currentStatus]) {
-            return redirect()->route('admin.orders.index')->with('error', 'Không thể quay lại trạng thái trước đó!');
+            return redirect()->route('admin.orders.index')->with('error', 'Khôngg thể quay lại trạng thái trước đó!');
         }
 
 
