@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Voucher;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\ProductVariant;
 use App\Models\OrderDetail;
 use Illuminate\Http\Request;
 
@@ -85,6 +86,26 @@ class OrderController extends Controller
         $request->validate([
             'status' => 'required|in:pending,processing,shipping,completed,cancelled',
         ]);
+    
+        $oldStatus = $order->status;
+        $newStatus = $request->status;
+    
+        // Nếu trạng thái chuyển thành cancelled => hoàn lại tồn kho
+        if ($oldStatus !== 'cancelled' && $newStatus === 'cancelled') {
+            foreach ($order->orderDetails as $detail) {
+                $variant = ProductVariant::find($detail->product_variant_id);
+                if ($variant && $variant->product_id) {
+                    $product = \App\Models\Product::find($variant->product_id);
+                    if ($product) {
+                        $product->quantity += $detail->quantity;
+                        $product->save();
+                    }
+                }
+            }
+        }
+    
+        $order->update(['status' => $newStatus]);
+    
         $newStatus = $request->status;
         $currentStatus = $order->status;
 
@@ -102,7 +123,7 @@ class OrderController extends Controller
         $statusOrder = array_flip($validStatuses); // Tạo danh sách thứ tự trạng thái
 
         if ($newStatus !== 'cancelled' && $statusOrder[$newStatus] <= $statusOrder[$currentStatus]) {
-            return redirect()->route('admin.orders.index')->with('error', 'Không thể quay lại trạng thái trước đó!');
+            return redirect()->route('admin.orders.index')->with('error', 'Khôngg thể quay lại trạng thái trước đó!');
         }
 
 
@@ -110,6 +131,8 @@ class OrderController extends Controller
 
         return redirect()->route('admin.orders.index')->with('success', 'Cập nhật đơn hàng thành công.');
     }
+    
+
 
     /**
      * Xóa đơn hàng.
