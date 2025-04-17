@@ -1,285 +1,434 @@
-@extends('user.layouts.main')
-@section('title')
-    Tài khoản của tôi
-@endsection
+@extends('user.layouts.master')
+@section('title', 'Account Settings')
 @section('content')
-    <!-- Begin Kenne's Breadcrumb Area -->
-    <div class="breadcrumb-area">
-        <div class="container">
-            <div class="breadcrumb-content">
-                <h2>Cửa hàng liên quan</h2>
-                <ul>
-                    <li><a href="{{ route('home') }}">Trang Chủ</a></li>
-                    <li class="active">Tài khoản của tôi</li>
-                </ul>
-            </div>
-        </div>
+
+
+<div class="page-header">
+    <div class="container d-flex flex-column align-items-center">
+        <h1>
+            {{ $user->name }}
+        </h1>
     </div>
-    @if (session('success'))
-    <div class="alert alert-success">{{ session('success') }}</div>
-@endif
-    <!-- Kenne's Breadcrumb Area End Here -->
-    <!-- Begin Kenne's Page Content Area -->
-    <main class="page-content">
-        <div class="account-page-area">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-3">
-                        <ul class="nav myaccount-tab-trigger" id="account-page-tab" role="tablist">
-                            <li class="nav-item">
-                                <a class="nav-link active" id="account-dashboard-tab" data-bs-toggle="tab"
-                                    href="#account-dashboard" role="tab" aria-controls="account-dashboard"
-                                    aria-selected="true">Trang Chủ</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="account-orders-tab" data-bs-toggle="tab" href="#account-orders"
-                                    role="tab" aria-controls="account-orders" aria-selected="false">Đơn Hàng</a>
-                            </li>
-                            {{-- <li class="nav-item">
-                                <a class="nav-link" id="account-address-tab" data-bs-toggle="tab" href="#account-address"
-                                    role="tab" aria-controls="account-address" aria-selected="false">Địa Chỉ</a>
-                            </li> --}}
-                            <li class="nav-item">
-                                <a class="nav-link" id="account-details-tab" data-bs-toggle="tab" href="#account-details"
-                                    role="tab" aria-controls="account-details" aria-selected="false">Chi tiết tài
-                                    khoản</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="account-logout-tab" href="l#" role="tab"
-                                    aria-selected="false">
-                                    <form action="{{ route('logout') }}" method="POST">
-                                        @csrf
-                                        <button type="submit" class="text-light">
-                                            Đăng Xuất
-                                        </button>
-                                    </form>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="col-lg-9">
-                        <div class="tab-content myaccount-tab-content" id="account-page-tab-content">
-                            <div class="tab-pane fade show active" id="account-dashboard" role="tabpanel"
-                                aria-labelledby="account-dashboard-tab">
-                                <div class="myaccount-dashboard">
-                                    <p>Xin Chào <b>{{ $user->name }}</b>
-                                    <form action="{{ route('logout') }}" method="POST" style="display: inline;">
-                                        @csrf
-                                        <button type="submit"
-                                            style="background: none; border: none; color: #007bff; cursor: pointer;">
-                                            Đăng Xuất
-                                        </button>
-                                    </form>
-                                    </p>
+</div>
 
-                                    <p>Từ bảng điều khiển tài khoản của bạn, bạn có thể xem các đơn hàng gần đây, quản lý
-                                        địa chỉ giao hàng và
-                                        thanh toán và <a href="#">chỉnh sửa mật khẩu và thông tin tài khoản của
-                                            bạn.</a>.</p>
-                                </div>
-                            </div>
-                            <div class="tab-pane fade" id="account-orders" role="tabpanel"
-                                aria-labelledby="account-orders-tab">
-                                @if ($orders->isEmpty())
-                                    <p class="text-danger text-center">Bạn chưa có đơn hàng nào.</p>
-                                @else
-                                    <div class="myaccount-orders">
-                                        <h4 class="small-title">ĐƠN HÀNG CỦA TÔI</h4>
-                                        <div class="table-responsive">
-                                            <table class="table table-bordered table-hover">
-                                                <tbody>
-                                                    <tr>
-                                                        <th>Mã Đơn Hàng</th>
-                                                        <th>Ngày Mua</th>
-                                                        <th>Trạng Thái Đơn Hàng</th>
-                                                        <th>Tổng Tiền</th>
-                                                        <th></th>
-                                                    </tr>
-                                                    @foreach ($orders as $order)
-                                                        <tr>
-                                                            <td><a class="account-order-id"
-                                                                    href="#">{{ $order->order_code }}</a></td>
-                                                            <td>{{ $order->created_at->format('d-m-Y') }}</td>
-                                                            <td>
-                                                                @if ($order->status === 'pending')
-                                                                    Đang chờ xử lý
-                                                                @elseif($order->status === 'processing')
-                                                                    Đang xử lý
-                                                                @elseif($order->status === 'shipping')
-                                                                    Đang giao hàng
-                                                                @elseif($order->status === 'completed')
-                                                                    Hoàn thành
-                                                                @elseif($order->status === 'cancelled')
-                                                                    Đã hủy
-                                                                @endif
-                                                            </td>
-                                                            <td>{{ number_format($order->total_money, 0, ',', '.') }} VNĐ
-                                                            </td>
-                                                            <td><a href="{{ route('user.order.detail', $order) }}"
-                                                                    class="kenne-btn kenne-btn_sm"><span>Chi
-                                                                        tiết</span></a></td>
-                                                        </tr>
-                                                    @endforeach
-                                                </tbody>
-                                            </table>
-                                            <div class="d-flex justify-content-center mt-3">
-                                                {{ $orders->links('pagination::bootstrap-4') }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endif
 
-                            </div>
-                            {{-- <div class="tab-pane fade" id="account-address" role="tabpanel"
-                                aria-labelledby="account-address-tab">
-                                <div class="myaccount-address">
-                                    <p>Các địa chỉ sau đây sẽ được sử dụng trên trang thanh toán theo mặc định.</p>
-                                    <div class="row">
-                                        <div class="col">
-                                            <h4 class="small-title">Địa chỉ giao hàng</h4>
-                                            <address>
-                                                1234 Heaven Stress, Beverly Hill OldYork UnitedState of Lorem
-                                            </address>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> --}}
-                            <div class="tab-pane fade" id="account-details" role="tabpanel"
-                                aria-labelledby="account-details-tab">
-                                <div class="myaccount-details">
+<div class="container account-container custom-account-container">
+    <div class="row">
+        <div class="sidebar widget widget-dashboard mb-lg-0 mb-3 col-lg-3 order-0">
+            <ul class="nav nav-tabs list flex-column mb-0" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="dashboard-tab" data-toggle="tab" href="#dashboard" role="tab" aria-controls="dashboard" aria-selected="true">Dashboard</a>
+                </li>
 
-                                    {{-- @if ($errors->any())
-                                        <div class="alert alert-danger">
-                                            <ul>
-                                                @foreach ($errors->all() as $error)
-                                                    <li>{{ $error }}</li>
-                                                @endforeach
-                                            </ul>
-                                        </div>
-                                    @endif --}}
+                <li class="nav-item">
+                    <a class="nav-link" id="order-tab" data-toggle="tab" href="#order" role="tab" aria-controls="order" aria-selected="true">Orders</a>
+                </li>
 
-                                    <form action="{{ route('user.account.update') }}" method="POST" class="kenne-form">
-                                        @csrf
-                                        <div class="kenne-form-inner">
-                                            <div class="single-input single-input-half">
-                                                <label for="account-details-firstname">Họ Và Tên</label>
-                                                <input type="text" id="account-details-firstname" name="name"
-                                                    value="{{ $user->name }}" required>
-                                            </div>
+                <li class="nav-item">
+                    <a class="nav-link" id="address-tab" data-toggle="tab" href="#address" role="tab" aria-controls="address" aria-selected="false">Addresses</a>
+                </li>
 
-                                            <div class="single-input">
-                                                <label for="account-details-email">Email</label>
-                                                <input type="email" id="account-details-email" name="email"
-                                                    value="{{ $user->email }}" required>
-                                                @error('email')
-                                                    <span class="text-danger">{{ $message }}</span>
-                                                @enderror
-                                            </div>
+                <li class="nav-item">
+                    <a class="nav-link" id="edit-tab" data-toggle="tab" href="#edit" role="tab" aria-controls="edit" aria-selected="false">Account
+                        details</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="shop-address-tab" data-toggle="tab" href="#shipping" role="tab" aria-controls="edit" aria-selected="false">Shopping Addres</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="wishlist.html">Wishlist</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="login.html">Logout</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-lg-9 order-lg-last order-1 tab-content">
+            <div class="tab-pane fade show active" id="dashboard" role="tabpanel">
+                <div class="dashboard-content">
+                    <p>
+                        From your account dashboard you can view your
+                        <a class="btn btn-link link-to-tab" href="#order">recent orders</a>,
+                        manage your
+                        <a class="btn btn-link link-to-tab" href="#address">shipping and
+                            billing
+                            addresses</a>, and
+                        <a class="btn btn-link link-to-tab" href="#edit">edit your password
+                            and account
+                            details.</a>
+                    </p>
 
-                                            <div class="single-input">
-                                                <label for="account-details-oldpass">Mật khẩu mới (để trống nếu không thay
-                                                    đổi)</label>
-                                                <input type="password" id="account-details-oldpass" name="password">
-                                                @error('password')
-                                                    <span class="text-danger">{{ $message }}</span>
-                                                @enderror
-                                            </div>
+                    <div class="mb-4"></div>
 
-                                            <div class="single-input">
-                                                <label for="account-details-confpass">Xác nhận mật khẩu mới</label>
-                                                <input type="password" id="account-details-confpass"
-                                                    name="password_confirmation">
-                                            </div>
-
-                                            <div class="single-input">
-                                                <button class="kenne-btn kenne-btn_dark" type="submit"><span>LƯU THAY
-                                                        ĐỔI</span></button>
-                                            </div>
-                                        </div>
-                                    </form>
-
+                    <div class="row row-lg">
+                        <div class="col-6 col-md-4">
+                            <div class="feature-box text-center pb-4">
+                                <a href="#order" class="link-to-tab"><i class="sicon-social-dropbox"></i></a>
+                                <div class="feature-box-content">
+                                    <h3>ORDERS</h3>
                                 </div>
                             </div>
                         </div>
+
+                        <div class="col-6 col-md-4">
+                            <div class="feature-box text-center pb-4">
+                                <a href="#download" class="link-to-tab"><i class="sicon-cloud-download"></i></a>
+                                <div class=" feature-box-content">
+                                    <h3>DOWNLOADS</h3>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-6 col-md-4">
+                            <div class="feature-box text-center pb-4">
+                                <a href="#address" class="link-to-tab"><i class="sicon-location-pin"></i></a>
+                                <div class="feature-box-content">
+                                    <h3>ADDRESSES</h3>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-6 col-md-4">
+                            <div class="feature-box text-center pb-4">
+                                <a href="#edit" class="link-to-tab"><i class="icon-user-2"></i></a>
+                                <div class="feature-box-content p-0">
+                                    <h3>ACCOUNT DETAILS</h3>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-6 col-md-4">
+                            <div class="feature-box text-center pb-4">
+                                <a href="wishlist.html"><i class="sicon-heart"></i></a>
+                                <div class="feature-box-content">
+                                    <h3>WISHLIST</h3>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-6 col-md-4">
+                            <div class="feature-box text-center pb-4">
+                                <a href="login.html"><i class="sicon-logout"></i></a>
+                                <div class="feature-box-content">
+                                    <h3>LOGOUT</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- End .row -->
+                </div>
+            </div><!-- End .tab-pane -->
+
+            <div class="tab-pane fade" id="order" role="tabpanel">
+                <div class="order-content">
+                    <h3 class="account-sub-title d-none d-md-block"><i class="sicon-social-dropbox align-middle mr-3"></i>Orders</h3>
+                    <div class="order-table-container text-center">
+
+                        @if ($orders->isEmpty())
+                        <p class="text-danger text-center">Bạn chưa có đơn hàng nào.</p>
+                        @else
+                        <table class="table table-order text-left">
+                            <thead>
+                                <tr>
+                                    <th>Mã Đơn Hàng</th>
+                                    <th>Ngày Mua</th>
+                                    <th>Trạng Thái Đơn Hàng</th>
+                                    <th>Tổng Tiền</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($orders as $order)
+                                <tr>
+                                    <td><a class="account-order-id" href="#">{{ $order->order_code }}</a></td>
+                                    <td>{{ $order->created_at->format('d-m-Y') }}</td>
+                                    <td>
+                                        @if ($order->status === 'pending')
+                                        Đang chờ xử lý
+                                        @elseif($order->status === 'processing')
+                                        Đang xử lý
+                                        @elseif($order->status === 'shipping')
+                                        Đang giao hàng
+                                        @elseif($order->status === 'completed')
+                                        Hoàn thành
+                                        @elseif($order->status === 'cancelled')
+                                        Đã hủy
+                                        @endif
+                                    </td>
+                                    <td>{{ number_format($order->total_money, 0, ',', '.') }} VNĐ
+                                    </td>
+                                    <td><a href="{{ route('user.order.detail', $order) }}" class="kenne-btn kenne-btn_sm"><span>Chi
+                                                tiết</span></a></td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                        @endif
+                        <hr class="mt-0 mb-3 pb-2" />
+
+                        <a href="{{ route('pageCategory') }}" class="btn btn-dark">Mua hàng</a>
                     </div>
                 </div>
-            </div>
-        </div>
-        <!-- Kenne's Account Page Area End Here -->
-    </main>
+            </div><!-- End .tab-pane -->
 
-    <!-- Begin Brand Area -->
-    <div class="brand-area ">
-        <div class="container">
-            <div class="brand-nav border-top ">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="kenne-element-carousel brand-slider slider-nav"
-                            data-slick-options='{
-                                    "slidesToShow": 6,
-                                    "slidesToScroll": 1,
-                                    "infinite": false,
-                                    "arrows": false,
-                                    "dots": false,
-                                    "spaceBetween": 30
-                                    }'
-                            data-slick-responsive='[
-                                    {"breakpoint":992, "settings": {
-                                    "slidesToShow": 4
-                                    }},
-                                    {"breakpoint":768, "settings": {
-                                    "slidesToShow": 3
-                                    }},
-                                    {"breakpoint":576, "settings": {
-                                    "slidesToShow": 2
-                                    }}
-                                ]'>
+            <div class="tab-pane fade" id="address" role="tabpanel">
+                <h3 class="account-sub-title d-none d-md-block mb-1"><i class="sicon-location-pin align-middle mr-3"></i>Addresses</h3>
+                <div class="addresses-content">
+                    <p class="mb-4">
+                        The following addresses will be used on the checkout page by
+                        default.
+                    </p>
 
-                            <div class="brand-item">
-                                <a href="#">
-                                    <img src="assets/images/brand/1.png" alt="Brand Images">
-                                </a>
-                            </div>
-                            <div class="brand-item">
-                                <a href="#">
-                                    <img src="assets/images/brand/2.png" alt="Brand Images">
-                                </a>
-                            </div>
-                            <div class="brand-item">
-                                <a href="#">
-                                    <img src="assets/images/brand/3.png" alt="Brand Images">
-                                </a>
-                            </div>
-                            <div class="brand-item">
-                                <a href="#">
-                                    <img src="assets/images/brand/4.png" alt="Brand Images">
-                                </a>
-                            </div>
-                            <div class="brand-item">
-                                <a href="#">
-                                    <img src="assets/images/brand/5.png" alt="Brand Images">
-                                </a>
-                            </div>
-                            <div class="brand-item">
-                                <a href="#">
-                                    <img src="assets/images/brand/6.png" alt="Brand Images">
-                                </a>
-                            </div>
-                            <div class="brand-item">
-                                <a href="#">
-                                    <img src="assets/images/brand/1.png" alt="Brand Images">
-                                </a>
-                            </div>
-                            <div class="brand-item">
-                                <a href="#">
-                                    <img src="assets/images/brand/2.png" alt="Brand Images">
-                                </a>
+                    <div class="row">
+                        <div class="address col-md-6">
+                            <div class="heading d-flex">
+                                <h4 class="text-dark mb-0">Billing address</h4>
                             </div>
 
+                            <div class="address-box">
+                                You have not set up this type of address yet.
+                            </div>
+
+                            <a href="#billing" class="btn btn-default address-action link-to-tab">Add
+                                Address</a>
+                        </div>
+
+                        <div class="address col-md-6 mt-5 mt-md-0">
+                            <div class="heading d-flex">
+                                <h4 class="text-dark mb-0">
+                                    Shipping address
+                                </h4>
+                            </div>
+
+                            <div class="address-box">
+                                You have not set up this type of address yet.
+                            </div>
+
+                            <a href="#shipping" class="btn btn-default address-action link-to-tab">Add
+                                Address</a>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
+            </div><!-- End .tab-pane -->
+
+            <div class="tab-pane fade" id="edit" role="tabpanel">
+                <h3 class="account-sub-title d-none d-md-block mt-0 pt-1 ml-1"><i class="icon-user-2 align-middle mr-3 pr-1"></i>Account Details</h3>
+                <div class="account-content">
+                    <form action="#">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="acc-name">First name <span class="required">*</span></label>
+                                    <input type="text" class="form-control" placeholder="Editor" id="acc-name" name="acc-name" required />
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="acc-lastname">Last name <span class="required">*</span></label>
+                                    <input type="text" class="form-control" id="acc-lastname" name="acc-lastname" required />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-2">
+                            <label for="acc-text">Display name <span class="required">*</span></label>
+                            <input type="text" class="form-control" id="acc-text" name="acc-text" placeholder="Editor" required />
+                            <p>This will be how your name will be displayed in the account section and
+                                in
+                                reviews</p>
+                        </div>
+
+
+                        <div class="form-group mb-4">
+                            <label for="acc-email">Email address <span class="required">*</span></label>
+                            <input type="email" class="form-control" id="acc-email" name="acc-email" placeholder="editor@gmail.com" required />
+                        </div>
+
+                        <div class="change-password">
+                            <h3 class="text-uppercase mb-2">Password Change</h3>
+
+                            <div class="form-group">
+                                <label for="acc-password">Current Password (leave blank to leave
+                                    unchanged)</label>
+                                <input type="password" class="form-control" id="acc-password" name="acc-password" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="acc-password">New Password (leave blank to leave
+                                    unchanged)</label>
+                                <input type="password" class="form-control" id="acc-new-password" name="acc-new-password" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="acc-password">Confirm New Password</label>
+                                <input type="password" class="form-control" id="acc-confirm-password" name="acc-confirm-password" />
+                            </div>
+                        </div>
+
+                        <div class="form-footer mt-3 mb-0">
+                            <button type="submit" class="btn btn-dark mr-0">
+                                Save changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div><!-- End .tab-pane -->
+
+            <div class="tab-pane fade" id="billing" role="tabpanel">
+                <div class="address account-content mt-0 pt-2">
+                    <h4 class="title">Billing address</h4>
+
+                    <form class="mb-2" action="#">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>First name <span class="required">*</span></label>
+                                    <input type="text" class="form-control" required />
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Last name <span class="required">*</span></label>
+                                    <input type="text" class="form-control" required />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Company </label>
+                            <input type="text" class="form-control">
+                        </div>
+
+                        <div class="select-custom">
+                            <label>Country / Region <span class="required">*</span></label>
+                            <select name="orderby" class="form-control">
+                                <option value="" selected="selected">British Indian Ocean Territory
+                                </option>
+                                <option value="1">Brunei</option>
+                                <option value="2">Bulgaria</option>
+                                <option value="3">Burkina Faso</option>
+                                <option value="4">Burundi</option>
+                                <option value="5">Cameroon</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Street address <span class="required">*</span></label>
+                            <input type="text" class="form-control" placeholder="House number and street name" required />
+                            <input type="text" class="form-control" placeholder="Apartment, suite, unit, etc. (optional)" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Town / City <span class="required">*</span></label>
+                            <input type="text" class="form-control" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label>State / Country <span class="required">*</span></label>
+                            <input type="text" class="form-control" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Postcode / ZIP <span class="required">*</span></label>
+                            <input type="text" class="form-control" required />
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label>Phone <span class="required">*</span></label>
+                            <input type="number" class="form-control" required />
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label>Email address <span class="required">*</span></label>
+                            <input type="email" class="form-control" placeholder="editor@gmail.com" required />
+                        </div>
+
+                        <div class="form-footer mb-0">
+                            <div class="form-footer-right">
+                                <button type="submit" class="btn btn-dark py-4">
+                                    Save Address
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div><!-- End .tab-pane -->
+
+            <div class="tab-pane fade" id="shipping" role="tabpanel">
+                <div class="address account-content mt-0 pt-2">
+                    <h4 class="title mb-3">Shipping Address</h4>
+
+                    <form class="mb-2" action="#">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>First name <span class="required">*</span></label>
+                                    <input type="text" class="form-control" required />
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Last name <span class="required">*</span></label>
+                                    <input type="text" class="form-control" required />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Company </label>
+                            <input type="text" class="form-control">
+                        </div>
+
+                        <div class="select-custom">
+                            <label>Country / Region <span class="required">*</span></label>
+                            <select name="orderby" class="form-control">
+                                <option value="" selected="selected">British Indian Ocean Territory
+                                </option>
+                                <option value="1">Brunei</option>
+                                <option value="2">Bulgaria</option>
+                                <option value="3">Burkina Faso</option>
+                                <option value="4">Burundi</option>
+                                <option value="5">Cameroon</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Street address <span class="required">*</span></label>
+                            <input type="text" class="form-control" placeholder="House number and street name" required />
+                            <input type="text" class="form-control" placeholder="Apartment, suite, unit, etc. (optional)" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Town / City <span class="required">*</span></label>
+                            <input type="text" class="form-control" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label>State / Country <span class="required">*</span></label>
+                            <input type="text" class="form-control" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Postcode / ZIP <span class="required">*</span></label>
+                            <input type="text" class="form-control" required />
+                        </div>
+
+                        <div class="form-footer mb-0">
+                            <div class="form-footer-right">
+                                <button type="submit" class="btn btn-dark py-4">
+                                    Save Address
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div><!-- End .tab-pane -->
+        </div><!-- End .tab-content -->
+    </div><!-- End .row -->
+</div><!-- End .container -->
+
+<div class="mb-5"></div><!-- margin -->
+
 @endsection
