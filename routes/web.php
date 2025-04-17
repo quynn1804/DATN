@@ -54,9 +54,14 @@ Route::middleware('auth')->group(function () {
     })->name('dashboard');
 
     Route::prefix('admin')->name('admin.')->group(function () {
-        Route::get('/', function () {
-            return redirect()->route('admin.statistic.index');
-        })->name('dashboard');
+        // Route::get('/', function () {
+        //     return redirect()->route('admin.statistic.index');
+        // })->name('dashboard');
+
+
+
+        Route::get('/', [AdminController::class, 'index'])->name('dashboard');
+
         Route::resource('statistic', StatisticController::class);
         Route::resource('contacts', ContactController::class)->except(['create', 'store']);
         Route::resource('account', AccountController::class);
