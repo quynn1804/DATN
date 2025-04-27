@@ -185,6 +185,7 @@ class ProductController extends Controller
             ]);
             $updateData['price'] = $request->price;
             $updateData['quantity'] = $request->quantity;
+            $product->variants()->delete();
         }
 
         // Cập nhật sản phẩm
@@ -192,6 +193,11 @@ class ProductController extends Controller
 
         // Nếu là sản phẩm có biến thể
         if ($productType === 'variant') {
+             // Xóa dữ liệu đơn thể nếu chuyển từ sản phẩm đơn sang biến thể
+            $product->update([
+                'price' => null,
+                'quantity' => null, ]);
+
             $request->validate([
                 'variants.*.id' => 'nullable|exists:product_variants,id',
                 'variants.*.color_id' => 'required|exists:colors,id',
