@@ -56,4 +56,17 @@ class User extends Authenticatable
     {
         return $this->hasMany(Order::class, 'user_id', 'id');
     }
+
+    public function getImageAttribute()
+    {
+        $image = $this->attributes['image'] ?? null;
+
+        $path = public_path('assets/images/' . $image);
+
+        if ($image && file_exists($path)) {
+            return asset('assets/images/' . $image);
+        }
+
+        return asset('https://laravel.com/img/logomark.min.svg');
+    }
 }

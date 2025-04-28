@@ -1,113 +1,126 @@
-@extends('admin.layouts.index')
-
+@extends('admin.layouts.master')
+@section('title', 'Users')
 @section('content')
-    <div class="container">
-        <div class="row">
-            <div class="col-12 mb-3 mb-lg-5">
-                <div class="overflow-hidden card table-nowrap table-card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">Danh sách tài khoản</h5>
-                        <a href="{{ route('admin.account.create') }}" class="btn btn-primary btn-sm ms-auto">Thêm tài
-                            khoản</a>
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0 font-size-18">Danh sách tài khoản</h4>
+
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item active">Quản lý tài khoản</li>
+                </ol>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- end page title -->
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row mb-2">
+                    <div class="col-sm-4">
+                        <div class="search-box me-2 mb-2 d-inline-block">
+                            <div class="position-relative">
+                                <input type="text" class="form-control" id="searchTableList" placeholder="Search...">
+                                <i class="bx bx-search-alt search-icon"></i>
+                            </div>
+                        </div>
                     </div>
-                    @if (session('success'))
-                        <script>
-                            alert("{{ session('success') }}");
-                        </script>
-                    @endif
-                    <div class="table-responsive">
-                        <table class="table mb-0">
-                            <thead class="small text-uppercase bg-body text-muted">
+                    <div class="col-sm-8">
+                        <div class="text-sm-end">
+                            <a href="{{ route('admin.account.create') }}" class="btn btn-success waves-effect waves-light mb-2 me-2 addCustomers-modal">
+                                <i class="mdi mdi-plus me-1"></i>
+                                Thêm
+                            </a>
+                        </div>
+                    </div><!-- end col-->
+                </div>
+
+                <div class="table-responsive min-vh-100">
+                    @if ($data->isNotEmpty())
+                    <div class="min-vh-100">
+                        <table class="table align-middle table-nowrap text-center dt-responsive nowrap w-100">
+                            <thead class="">
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Tên</th>
-                                    <th>Role</th>
-                                    <th>Email</th>
-                                    <th>Giới tính</th>
-                                    <th>Số điện thoại</th>
+                                    <th>STT</th>
                                     <th>Ảnh</th>
+                                    <th>Tên</th>
+                                    <th>Email</th>
+                                    <th>Số điện thoại</th>
+                                    <th>Role</th>
                                     <th>Trạng thái</th>
-                                    <th class="text-end">Hành động</th>
+                                    <th>Thao tác</th>
                                 </tr>
                             </thead>
+
                             <tbody>
-                                @foreach ($data as $item)
-                                    <tr class="align-middle">
-                                        <td>{{ $item->id }}</td>
-                                        <td>{{ $item->name }}</td>
-                                        <td>{{ $item->role_id }}</td>
-                                        <td>{{ $item->email }}</td>
-                                        <td>{{ $item->gender }}</td>
-                                        <td>{{ $item->phone }}</td>
-                                        <td>
-                                            <img src="{{ asset('assets/images/' . $item->image) }}" width="50"
-                                                class="avatar sm rounded-pill">
-                                        </td>
-                                        <td>
-                                            <span class="badge {{ $item->status ? 'badge-success' : 'badge-secondary' }}">
-                                                {{ $item->status ? 'Hoạt động' : 'Bị khóa' }}
-                                            </span>
-                                        </td>
-                                        <td class="text-end">
-                                            <div class="dropdown">
-                                                <a data-bs-toggle="dropdown" href="#" class="btn p-1">
-                                                    <i class="fa fa-bars" aria-hidden="true"></i>
-                                                </a>
-                                                <div class="dropdown-menu dropdown-menu-end">
-                                                    <a href="{{ route('admin.account.edit', $item->id) }}"
-                                                        class="dropdown-item">Sửa</a>
-                                                    <form action="{{ route('admin.account.destroy', $item->id) }}"
-                                                        method="POST"
-                                                        onsubmit="return confirm('Bạn có chắc chắn muốn xóa tài khoản này?');">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit"
-                                                            class="dropdown-item text-danger">Xóa</button>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
+
+                                @foreach ($data as $user)
+                                <tr>
+                                    <td>
+                                        {{ $loop->iteration }}
+                                    </td>
+
+                                    <td>
+                                        <img src="{{ $user->image }}" alt="{{ $user->name }}" style="height: 40px; width: 40px">
+                                    </td>
+
+                                    <td>
+                                        {{ $user->name }}
+                                    </td>
+
+                                    <td>
+                                        {{ $user->email }}
+                                    </td>
+
+                                    <td>
+                                        <span @class(['text-danger'=> empty($user->phone)])>
+                                            {{ $user->phone ? Str::mask($user->phone, '*', 6) : 'No Data' }}
+                                        </span>
+                                    </td>
+
+                                    <td>{{ $user->role_id }}</td>
+
+                                    <td>
+                                        <span class="badge font-size-12 p-2 {{ $user->status ? 'bg-success' : ' bg-danger' }}">
+                                            {{ $user->status ? 'Hoạt động' : 'Tạm dừng' }}
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <a href="{{ route('admin.account.edit', $user) }}" class="btn btn-warning btn-sm">
+                                            <i class="fas fa-edit">
+                                            </i>
+
+                                        </a>
+                                    </td>
+                                </tr>
                                 @endforeach
                             </tbody>
                         </table>
                     </div>
 
-
+                    @else
+                    <div class="min-vh-100 text-center">
+                        <h1 class="text-danger">Không có người dùng nào !!!</h1>
+                    </div>
+                    @endif
                 </div>
+
+                @if ($data->isNotEmpty())
+                <div class="row">
+                    {{ $data->links('admin.layouts.components.pagination') }}
+                </div>
+                @endif
+
             </div>
         </div>
     </div>
+</div>
 
-    <style>
-        body {
-            margin-top: 20px;
-            background: #eee;
-        }
 
-        .card {
-            box-shadow: 0 20px 27px 0 rgb(0 0 0 / 5%);
-        }
-
-        .avatar.sm {
-            width: 2.25rem;
-            height: 2.25rem;
-            font-size: .818125rem;
-        }
-
-        .table-nowrap .table td,
-        .table-nowrap .table th {
-            white-space: nowrap;
-        }
-
-        .table>:not(caption)>*>* {
-            padding: 0.75rem 1.25rem;
-            border-bottom-width: 1px;
-        }
-
-        table th {
-            font-weight: 600;
-            background-color: #eeecfd !important;
-        }
-    </style>
 @endsection

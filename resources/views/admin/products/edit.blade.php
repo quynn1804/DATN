@@ -1,6 +1,18 @@
-@extends('admin.layouts.index')
+@extends('admin.layouts.master')
+@section('title', 'New Product')
 
-@section('title', 'Chỉnh sửa sản phẩm')
+@section('style')
+<style>
+    #projectlogo-img {
+        width: 6rem;
+    }
+
+    .h-screen {
+        height: 100%;
+    }
+
+</style>
+@endsection
 
 @section('content')
 <div class="container">
@@ -152,7 +164,109 @@
         </div>
     </form>
 </div>
+@endsection
 
+@section('script')
+<!--tinymce js-->
+<script src="https://themesbrand.com/skote/layouts/assets/libs/tinymce/tinymce.min.js"></script>
+
+{{-- <script>
+    const previewImage = (event) => {
+        const img = document.getElementById("projectlogo-img");
+        img.src = URL.createObjectURL(event.target.files[0]);
+
+        $("#projectlogo-img").addClass("h-screen");
+    }
+
+    $("#elm1") &&
+        tinymce.init({
+            selector: "textarea#elm1"
+            , height: 350
+            , plugins: [
+                "advlist"
+                , "autolink"
+                , "lists"
+                , "link"
+                , "image"
+                , "charmap"
+                , "preview"
+                , "anchor"
+                , "searchreplace"
+                , "visualblocks"
+                , "code"
+                , "fullscreen"
+                , "insertdatetime"
+                , "media"
+                , "table"
+                , "help"
+                , "wordcount"
+            , ]
+            , toolbar: "undo redo | blocks | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help"
+            , content_style: 'body { font-family:"Poppins",sans-serif; font-size:16px }'
+        , });
+
+
+
+    function removeVariant(button) {
+        let variantContainer = button.closest('.border.p-4');
+        if (variantContainer) {
+            variantContainer.remove();
+        }
+    }
+
+    function addVariant() {
+        let variantsContainer = document.getElementById('variants-container');
+        let index = variantsContainer.children.length; // Đếm số biến thể hiện có
+
+        let variantHtml = `
+            <div class="border p-4 relative min-w-[300px]">
+                <button type="button" class="absolute top-2 right-2 text-black hover:text-red-600 font-bold text-xl" onclick="removeVariant(this)">❌</button>
+
+                <div class="space-y-2">
+                    <input type="hidden" name="variants[${index}][id]" value="">
+
+                    <div>
+                        <label class="block text-gray-700">Màu sắc</label>
+                        <select name="variants[${index}][color_id]" class="w-full border rounded p-2">
+                            @foreach($colors as $color)
+                                <option value="{{ $color->id }}">{{ $color->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-gray-700">Dung lượng</label>
+                        <select name="variants[${index}][capacity_id]" class="w-full border rounded p-2">
+                            @foreach($capacities as $capacity)
+                                <option value="{{ $capacity->id }}">{{ $capacity->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-gray-700">Giá biến thể</label>
+                        <input type="text" name="variants[${index}][price]" class="w-full border rounded p-2">
+                    </div>
+
+                    <div>
+                        <label class="block text-gray-700">Số lượng kho</label>
+                        <input type="number" name="variants[${index}][stock]" class="w-full border rounded p-2">
+                    </div>
+                </div>
+            </div>
+        `;
+
+        variantsContainer.insertAdjacentHTML('beforeend', variantHtml);
+    }
+
+    function removeVariant(button) {
+        let variantContainer = button.closest('.border.p-4');
+        if (variantContainer) {
+            variantContainer.remove();
+        }
+    }
+
+</script> --}}
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const typeSingle = document.getElementById('type_single');

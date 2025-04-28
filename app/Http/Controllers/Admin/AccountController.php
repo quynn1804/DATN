@@ -14,7 +14,7 @@ class AccountController extends Controller
     public function index()
     {
 
-        $data = User::all();
+        $data = User::query()->latest('id')->paginate(10);
 
         return view('admin.account.show', ['title' => 'Quản lý tài khoản'], compact('data'));
     }

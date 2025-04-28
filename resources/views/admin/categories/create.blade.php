@@ -1,42 +1,67 @@
-@extends('admin.layouts.index')
-
+@extends('admin.layouts.master')
+@section('title', 'New Category')
 @section('content')
-<div class="bg-white rounded-lg shadow-md" style="margin-left: 50px;margin-right: 50px; border-radius: 2px">
-    <div class="card-header mb-4" style="background:#ebe8ff;border-radius: 2px; height: 55px;">
-        <h4 class="text-center" style="font-weight: 400; ">Thêm danh mục</h4>
-    </div>
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0 font-size-18">Thêm danh mục</h4>
 
-    <form action="{{ route('admin.categories.store') }}" method="POST">
-        @csrf
-        <div class="row justify-content-between text-left" style="margin-left: 100px">
-            <div class="col-10">
-                <div class="form-group">
-                    <label for="name">Tên danh mục <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="name" name="name" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Trạng thái <span class="text-danger">*</span></label>
-                    <select class="form-control" name="is_active">
-                        <option value="1">Hiển thị</option>
-                        <option value="0">Ẩn</option>
-                    </select>
-                </div>
-                <div style="margin: 50px 0">
-                    <button type="submit" class="btn btn-primary">Thêm danh mục</button>
-                    <a href="{{ route('admin.categories.index') }}" class="btn btn-secondary">Quay lại</a>
-                </div>
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item">
+                        <a href="{{ route('admin.categories.index') }}">Danh mục</a>
+                    </li>
+                    <li class="breadcrumb-item active">Thêm mới</li>
+                </ol>
             </div>
         </div>
-    </form>
+
+
+        <form action="{{ route('admin.categories.store') }}" method="POST">
+            @csrf
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label for="projectname-input" class="form-label">
+                                    <span class="text-danger">*</span>
+                                    Tên
+                                </label>
+                                <input id="projectname-input" name="name" type="text" class="form-control" placeholder="Nhập tên danh mục..." value="{{ old('name') }}" required>
+                                @error('name')
+                                <div class="text-danger fst-italic">
+                                    * {{ $message }}
+                                </div>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="projectname-input" class="form-label">
+                                    <span class="text-danger">*</span>
+                                    Trạng thái
+                                </label>
+                                <select class="form-select" name="is_active">
+                                    <option value="1">Hiển thị</option>
+                                    <option value="0">Ẩn</option>
+                                </select>
+                                @error('is_active')
+                                <div class="text-danger fst-italic">
+                                    * {{ $message }}
+                                </div>
+                                @enderror
+                            </div>
+
+                            <div class="text-end">
+                                <button type="submit" class="btn btn-primary">Thêm mới</button>
+                            </div>
+                        </div>
+                        <!-- end card body -->
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </div>
 </div>
 @endsection
