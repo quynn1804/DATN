@@ -13,9 +13,9 @@ class ProductVariant extends Model
         'product_id', 'color_id', 'capacity_id', 'price', 'stock', 'description', 'images'
     ];
 
-    // protected $casts = [
-    //     'images' => 'array',
-    // ];
+    protected $casts = [
+        'images' => 'array',
+    ];
 
     public function product()
     {

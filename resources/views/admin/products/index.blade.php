@@ -114,23 +114,19 @@
                                         </td>
                                         <td>
                                             @if ($product->product_type === 'single')
-                                            @php
-                                                $images = json_decode($product->images, true);
-                                            @endphp
-                                            @if (!empty($images))
-                                                <img src="{{ asset('storage/' . $images[0]) }}" alt="Ảnh" width="50">
+                                            @if (is_array($product->images) && !empty($product->images) && isset($product->images[0]))
+                                                <img src="{{ asset('storage/' . $product->images[0]) }}" alt="Ảnh" width="50">
                                             @else
-                                            <img src="https://laravel.com/img/logomark.min.svg" alt="Image Default" style="height: 40px; width: 40px">
+                                                <img src="https://laravel.com/img/logomark.min.svg" alt="Image Default" style="height: 40px; width: 40px">
                                             @endif
                                         @elseif ($product->product_type === 'variant')
                                             @php
                                                 $firstVariant = $product->variants->first();
-                                                $variantImages = $firstVariant ? json_decode($firstVariant->images, true) : [];
                                             @endphp
-                                            @if (!empty($variantImages))
-                                                <img src="{{ asset('storage/' . $variantImages[0]) }}" alt="Ảnh biến thể" width="50">
+                                            @if (!empty($firstVariant) && is_array($firstVariant->images) && !empty($firstVariant->images) && isset($firstVariant->images[0]))
+                                                <img src="{{ asset('storage/' . $firstVariant->images[0]) }}" alt="Ảnh biến thể" width="50">
                                             @else
-                                            <img src="https://laravel.com/img/logomark.min.svg" alt="Image Default" style="height: 40px; width: 40px">
+                                                <img src="https://laravel.com/img/logomark.min.svg" alt="Image Default" style="height: 40px; width: 40px">
                                             @endif
                                         @endif
                                         </td>

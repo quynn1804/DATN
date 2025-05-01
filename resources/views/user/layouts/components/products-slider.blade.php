@@ -2,91 +2,104 @@
 
 @php
 if (!function_exists('formatPrice')) {
-function formatPrice($price) {
-return number_format($price, 0, ',', '.') . ' đ';
-}
+    function formatPrice($price) {
+        return number_format($price, 0, ',', '.') . ' đ';
+    }
 }
 
 if (!function_exists('getImageUrl')) {
-function getImageUrl($path, $default = 'https://laravel.com/img/logomark.min.svg') {
-if ($path && file_exists(public_path('storage/' . $path))) {
-return asset('storage/' . $path);
-}
-
-return asset($default); // ảnh mặc định (đặt ở public/images/default.png)
-}
+    function getImageUrl($path, $default = 'images/default.png') {
+        if ($path && file_exists(public_path('storage/' . $path))) {
+            return asset('storage/' . $path);
+        }
+        return asset($default); // ảnh mặc định
+    }
 }
 @endphp
 
 <div class="container">
-    <h2 class="section-title">
-        {{ $title }}
-    </h2>
+    <h2 class="section-title">{{ $title }}</h2>
 
     <div class="products-slider owl-carousel owl-theme dots-top dots-small">
         @foreach ($products as $product)
-        <div class="product-default">
-            <figure>
-                <a href="{{ route('singleProduct', ['id' => $product->id]) }}">
-                    <img src="{{ getImageUrl($product->image)  }}" alt="{{ $product->name }}" class="avatar sm rounded-pill me-3" height="280" width="280">
-                </a>
-                @if ($product->price_sale > 0)
-                <div class="label-group">
-                    {{-- <div class="product-label label-hot">
-                        {{ $product['type'] }}
-                </div> --}}
-                <div class="product-label label-sale">
-                    Sale
-                </div>
-        </div>
-        @endif
-        </figure>
-        <div class="product-details">
-            <div class="category-list">
-                <a class="product-category">
-                    {{ $product->category->name }}
-                </a>
-            </div>
-            <h3 class="product-title">
-                <a href="{{ route('singleProduct', ['id' => $product->id]) }}">{{ $product->name }}</a>
-            </h3>
-            <div class="ratings-container">
-                <div class="product-ratings">
-                    <span class="ratings" style="width:80%"></span>
-                    <!-- End .ratings -->
-                    <span class="tooltiptext tooltip-top"></span>
-                </div>
-                <!-- End .product-ratings -->
-            </div>
-            <!-- End .product-container -->
-            <div class="price-box">
 
-                @if ($product->price_sale > 0)
-                <del class="old-price">{{ formatPrice($product->price_regular) }}đ</del>
-                @endif
+        @php
+        $mainImage = null;
 
-                <span class="product-price">
-                    {{ formatPrice($product->price) }}
-                </span>
+        // Trường hợp sản phẩm đơn (có mảng images trực tiếp)
+        if (is_array($product->images) && count($product->images) > 0) {
+            $mainImage = $product->images[0];
+        }
+        // Trường hợp sản phẩm có biến thể
+        elseif ($product->variants && $product->variants->count() > 0) {
+            $firstVariant = $product->variants->first();
+            if (is_array($firstVariant->images) && count($firstVariant->images) > 0) {
+                $mainImage = $firstVariant->images[0];
+            }
+        }
+
+        // fallback nếu không có ảnh
+        $mainImageUrl = getImageUrl($mainImage);
+    @endphp
+
+
+            <div class="product-default">
+                <figure>
+                    <a href="{{ route('singleProduct', ['id' => $product->id]) }}">
+                        <img src="{{ getImageUrl($mainImage) }}" alt="{{ $product->name }}" class="avatar sm rounded-pill me-3" height="280" width="280">
+                    </a>
+
+                    @if ($product->price_sale > 0)
+                        <div class="label-group">
+                            <div class="product-label label-sale">Sale</div>
+                        </div>
+                    @endif
+                </figure>
+
+                <div class="product-details">
+                    <div class="category-list">
+                        <a class="product-category">
+                            {{ $product->category->name ?? 'Không có danh mục' }}
+                        </a>
+                    </div>
+
+                    <h3 class="product-title">
+                        <a href="{{ route('singleProduct', ['id' => $product->id]) }}">{{ $product->name }}</a>
+                    </h3>
+
+                    <div class="ratings-container">
+                        <div class="product-ratings">
+                            <span class="ratings" style="width:80%"></span>
+                            <span class="tooltiptext tooltip-top"></span>
+                        </div>
+                    </div>
+
+                    <div class="price-box">
+                        @if ($product->price_sale > 0)
+                            <del class="old-price">{{ formatPrice($product->price_regular) }}</del>
+                        @endif
+
+                        <span class="product-price">
+                            {{ formatPrice($product->price) }}
+                        </span>
+                    </div>
+
+                    <div class="product-action">
+                        <a href="#" title="Wishlist" class="btn-icon-wish">
+                            <i class="icon-heart"></i>
+                        </a>
+                        <a href="{{ route('singleProduct', ['id' => $product->id]) }}" class="btn-icon btn-add-cart">
+                            <i class="fa fa-arrow-right"></i>
+                            <span>SELECT OPTIONS</span>
+                        </a>
+                        <a class="btn-quickview" title="Quick View">
+                            <i class="fas fa-external-link-alt"></i>
+                        </a>
+                    </div>
+                </div>
             </div>
-            <!-- End .price-box -->
-            <div class="product-action">
-                <a href="#" title="Wishlist" class="btn-icon-wish">
-                    <i class="icon-heart"></i>
-                </a>
-                <a href="{{ route('singleProduct', ['id' => $product->id]) }}" class="btn-icon btn-add-cart">
-                    <i class="fa fa-arrow-right"></i>
-                    <span>SELECT OPTIONS</span>
-                </a>
-                <a class="btn-quickview" title="Quick View">
-                    <i class="fas fa-external-link-alt"></i>
-                </a>
-            </div>
-        </div>
-        <!-- End .product-details -->
+
+        @endforeach
     </div>
-    @endforeach
-
-</div>
 </div>
 @endisset
