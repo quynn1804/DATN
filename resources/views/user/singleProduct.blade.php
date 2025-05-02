@@ -176,14 +176,14 @@ if (!function_exists('getImageUrl')) {
                         </strong>
                     </li>
                 </ul>
-                <form action="{{ route('cart.add') }}" method="POST">
+                {{-- <form action="{{ route('cart.add') }}" method="POST">
                     @csrf
                     <input type="hidden" name="product_id" value="{{ $product->id }}">
 
                     @if ($product->variants->count() > 0)
                     <div class="form-group">
                         <label for="capacity">Màu sắc:</label>
-                        <select name="color_id" id="color" class="form-control" style="height: 40px">
+                        <select name="color_id" id="color" class="form-control" style="height: 40px" required>
                             @foreach ($product->variants->unique('color_id') as $variant)
                             <option value="{{ $variant->color_id }}">
                                 {{ optional($variant->color)->name ?? 'Không có màu' }}
@@ -196,7 +196,7 @@ if (!function_exists('getImageUrl')) {
                     @if ($product->variants->count() > 0)
                     <div class="form-group">
                         <label for="capacity">Chọn dung lượng:</label>
-                        <select name="capacity_id" id="capacity" class="form-control" style="height: 40px">
+                        <select name="capacity_id" id="capacity" class="form-control" style="height: 40px" required>
                             @foreach ($product->variants->unique('capacity_id') as $variant)
                             <option value="{{ $variant->capacity_id }}">
                                 {{ optional($variant->capacity)->name ?? 'Không có dung lượng' }}
@@ -214,6 +214,48 @@ if (!function_exists('getImageUrl')) {
                         <button type="submit" class="btn btn-dark mr-2">Thêm vào giỏ hàng</button>
 
                         <a href="cart.html" class="btn btn-gray view-cart d-none">View cart</a>
+                    </div>
+                </form> --}}
+                <form action="{{ route('cart.add') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+
+                    @if ($product->variants->count() > 0)
+                    <div class="form-group">
+                        <label for="color">Màu sắc:</label>
+                        <select name="color_id" id="color" class="form-control" style="height: 40px" required>
+                            @foreach ($product->variants->unique('color_id') as $colorVariant)
+                            <option value="{{ $colorVariant->color_id }}">
+                                {{ optional($colorVariant->color)->name ?? 'Không có màu' }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="capacity">Chọn dung lượng:</label>
+                        <select name="capacity_id" id="capacity" class="form-control" style="height: 40px" required>
+                            @foreach ($product->variants->unique('capacity_id') as $capacityVariant)
+                            <option value="{{ $capacityVariant->capacity_id }}">
+                                {{ optional($capacityVariant->capacity)->name ?? 'Không có dung lượng' }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @endif
+
+                    <div class="product-action">
+                        <div class="product-single-qty">
+                            <input id="product-quantity" name="quantity" value="1" min="1" class="horizontal-quantity form-control" type="number">
+                        </div>
+
+                        @auth
+                            <button type="submit" class="btn btn-dark mr-2">Thêm vào giỏ hàng</button>
+                        @else
+                            <a href="{{ route('login') }}" class="btn btn-primary">Đăng nhập để mua hàng</a>
+                        @endauth
+
+                        <a href="{{ route('cart') }}" class="btn btn-gray view-cart d-none">Xem giỏ hàng</a>
                     </div>
                 </form>
                 <!-- End .product-action -->

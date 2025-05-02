@@ -1,4 +1,4 @@
-@extends('admin.layouts.index')
+@extends('admin.layouts.master')
 
 @section('title', 'Thống kê đơn hàng')
 

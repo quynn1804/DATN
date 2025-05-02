@@ -18,14 +18,14 @@
             <li>
                 <a href="{{ route('admin.categories.index') }}" class="waves-effect">
                     <i class="fas fa-list"></i>
-                    <span key="t-categories">Danh mục sản phẩm</span>
+                    <span key="t-categories">Quản Lý Danh mục</span>
                 </a>
             </li>
 
             <li>
                 <a href="{{ route('admin.products.index') }}" class="waves-effect">
                     <i class="bx bx-share-alt"></i>
-                    <span key="t-products">Sản phẩm</span>
+                    <span key="t-products">Quản Lý Sản phẩm</span>
                 </a>
             </li>
 
@@ -39,28 +39,34 @@
             <li>
                 <a href="{{ route('admin.orders.index') }}" class="waves-effect">
                     <i class="bx bx-receipt"></i>
-                    <span key="t-orders">Đơn hàng</span>
+                    <span key="t-orders">Quản Lý Đơn hàng</span>
                 </a>
             </li>
 
             <li>
                 <a href="{{ route('admin.comments.index') }}" class="waves-effect">
                     <i class="bx bx-receipt"></i>
-                    <span key="t-comments">Bình luận</span>
+                    <span key="t-comments">Quản Lý Bình luận</span>
                 </a>
             </li>
 
             <li>
                 <a href="{{ route('admin.contacts.index') }}" class="waves-effect">
                     <i class="bx bx-user"></i>
-                    <span key="t-contact">Liên hệ</span>
+                    <span key="t-contact">Quản Lý Liên hệ</span>
                 </a>
             </li>
 
             <li>
                 <a href="{{ route('admin.vouchers.index') }}" class="waves-effect">
                     <i class="fas fa-receipt"></i>
-                    <span key="t-vouchers">Mã giảm giá</span>
+                    <span key="t-vouchers">Quản Lý Voucher</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('admin.stock-imports.index') }}" class="waves-effect">
+                    <i class="fas fa-receipt"></i>
+                    <span key="t-stockimports">Quản Lý Nhập Kho </span>
                 </a>
             </li>
         </ul>

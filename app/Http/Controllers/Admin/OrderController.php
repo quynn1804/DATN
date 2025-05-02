@@ -86,26 +86,7 @@ class OrderController extends Controller
         $request->validate([
             'status' => 'required|in:pending,processing,shipping,completed,cancelled',
         ]);
-    
-        $oldStatus = $order->status;
-        $newStatus = $request->status;
-    
-        // Nếu trạng thái chuyển thành cancelled => hoàn lại tồn kho
-        if ($oldStatus !== 'cancelled' && $newStatus === 'cancelled') {
-            foreach ($order->orderDetails as $detail) {
-                $variant = ProductVariant::find($detail->product_variant_id);
-                if ($variant && $variant->product_id) {
-                    $product = \App\Models\Product::find($variant->product_id);
-                    if ($product) {
-                        $product->quantity += $detail->quantity;
-                        $product->save();
-                    }
-                }
-            }
-        }
-    
-        $order->update(['status' => $newStatus]);
-    
+
         $newStatus = $request->status;
         $currentStatus = $order->status;
 
@@ -129,9 +110,28 @@ class OrderController extends Controller
 
         $order->update(['status' => $request->status]);
 
+        $oldStatus = $order->status;
+        $newStatus = $request->status;
+
+        // Nếu trạng thái chuyển thành cancelled => hoàn lại tồn kho
+        if ($oldStatus !== 'cancelled' && $newStatus === 'cancelled') {
+            foreach ($order->orderDetails as $detail) {
+                $variant = ProductVariant::find($detail->product_variant_id);
+                if ($variant && $variant->product_id) {
+                    $product = \App\Models\Product::find($variant->product_id);
+                    if ($product) {
+                        $product->quantity += $detail->quantity;
+                        $product->save();
+                    }
+                }
+            }
+        }
+
+        $order->update(['status' => $newStatus]);
+
         return redirect()->route('admin.orders.index')->with('success', 'Cập nhật đơn hàng thành công.');
     }
-    
+
 
 
     /**
