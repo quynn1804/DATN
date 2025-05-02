@@ -31,13 +31,13 @@
 
             <div class="mt-3">
                 <strong>Hình ảnh:</strong><br>
-                @if ($product->images)
-                    @foreach (json_decode($product->images) as $image)
-                        <img src="{{ asset('storage/' . $image) }}" alt="Ảnh sản phẩm" style="max-width: 150px;" class="img-thumbnail me-2 mb-2">
-                    @endforeach
-                @else
-                    <p>Không có hình ảnh.</p>
-                @endif
+                @if (!empty($product->images))
+                @foreach ($product->images as $image)
+                    <img src="{{ asset('storage/' . $image) }}" alt="Ảnh sản phẩm" style="max-width: 150px;" class="img-thumbnail me-2 mb-2">
+                @endforeach
+            @else
+                <p><img src="https://laravel.com/img/logomark.min.svg" alt="Image Default" style="height: 40px; width: 40px"></p>
+            @endif
             </div>
 
             @if ($product->product_type === 'single')
@@ -68,17 +68,13 @@
                                     <td><span class="text-success">{{ $variant->stock }}</span></td>
                                     <td>{!! nl2br(e($variant->description ?? '-')) !!}</td>
                                     <td>
-                                        @php
-                                            $variantImages = json_decode($variant->images, true);
-                                        @endphp
-
-                                        @if (!empty($variantImages))
-                                            @foreach ($variantImages as $img)
-                                                <img src="{{ asset('storage/' . $img) }}" alt="Ảnh biến thể" style="width: 80px;" class="img-thumbnail me-1 mb-1">
-                                            @endforeach
-                                        @else
-                                            <span>Không có ảnh</span>
-                                        @endif
+                                        @if (!empty($variant->images))
+                                        @foreach ($variant->images as $img)
+                                            <img src="{{ asset('storage/' . $img) }}" alt="Ảnh biến thể" style="width: 80px;" class="img-thumbnail me-1 mb-1">
+                                        @endforeach
+                                    @else
+                                        <img src="https://laravel.com/img/logomark.min.svg" alt="Image Default" style="height: 40px; width: 40px">
+                                    @endif
                                     </td>
                                 </tr>
                             @endforeach

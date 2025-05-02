@@ -1,11 +1,12 @@
 @php
 if (!function_exists('getImageUrl')) {
-function getImageUrl($path, $default = 'https://laravel.com/img/logomark.min.svg') {
-if ($path && file_exists(public_path('storage/' . $path))) {
-return asset('storage/' . $path);
-}
-
-return asset($default); // ảnh mặc định (đặt ở public/images/default.png)
+    if (!function_exists('getImageUrl')) {
+    function getImageUrl($path, $default = 'images/default.png') {
+        if ($path && file_exists(public_path('storage/' . $path))) {
+            return asset('storage/' . $path);
+        }
+        return asset($default); // ảnh mặc định
+    }
 }
 }
 @endphp
@@ -52,10 +53,61 @@ return asset($default); // ảnh mặc định (đặt ở public/images/default
 
                     <div class="product-single-carousel owl-carousel owl-theme show-nav-hover">
                         <div class="product-item">
-                            <img class="product-single-image" src="{{ getImageUrl($product->image) }}" data-zoom-image="{{ getImageUrl($product->image) }}" width="468" height="468" alt="product" />
+                            @php
+
+                            $imageList = [];
+
+                            if (is_array($product->images) && count($product->images) > 0) {
+                                $imageList = $product->images;
+                            } elseif ($product->variants && $product->variants->count() > 0) {
+                                $firstVariant = $product->variants->first();
+                                if (is_array($firstVariant->images) && count($firstVariant->images) > 0) {
+                                    $imageList = $firstVariant->images;
+                                }
+                            }
+
+                            $mainImageUrl = getImageUrl($imageList[0] ?? null);
+                        @endphp
+
+
                         </div>
                     </div>
+                    <div class="product-gallery">
+                        <!-- Ảnh chính -->
+                        <div class="main-image">
+                            <img id="mainProductImage" src="{{ $mainImageUrl }}" alt="{{ $product->name }}"
+                                 style="width: 100%; max-width: 400px; transition: opacity 0.5s ease;" />
+                        </div>
 
+                        <!-- Thumbnails -->
+                        @if (count($imageList) > 1)
+                            <div class="thumbnail-list" style="display: flex; gap: 10px; margin-top: 15px;">
+                                @foreach ($imageList as $thumb)
+                                    <img src="{{ getImageUrl($thumb) }}" alt="Thumbnail"
+                                         class="thumbnail-img"
+                                         style="width: 70px; cursor: pointer;"
+                                         onclick="changeMainImage('{{ getImageUrl($thumb) }}')">
+                                @endforeach
+                            </div>
+                        @endif
+                    </div>
+
+                    <script>
+                        function changeMainImage(newSrc) {
+                            const mainImage = document.getElementById('mainProductImage');
+
+                            // Bắt đầu hiệu ứng fade out
+                            mainImage.style.opacity = 0;
+
+                            // Đợi 200ms rồi đổi ảnh và fade in
+                            setTimeout(() => {
+                                mainImage.src = newSrc;
+                                mainImage.onload = () => {
+                                    mainImage.style.opacity = 1;
+                                };
+                            }, 200);
+                        }
+                    </script>
                     <!-- End .product-single-carousel -->
                     <span class="prod-full-screen">
                         <i class="icon-plus"></i>
@@ -443,4 +495,5 @@ return asset($default); // ảnh mặc định (đặt ở public/images/default
 </section>
 
 </div>
+
 @endsection
