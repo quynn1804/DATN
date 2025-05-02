@@ -126,5 +126,5 @@ Route::post('/process-payment', [PaymentController::class, 'processPayment'])->n
 Route::get('/payment/success', [PaymentController::class, 'paymentSuccess'])->name('payment.success');
 Route::get('/payment/failure', [PaymentController::class, 'paymentFailure'])->name('payment.failure');
 Route::get('/top-favorite-products', [ProductController::class, 'topFavorites'])->name('products.topFavorites');
-Route::post('/checkout/apply-voucher', [CartController::class, 'apply'])->name('cart.apply');
+// Route::post('/checkout/apply-voucher', [CartController::class, 'apply'])->name('cart.apply');
 
