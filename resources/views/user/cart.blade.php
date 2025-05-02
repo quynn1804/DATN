@@ -1,16 +1,14 @@
 @php
 if (!function_exists('getImageUrl')) {
-function getImageUrl($path, $default = 'https://laravel.com/img/logomark.min.svg') {
-
-$fullPath = public_path('assets/images/' . $path);
-if (file_exists($fullPath) && !is_dir($fullPath)) {
-return asset('assets/images/' . $path);
-}
-
-return asset($default);
+function getImageUrl($path, $default = 'images/default.png') {
+    if ($path && file_exists(public_path('storage/' . $path))) {
+        return asset('storage/' . $path);
+    }
+    return asset($default);
 }
 }
 @endphp
+
 
 
 @extends('user.layouts.master')
@@ -93,7 +91,22 @@ return asset($default);
                             <td>
                                 <figure class="product-image-container">
                                     <a href="{{ route('singleProduct', $item->productVariant->product->id) }}" class="product-image">
-                                        <img src="{{ getImageUrl($item->productVariant->product->image) }}" alt="Product">
+                                        @php
+                                        $product = $item->productVariant->product;
+                                        $mainImage = null;
+
+                                        // Lấy ảnh từ sản phẩm chính
+                                        if (is_array($product->images) && count($product->images) > 0) {
+                                            $mainImage = $product->images[0];
+                                        }
+                                        // Nếu không có thì lấy từ biến thể
+                                        elseif (is_array($item->productVariant->images) && count($item->productVariant->images) > 0) {
+                                            $mainImage = $item->productVariant->images[0];
+                                        }
+
+                                        $mainImageUrl = getImageUrl($mainImage);
+                                    @endphp
+                                        <img src="{{ $mainImageUrl }}" alt="{{ $product->name }}">
                                     </a>
 
                                     <a class="btn-remove icon-cancel" onclick="event.preventDefault();
