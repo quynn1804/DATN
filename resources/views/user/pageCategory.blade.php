@@ -1,6 +1,17 @@
 @extends('user.layouts.master')
 @section('title', 'Sản phẩm')
 @section('content')
+
+@php
+if (!function_exists('getImageUrl')) {
+    function getImageUrl($path, $default = 'images/default.png') {
+        if ($path && file_exists(public_path('storage/' . $path))) {
+            return asset('storage/' . $path);
+        }
+        return asset($default);
+    }
+}
+@endphp
 <div class="container">
     <nav aria-label="breadcrumb" class="breadcrumb-nav">
         <ol class="breadcrumb">
@@ -90,9 +101,20 @@
                     <div class="product-default">
                         <figure>
                             <a href="{{ route('singleProduct', $product->id) }}">
-                                <img src="{{ $product->image && file_exists(public_path('storage/' . $product->image)) ? asset('storage/' . $product->image) : 'https://laravel.com/img/logomark.min.svg' }}" alt="{{ $product->name }}" width="50px" height="50px">
+                                @php
+                                $mainImage = null;
 
-
+                                if (is_array($product->images) && count($product->images) > 0) {
+                                    $mainImage = $product->images[0];
+                                } elseif ($product->variants && $product->variants->count() > 0) {
+                                    $firstVariant = $product->variants->first();
+                                    if (is_array($firstVariant->images) && count($firstVariant->images) > 0) {
+                                        $mainImage = $firstVariant->images[0];
+                                    }
+                                }
+                                $mainImageUrl = getImageUrl($mainImage);
+                                @endphp
+                            <img src="{{ $mainImageUrl }}" alt="{{ $product->name }}">
                             </a>
 
                             <div class="label-group">
@@ -101,7 +123,7 @@
                             @if($product->price_sale > 0)
                             <div class="product-label label-sale">Sale</div>
                             @endif
-                    </div>
+                            </div>
                     </figure>
 
                     <div class="product-details">

@@ -14,9 +14,9 @@ class Product extends Model
         'name', 'price', 'description', 'images', 'quantity', 'status'
         ,'category_id','product_type'];
 
-    // protected $casts = [
-    //         'images' => 'array',
-    //     ];
+        protected $casts = [
+            'images' => 'array',
+        ];
     public function thumbnails()
     {
     return $this->morphMany(Thumbnail::class, 'thumbnailable');

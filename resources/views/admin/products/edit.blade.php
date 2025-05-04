@@ -79,9 +79,9 @@
                     <div class="mb-3">
                         <label for="images" class="form-label">Hình ảnh sản phẩm</label>
                         <input type="file" name="images[]" id="images" class="form-control" multiple>
-                        @if ($product->images && is_array(json_decode($product->images)))
+                        @if ($product->images && is_array($product->images))
                             <div class="mt-2">
-                                @foreach (json_decode($product->images) as $image)
+                                @foreach ($product->images as $image)
                                     <img src="{{ asset('storage/' . $image) }}" alt="Image" class="img-thumbnail me-2 mb-2" width="100">
                                 @endforeach
                             </div>
@@ -124,9 +124,9 @@
                                 <div class="col-md-3">
                                     <label class="form-label">Ảnh</label>
                                     <input type="file" name="variants[{{ $index }}][images][]" class="form-control" multiple>
-                                    @if ($variant->images && is_array(json_decode($variant->images)))
+                                    @if ($variant->images && is_array($variant->images))
                                         <div class="mt-2">
-                                            @foreach (json_decode($variant->images) as $img)
+                                            @foreach ($variant->images as $img)
                                                 <img src="{{ asset('storage/' . $img) }}" alt="Variant Image" class="img-thumbnail me-2 mb-2" width="80">
                                             @endforeach
                                         </div>
