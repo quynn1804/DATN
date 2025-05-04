@@ -148,9 +148,9 @@
 
                 <div class="mb-3">
                     <label for="status" class="form-label">Trạng thái</label>
-                    <select name="status" id="status" class="form-select">
+                    <select name="status"  class="form-select">
                         <option value="1" {{ old('status') == 1 ? 'selected' : '' }}>Hiển thị</option>
-                        <option value="0" {{ old('status') == 0 ? 'selected' : '' }}>Ẩn</option>
+                        <option value="0" >Ẩn</option>
                     </select>
                 </div>
 

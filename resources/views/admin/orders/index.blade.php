@@ -1,6 +1,25 @@
 @extends('admin.layouts.master')
 @section('title', 'Mã giảm giá')
 @section('content')
+@if(session('error'))
+    <div id="alert-error" class="alert alert-danger alert-dismissible fade show">
+        {{ session('error') }}
+    </div>
+@endif
+
+@if(session('success'))
+    <div id="alert-success" class="alert alert-success alert-dismissible fade show">
+        {{ session('success') }}
+    </div>
+@endif
+
+<script>
+    // Chờ 4 giây rồi ẩn thông báo
+    setTimeout(function() {
+        document.getElementById('alert-error')?.classList.add('d-none');
+        document.getElementById('alert-success')?.classList.add('d-none');
+    }, 4000);
+</script>
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-sm-flex align-items-center justify-content-between">

@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\VoucherController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\User\UserOrderController;
 use App\Http\Controllers\Admin\CommentController;
+use App\Http\Controllers\Admin\StockImportController;
 use App\Http\Controllers\AuthController;
 
 use App\Http\Controllers\Admin\ApplyVoucherController;
@@ -70,6 +71,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('products', ProductController::class);
         Route::resource('categories', CategoryController::class);
         Route::resource('orders', OrderController::class);
+        Route::resource('stock-imports', StockImportController::class);
         Route::delete('/products/variant/{id}', [ProductController::class, 'destroyVariant'])->name('products.variant.destroy');
     });
 
@@ -119,6 +121,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
     Route::post('/vnpay_payment', [PaymentController::class, 'vnpay_payment']);
     Route::post('/momo_payment', [PaymentController::class, 'momo_payment']);
+    Route::post('/momoQr_payment', [PaymentController::class, 'momoQr_payment']);
+    Route::get('/momo-callback', [PaymentController::class, 'momoCallback'])->name('momo.callback');
 });
 
 Route::get('/checkout', [PaymentController::class, 'checkout'])->name('checkout');
