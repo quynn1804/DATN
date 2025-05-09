@@ -76,7 +76,7 @@ class PaymentController extends Controller
         return back()->with('error', 'Lỗi khi tạo thanh toán MoMo: ' . json_encode($jsonResult));
     }
 
-}
+    }
     public function momoQr_payment(Request $request){
 
         $cart_Total = $request->all();
@@ -116,69 +116,86 @@ class PaymentController extends Controller
         } else {
             return back()->with('error', 'Lỗi khi tạo thanh toán MoMo: ' . json_encode($jsonResult));
         }
-        }
+    }
     public function momoCallback(Request $request)
-    {
-        $orderId = $request->input('orderId');
-        $resultCode = $request->input('resultCode');
-        $amount = $request->input('amount');
-        $data = $request->all();
+        {
+            $orderId = $request->input('orderId');
+            $resultCode = $request->input('resultCode');
+            $amount = $request->input('amount');
+            $data = $request->all();
 
-        Log::info("MomoPay Response Data: ", $data);
+            Log::info("MomoPay Response Data: ", $data);
 
-        if ($resultCode == 0) {
-            try {
-                $cartItems = Cart::where('user_id', auth()->id())->get();
-                if ($cartItems->isEmpty()) {
-                    return redirect()->route('checkout')->with('error', 'Giỏ hàng trống, không thể tạo đơn hàng.');
+            if ($resultCode == 0) {
+                try {
+                    $userId = auth()->id();
+
+                    $cartItems = Cart::where('user_id', $userId)->get();
+                    if ($cartItems->isEmpty()) {
+                        Log::error("Giỏ hàng trống, không thể tiếp tục tạo đơn hàng.");
+                        return redirect()->route('checkout')->with('error', 'Giỏ hàng trống, không thể tạo đơn hàng.');
+                    }
+
+                    // Lấy thông tin đơn hàng từ session
+                    $checkoutInfo = session('checkout_info');
+
+                    if (!$checkoutInfo) {
+                        Log::error("Không tìm thấy thông tin checkout trong session.");
+                        return redirect()->route('checkout')->with('error', 'Không tìm thấy thông tin đơn hàng.');
+                    }
+
+                    // Trích xuất thông tin từ session
+                    $fullname = $checkoutInfo['fullname'] ?? 'Khách hàng chưa nhập';
+                    $phone = $checkoutInfo['phone'] ?? '0000000000';
+                    $address = $checkoutInfo['address'] ?? 'Chưa có địa chỉ';
+                    $note = $checkoutInfo['voucher'] ?? null;
+
+                    // Kiểm tra nếu đơn hàng đã tồn tại
+                    $order = Order::where('order_code', $orderId)->first();
+
+                    if ($order) {
+                        $order->update([
+                            'status' => 'pending',
+                            'payment_method' => 'MoMo',
+                        ]);
+                    } else {
+                        $order = Order::create([
+                            'order_code' => $orderId,
+                            'user_id' => $userId,
+                            'name' => $fullname,
+                            'phone' => $phone,
+                            'address' => $address,
+                            'total_money' => $amount,
+                            'status' => 'pending',
+                            'payment_method' => 'MoMo',
+                            'note' => $note,
+                        ]);
+                    }
+
+                    foreach ($cartItems as $item) {
+                        OrderDetail::create([
+                            'order_id' => $order->id,
+                            'product_variant_id' => $item->product_variant_id,
+                            'quantity' => $item->quantity,
+                            'price_at_time' => $item->price_at_time,
+                            'total_price' => $item->price_at_time * $item->quantity,
+                        ]);
+                    }
+
+                    Cart::where('user_id', $userId)->delete();
+                    session()->forget('checkout_info');
+
+                    Log::info("Đã tạo/ghi nhận đơn hàng MoMo thành công cho user_id: $userId");
+
+                    return redirect()->route('checkout')->with('success', 'Thanh toán thành công! Đơn hàng đã được ghi nhận.');
+                } catch (\Exception $e) {
+                    Log::error("Lỗi khi xử lý đơn hàng sau thanh toán MoMo: " . $e->getMessage());
+                    return redirect()->route('checkout')->with('error', 'Có lỗi xảy ra khi tạo đơn hàng. Vui lòng thử lại.');
                 }
-
-                $fullname = $data['fullname'] ?? 'Khách hàng chưa nhập';
-                $phone = $data['phone'] ?? '0000000000';
-                $address = $data['address'] ?? 'Chưa có địa chỉ';
-
-                // Kiểm tra nếu đơn hàng đã tồn tại (tránh tạo trùng)
-                $order = Order::where('order_code', $orderId)->first();
-
-                if ($order) {
-                    $order->update([
-                        'status' => 'pending', // Cập nhật trạng thái đã thanh toán
-                        'payment_method' => 'MoMo',
-                    ]);
-                } else {
-                    $order = Order::create([
-                        'order_code' => $orderId,
-                        'user_id' => auth()->check() ? auth()->id() : null,
-                        'name' => $fullname,
-                        'phone' => $phone,
-                        'address' => $address,
-                        'total_money' => $amount,
-                        'status' => 'pending',
-                        'payment_method' => 'MoMo',
-                        'note' => $data['voucher'] ?? null,
-                    ]);
-                }
-
-                foreach ($cartItems as $item) {
-                    OrderDetail::create([
-                        'order_id' => $order->id,
-                        'product_variant_id' => $item->product_variant_id,
-                        'quantity' => $item->quantity,
-                        'price_at_time' => $item->price_at_time,
-                        'total_price' => $item->price_at_time * $item->quantity,
-                    ]);
-                }
-
-                Cart::where('user_id', auth()->id())->delete();
-
-                return redirect()->route('checkout')->with('success', 'Thanh toán thành công! Đơn hàng đã được cập nhật.');
-            } catch (\Exception $e) {
-                Log::error("Lỗi khi cập nhật đơn hàng: " . $e->getMessage());
-                return redirect()->route('checkout')->with('error', 'Có lỗi xảy ra khi cập nhật đơn hàng. Vui lòng thử lại.');
+            } else {
+                Log::warning("Thanh toán thất bại từ MoMo. Mã phản hồi: $resultCode");
+                return redirect()->route('checkout')->with('error', 'Thanh toán không thành công. Vui lòng thử lại.');
             }
-        } else {
-            return redirect()->route('checkout')->with('error', 'Thanh toán không thành công. Vui lòng thử lại.');
-        }
     }
     public function vnpay_payment(Request $request)
     {
@@ -247,58 +264,74 @@ class PaymentController extends Controller
         $vnp_ResponseCode = $request->input('vnp_ResponseCode');
         $vnp_TxnRef = $request->input('vnp_TxnRef');
         $vnp_Amount = $request->input('vnp_Amount') / 100;
-        $data = $request->all();
 
-        Log::info("VNPay Response Data: ", $data);
+        Log::info("VNPay Response Received", $request->all());
 
-        if ($vnp_ResponseCode == '00') {
-            try {
-                $cartItems = Cart::where('user_id', auth()->id())->get();
-                if ($cartItems->isEmpty()) {
-                    Log::error("Giỏ hàng trống, không thể tạo đơn hàng.");
-                    return redirect()->route('checkout')->with('error', 'Giỏ hàng trống, không thể tạo đơn hàng.');
-                }
-
-                // Xử lý nếu thiếu dữ liệu
-                $fullname = $data['fullname'] ?? 'Khách hàng chưa nhập';
-                $phone = $data['phone'] ?? '0000000000';
-                $address = $data['address'] ?? 'Chưa có địa chỉ';
-
-                $order = Order::create([
-                    'order_code' => $vnp_TxnRef,
-                    'user_id' => auth()->check() ? auth()->id() : null,
-                    'name' => $fullname,
-                    'phone' => $phone,
-                    'address' => $address,
-                    'total_money' => $vnp_Amount,
-                    'status' => 'pending',
-                    'payment_method' => 'VNPay',
-                    'note' => $data['voucher'] ?? null,
-                ]);
-
-                Log::info("Đơn hàng đã tạo thành công: ", $order->toArray());
-
-                foreach ($cartItems as $item) {
-                    OrderDetail::create([
-                        'order_id' => $order->id,
-                        'product_variant_id' => $item->product_variant_id,
-                        'quantity' => $item->quantity,
-                        'price_at_time' => $item->price_at_time,
-                        'total_price' => $item->price_at_time * $item->quantity,
-                    ]);
-                }
-
-                Cart::where('user_id', auth()->id())->delete();
-                Log::info("Đã xóa giỏ hàng của user_id: " . auth()->id());
-
-                return redirect()->route('checkout')->with('success', 'Thanh toán thành công! Đơn hàng đã được cập nhật.');
-            } catch (\Exception $e) {
-                Log::error("Lỗi khi tạo đơn hàng: " . $e->getMessage());
-                return redirect()->route('checkout')->with('error', 'Có lỗi xảy ra khi tạo đơn hàng. Vui lòng thử lại.');
-            }
-        } else {
-            Log::warning("Thanh toán thất bại, mã phản hồi: " . $vnp_ResponseCode);
+        if ($vnp_ResponseCode !== '00') {
+            Log::warning("Thanh toán thất bại từ VNPay. Mã phản hồi: $vnp_ResponseCode");
             return redirect()->route('checkout')->with('error', 'Thanh toán không thành công. Vui lòng thử lại.');
+        }
+
+        try {
+            // Lấy thông tin đơn hàng từ session
+            $checkoutInfo = session('checkout_info');
+
+            if (!$checkoutInfo) {
+                Log::error("Không tìm thấy thông tin checkout trong session.");
+                return redirect()->route('checkout')->with('error', 'Không tìm thấy thông tin đơn hàng.');
+            }
+
+            $userId = auth()->id();
+
+            $cartItems = Cart::where('user_id', $userId)->get();
+
+            if ($cartItems->isEmpty()) {
+                Log::error("Giỏ hàng trống, không thể tiếp tục tạo đơn hàng.");
+                return redirect()->route('checkout')->with('error', 'Giỏ hàng trống, không thể tạo đơn hàng.');
+            }
+
+            // Trích xuất thông tin từ session
+            $fullname = $checkoutInfo['fullname'] ?? 'Khách hàng chưa nhập';
+            $phone = $checkoutInfo['phone'] ?? '0000000000';
+            $address = $checkoutInfo['address'] ?? 'Chưa có địa chỉ';
+            $note = $checkoutInfo['voucher'] ?? null;
+
+            // Tạo đơn hàng
+            $order = Order::create([
+                'order_code' => $vnp_TxnRef,
+                'user_id' => $userId,
+                'name' => $fullname,
+                'phone' => $phone,
+                'address' => $address,
+                'total_money' => $vnp_Amount,
+                'status' => 'pending',
+                'payment_method' => 'VNPay',
+                'note' => $note,
+            ]);
+
+            Log::info("Đã tạo đơn hàng thành công", ['order_id' => $order->id]);
+
+            // Tạo chi tiết đơn hàng
+            foreach ($cartItems as $item) {
+                OrderDetail::create([
+                    'order_id' => $order->id,
+                    'product_variant_id' => $item->product_variant_id,
+                    'quantity' => $item->quantity,
+                    'price_at_time' => $item->price_at_time,
+                    'total_price' => $item->price_at_time * $item->quantity,
+                ]);
+            }
+
+            // Dọn dẹp giỏ hàng và session
+            Cart::where('user_id', $userId)->delete();
+            session()->forget('checkout_info');
+
+            Log::info("Đã xóa giỏ hàng và session cho user_id: $userId");
+
+            return redirect()->route('checkout')->with('success', 'Thanh toán thành công! Đơn hàng đã được ghi nhận.');
+        } catch (\Exception $e) {
+            Log::error("Lỗi khi xử lý đơn hàng sau thanh toán VNPay: " . $e->getMessage());
+            return redirect()->route('checkout')->with('error', 'Có lỗi xảy ra khi tạo đơn hàng. Vui lòng thử lại.');
         }
     }
     public function checkout()
@@ -316,6 +349,14 @@ class PaymentController extends Controller
     public function processPayment(Request $request)
     {
         $data = $request->all();
+        session(['checkout_info' => [
+            'fullname' => $request->fullname,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'address' => $request->address,
+            'voucher' => $request->input('voucher_code'), // nếu có
+        ]]);
+
 
         // Lấy tổng tiền sau khi đã trừ giảm giá từ request
         $finalAmount = $data['amount'];

@@ -38,7 +38,14 @@ class ProductController extends Controller
     public function show($id)
     {
         $product = Product::with('variants.color', 'variants.capacity', 'category')->findOrFail($id);
-        return view('admin.products.show', compact('product'));
+        $productVariants = $product->variants;
+        $productVariantsByColor = $productVariants
+            ->groupBy('color_id')
+            ->map(function ($variants) {
+                return $variants->first(); // lấy 1 biến thể đầu tiên mỗi màu (để hiển thị ảnh)
+            });
+
+        return view('admin.products.show', compact('product', 'productVariants', 'productVariantsByColor'));
     }
 
     public function create()
@@ -150,7 +157,8 @@ class ProductController extends Controller
         ]);
 
         // Xử lý ảnh sản phẩm
-        $imagePaths = $product->images ?? '[]';
+        $imagePaths = is_array($product->images) ? $product->images : json_decode($product->images, true) ?? [];
+
 
         if ($request->hasFile('images')) {
             // Xóa ảnh cũ

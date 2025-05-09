@@ -106,7 +106,15 @@ if (!function_exists('getImageUrl')) {
 
                         <div class="price-box">
 
-                            <span class="product-price">{{ number_format($product->price, 0, ',', '.') }}đ</span>
+                            <span class="product-price">  @if($product->product_type === 'single')
+                                {{ number_format($product->price, 0, ',', '.') }}₫
+                            @else
+                                @php
+                                    $minPrice = $product->variants->min('price');
+                                    $maxPrice = $product->variants->max('price');
+                                @endphp
+                                {{ number_format($minPrice, 0, ',', '.') }}₫ - {{ number_format($maxPrice, 0, ',', '.') }}₫
+                            @endif</span>
                             @if ($product->old_price)
                             <span class="old-price"><del>{{ number_format($product->old_price, 0, ',', '.') }}đ</del></span>
                             @endif

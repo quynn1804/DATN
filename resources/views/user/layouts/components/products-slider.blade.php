@@ -80,7 +80,15 @@ if (!function_exists('getImageUrl')) {
                         @endif
 
                         <span class="product-price">
-                            {{ formatPrice($product->price) }}
+                            @if($product->product_type === 'single')
+                            {{ number_format($product->price, 0, ',', '.') }}₫
+                        @else
+                            @php
+                                $minPrice = $product->variants->min('price');
+                                $maxPrice = $product->variants->max('price');
+                            @endphp
+                            {{ number_format($minPrice, 0, ',', '.') }}₫ - {{ number_format($maxPrice, 0, ',', '.') }}₫
+                        @endif
                         </span>
                     </div>
 
