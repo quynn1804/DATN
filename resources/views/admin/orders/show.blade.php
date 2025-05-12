@@ -22,15 +22,23 @@
 <div class="row">
     <div class="col-12">
         <div class="card p-4 mb-4">
-            <p><strong>Khách hàng:</strong> {{ $order->name }}</p>
-            <p><strong>Địa chỉ:</strong> {{ $order->address }}</p>
-            <p><strong>Số điện thoại:</strong> {{ $order->phone }}</p>
-            <p><strong>Trạng thái:</strong>
-                <span class="badge badge-{{ $order->status == 'pending' ? 'warning' : ($order->status == 'processing' ? 'primary' : ($order->status == 'shipping' ? 'info' : ($order->status == 'completed' ? 'success' : 'danger'))) }}">
+            <p><strong>Id Order:</strong> {{  $order->order_code }}</p>
+            <p><strong>Account User:</strong> {{ $order->user->name ?? 'Khách vãng lai' }}</p>
+            <p><strong>Name User:</strong> {{ $order->name }}</p>
+            <p><strong>Address:</strong> {{ $order->address }}</p>
+            <p><strong>Number Phone:</strong> {{ $order->phone }}</p>
+            <p><strong>Method Payment:</strong> {{ $order->payment_method }}</p>
+            <p><strong>Note:</strong> {{ $order->note }}</p>
+            <p><strong>Status:</strong>s
+                <span class="badge bg-{{
+                    $order->status == 'pending' ? 'warning' :
+                    ($order->status == 'processing' ? 'primary' :
+                    ($order->status == 'shipping' ? 'info' :
+                    ($order->status == 'completed' ? 'success' : 'danger'))) }}">
                     {{ ucfirst($order->status) }}
                 </span>
             </p>
-            <p><strong>Tổng tiền:</strong> {{ number_format($order->total_money, 0, ',', '.') }} đ</p>
+            <p><strong>Total Money:</strong> {{ number_format($order->total_money, 0, ',', '.') }} đ</p>
         </div>
 
 
@@ -39,6 +47,7 @@
             <thead>
                 <tr>
                     <th>Tên sản phẩm</th>
+                    <th>Màu Sắc / Dung Lượng</th>
                     <th>Số lượng</th>
                     <th>Giá</th>
                     <th>Tổng</th>
@@ -48,6 +57,7 @@
                 @foreach ($order->orderDetails as $detail)
                 <tr>
                     <td>{{ $detail->productVariant->product->name }}</td>
+                    <td>{{ $detail->productVariant->color->name ?? '' }} / {{ $detail->productVariant->capacity->name ?? '' }}</td>
                     <td>{{ $detail->quantity }}</td>
                     <td>{{ number_format($detail->price_at_time, 0, ',', '.') }} đ</td>
                     <td>{{ number_format($detail->total_price, 0, ',', '.') }} đ</td>

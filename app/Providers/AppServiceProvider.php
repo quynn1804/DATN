@@ -19,9 +19,9 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
-    public function boot(): void
-    {
-        $categories = Category::all(); // Lấy danh sách category
-        View::share('categories', $categories); // Chia sẻ với tất cả view
-    }
+    // public function boot(): void
+    // {
+    //     $categories = Category::all(); // Lấy danh sách category
+    //     View::share('categories', $categories); // Chia sẻ với tất cả view
+    // }
 }
