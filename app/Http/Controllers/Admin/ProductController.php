@@ -83,6 +83,8 @@ class ProductController extends Controller
             $request->validate([
                 'price' => 'required|numeric',
                 'quantity' => 'required|integer',
+                'color_id' => 'required|exists:colors,id',
+                'capacity_id' => 'required|exists:capacities,id',
             ]);
 
             $productData['price'] = $request->price;
