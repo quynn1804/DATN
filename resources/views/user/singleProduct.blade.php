@@ -1,12 +1,11 @@
 @php
 if (!function_exists('getImageUrl')) {
-    if (!function_exists('getImageUrl')) {
-    function getImageUrl($path, $default = 'images/default.png') {
-        if ($path && file_exists(public_path('storage/' . $path))) {
-            return asset('storage/' . $path);
-        }
-        return asset($default); // ảnh mặc định
-    }
+function getImageUrl($path, $default = 'https://laravel.com/img/logomark.min.svg') {
+if ($path && file_exists(public_path('storage/' . $path))) {
+return asset('storage/' . $path);
+}
+
+return asset($default); // ảnh mặc định (đặt ở public/images/default.png)
 }
 }
 @endphp
@@ -53,61 +52,10 @@ if (!function_exists('getImageUrl')) {
 
                     <div class="product-single-carousel owl-carousel owl-theme show-nav-hover">
                         <div class="product-item">
-                            @php
-
-                            $imageList = [];
-
-                            if (is_array($product->images) && count($product->images) > 0) {
-                                $imageList = $product->images;
-                            } elseif ($product->variants && $product->variants->count() > 0) {
-                                $firstVariant = $product->variants->first();
-                                if (is_array($firstVariant->images) && count($firstVariant->images) > 0) {
-                                    $imageList = $firstVariant->images;
-                                }
-                            }
-
-                            $mainImageUrl = getImageUrl($imageList[0] ?? null);
-                        @endphp
-
-
+                            <img class="product-single-image" src="{{ getImageUrl($product->image) }}" data-zoom-image="{{ getImageUrl($product->image) }}" width="468" height="468" alt="product" />
                         </div>
                     </div>
-                    <div class="product-gallery">
-                        <!-- Ảnh chính -->
-                        <div class="main-image">
-                            <img id="mainProductImage" src="{{ $mainImageUrl }}" alt="{{ $product->name }}"
-                                 style="width: 100%; max-width: 400px; transition: opacity 0.5s ease;" />
-                        </div>
 
-                        <!-- Thumbnails -->
-                        @if (count($imageList) > 1)
-                            <div class="thumbnail-list" style="display: flex; gap: 10px; margin-top: 15px;">
-                                @foreach ($imageList as $thumb)
-                                    <img src="{{ getImageUrl($thumb) }}" alt="Thumbnail"
-                                         class="thumbnail-img"
-                                         style="width: 70px; cursor: pointer;"
-                                         onclick="changeMainImage('{{ getImageUrl($thumb) }}')">
-                                @endforeach
-                            </div>
-                        @endif
-                    </div>
-
-                    <script>
-                        function changeMainImage(newSrc) {
-                            const mainImage = document.getElementById('mainProductImage');
-
-                            // Bắt đầu hiệu ứng fade out
-                            mainImage.style.opacity = 0;
-
-                            // Đợi 200ms rồi đổi ảnh và fade in
-                            setTimeout(() => {
-                                mainImage.src = newSrc;
-                                mainImage.onload = () => {
-                                    mainImage.style.opacity = 1;
-                                };
-                            }, 200);
-                        }
-                    </script>
                     <!-- End .product-single-carousel -->
                     <span class="prod-full-screen">
                         <i class="icon-plus"></i>
@@ -176,14 +124,14 @@ if (!function_exists('getImageUrl')) {
                         </strong>
                     </li>
                 </ul>
-                {{-- <form action="{{ route('cart.add') }}" method="POST">
+                <form action="{{ route('cart.add') }}" method="POST">
                     @csrf
                     <input type="hidden" name="product_id" value="{{ $product->id }}">
 
                     @if ($product->variants->count() > 0)
                     <div class="form-group">
                         <label for="capacity">Màu sắc:</label>
-                        <select name="color_id" id="color" class="form-control" style="height: 40px" required>
+                        <select name="color_id" id="color" class="form-control" style="height: 40px">
                             @foreach ($product->variants->unique('color_id') as $variant)
                             <option value="{{ $variant->color_id }}">
                                 {{ optional($variant->color)->name ?? 'Không có màu' }}
@@ -196,7 +144,7 @@ if (!function_exists('getImageUrl')) {
                     @if ($product->variants->count() > 0)
                     <div class="form-group">
                         <label for="capacity">Chọn dung lượng:</label>
-                        <select name="capacity_id" id="capacity" class="form-control" style="height: 40px" required>
+                        <select name="capacity_id" id="capacity" class="form-control" style="height: 40px">
                             @foreach ($product->variants->unique('capacity_id') as $variant)
                             <option value="{{ $variant->capacity_id }}">
                                 {{ optional($variant->capacity)->name ?? 'Không có dung lượng' }}
@@ -215,48 +163,6 @@ if (!function_exists('getImageUrl')) {
 
                         <a href="cart.html" class="btn btn-gray view-cart d-none">View cart</a>
                     </div>
-                </form> --}}
-                <form action="{{ route('cart.add') }}" method="POST">
-                    @csrf
-                    <input type="hidden" name="product_id" value="{{ $product->id }}">
-
-                    @if ($product->variants->count() > 0)
-                    <div class="form-group">
-                        <label for="color">Màu sắc:</label>
-                        <select name="color_id" id="color" class="form-control" style="height: 40px" required>
-                            @foreach ($product->variants->unique('color_id') as $colorVariant)
-                            <option value="{{ $colorVariant->color_id }}">
-                                {{ optional($colorVariant->color)->name ?? 'Không có màu' }}
-                            </option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="capacity">Chọn dung lượng:</label>
-                        <select name="capacity_id" id="capacity" class="form-control" style="height: 40px" required>
-                            @foreach ($product->variants->unique('capacity_id') as $capacityVariant)
-                            <option value="{{ $capacityVariant->capacity_id }}">
-                                {{ optional($capacityVariant->capacity)->name ?? 'Không có dung lượng' }}
-                            </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    @endif
-
-                    <div class="product-action">
-                        <div class="product-single-qty">
-                            <input id="product-quantity" name="quantity" value="1" min="1" class="horizontal-quantity form-control" type="number">
-                        </div>
-
-                        @auth
-                            <button type="submit" class="btn btn-dark mr-2">Thêm vào giỏ hàng</button>
-                        @else
-                            <a href="{{ route('login') }}" class="btn btn-primary">Đăng nhập để mua hàng</a>
-                        @endauth
-
-                        <a href="{{ route('cart') }}" class="btn btn-gray view-cart d-none">Xem giỏ hàng</a>
-                    </div>
                 </form>
                 <!-- End .product-action -->
 
@@ -274,8 +180,60 @@ if (!function_exists('getImageUrl')) {
                     </div>
                     <!-- End .social-icons -->
 
-                    <a href="wishlist.html" class="btn-icon-wish add-wishlist" title="Add to Wishlist"><i class="icon-wishlist-2"></i><span>Add to
-                            Wishlist</span></a>
+                    <a href="wishlist.html" class="btn-icon-wish add-wishlist" title="Add to Wishlist">
+                        <i class="icon-wishlist-2"></i>
+                        <span>Add to Wishlist</span>
+                    </a>
+
+                    @if(Auth::check())
+                    <a onclick="handleShowModalChat()" style="cursor: pointer" class="add-wishlist" title="Nhắn tin với shop 1-1">
+                        <i class="fa-regular fa-message"></i>
+                        <span>Nhắn Tin</span>
+                    </a>
+
+                    <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5 text-center" id="myModalLabel">
+                                        Tin nhắn
+                                    </h1>
+                                    <button id="modal-button-close" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng">
+                                        <i class="fa-solid fa-xmark"></i>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+
+                                    <ul class="box-chat-client-ul"></ul>
+
+                                    <form id="chat-box" action="{{ route('admin.chats.write', 1) }}" method="POST" class="row">
+                                        @csrf
+                                        <div class="col">
+                                            <div class="position-relative">
+                                                <input type="text" class="form-control chat-input" placeholder="Nhập tin nhắn của bạn..." name="message" id="chat-client-message">
+                                                <div class="chat-input-links" id="tooltip-container">
+                                                    <ul class="list-inline mb-0">
+                                                        <li class="list-inline-item"><a href="javascript: void(0);" title="Emoji"><i class="mdi mdi-emoticon-happy-outline"></i></a>
+                                                        </li>
+                                                        <li class="list-inline-item"><a href="javascript: void(0);" title="Images"><i class="mdi mdi-file-image-outline"></i></a></li>
+                                                        <li class="list-inline-item"><a href="javascript: void(0);" title="Add Files"><i class="mdi mdi-file-document-outline"></i></a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <button type="button" class="btn btn-primary btn-rounded chat-send w-md waves-effect waves-light" onclick="handleApply('1')">
+                                                <span class="d-none d-sm-inline-block me-2">Gửi</span>
+                                                <i class="mdi mdi-send"></i>
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
                 </div>
                 <!-- End .product single-share -->
             </div>
@@ -537,5 +495,36 @@ if (!function_exists('getImageUrl')) {
 </section>
 
 </div>
+@endsection
 
+@section('script')
+
+@if(Auth::check())
+@php
+$senderType = Auth::user()->role_id == 1 ? 'Admin' : 'User';
+$userCurrent = Auth::user();
+@endphp
+
+<script>
+    const handleShowModalChat = () => {
+        let myModal = new bootstrap.Modal(document.getElementById('myModal'));
+
+        myModal.show();
+    }
+
+    $(document).ready(function() {
+        let myModal = new bootstrap.Modal(document.getElementById('myModal'));
+
+        $('#modal-button-close').click(function() {
+            myModal.hide();
+        });
+    });
+
+    // const userCurrent = @json($userCurrent);
+
+</script>
+
+@vite(['resources/js/product-detail.js'])
+
+@endif
 @endsection

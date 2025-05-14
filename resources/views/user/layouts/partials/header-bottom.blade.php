@@ -26,7 +26,7 @@ return Str::startsWith(request()->path(), $uri) ? 'active' : '';
                 <a href="{{ route('products.topFavorites') }}">Top Sản Phẩm</a>
             </li>
             <li>
-                <a href="category.html">Categories</a>
+                <a href="category.html">Danh Mục</a>
                 <div class="megamenu megamenu-fixed-width megamenu-3cols">
                     <div class="row">
                         <div class="col-lg-4">
@@ -80,7 +80,7 @@ return Str::startsWith(request()->path(), $uri) ? 'active' : '';
                 <!-- End .megamenu -->
             </li>
 
-            <li class="float-right">
+            {{-- <li class="float-right">
                 <a href="#" rel="noopener" class="pl-5" target="_blank">
                     Policy!
                 </a>
@@ -89,7 +89,7 @@ return Str::startsWith(request()->path(), $uri) ? 'active' : '';
                 <a href="#policy" class="pl-5">
                     Special Offer!
                 </a>
-            </li>
+            </li> --}}
         </ul>
     </nav>
 </div>

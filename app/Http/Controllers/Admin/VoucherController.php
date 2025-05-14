@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\VoucherNotification;
 use App\Http\Controllers\Controller;
 use App\Models\Voucher;
 use Illuminate\Http\Request;
@@ -36,7 +37,11 @@ class VoucherController extends Controller
             'is_active' => 'boolean',
         ]);
 
-        Voucher::create($request->all());
+        // Voucher::create($request->all());
+        $voucher = Voucher::create($request->all());
+
+        broadcast(new VoucherNotification($voucher))->toOthers();
+
         return redirect()->route('admin.vouchers.index')->with('success', 'Tạo voucher thành công');
     }
 

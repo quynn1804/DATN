@@ -69,4 +69,9 @@ class User extends Authenticatable
 
         return asset('https://laravel.com/img/logomark.min.svg');
     }
+
+    public function conversations()
+    {
+        return $this->hasMany(Conversation::class);
+    }
 }

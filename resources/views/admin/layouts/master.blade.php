@@ -8,6 +8,14 @@
     <meta content="Datn GunDam" name="description" />
     <meta content="Datn GunDam" name="author" />
 
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="user-id" content="{{ auth()->id() }}">
+    <script>
+        window.user = @json(Auth::user());
+        console.log(window.user);
+
+    </script>
+
     @include('admin.layouts.partials.css')
     @yield('style')
 
