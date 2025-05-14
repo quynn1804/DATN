@@ -75,13 +75,27 @@ if (!function_exists('getImageUrl')) {
                     </div>
 
                     <div class="price-box">
-                        @if ($product->price_sale > 0)
-                            <del class="old-price">{{ formatPrice($product->price_regular) }}</del>
-                        @endif
-
-                        <span class="product-price">
-                            {{ formatPrice($product->price) }}
-                        </span>
+                        @if ($product->product_type === 'single')
+                        <hr>
+                        <p><strong>Giá:</strong> <span
+                                class="product-price">{{ number_format($product->price, 0, ',', '.') }}
+                                VNĐ</span></p>
+                    @else
+                        <hr>
+                        @php
+                            $prices = $product->variants->pluck('price')->sort();
+                            $minPrice = $prices->first();
+                            $maxPrice = $prices->last();
+                        @endphp
+                        <p><strong>Giá:</strong>
+                            <span class="product-price">
+                                {{ number_format($minPrice, 0, ',', '.') }} VNĐ
+                                @if ($minPrice !== $maxPrice)
+                                    - {{ number_format($maxPrice, 0, ',', '.') }} VNĐ
+                                @endif
+                            </span>
+                        </p>
+                    @endif
                     </div>
 
                     <div class="product-action">
