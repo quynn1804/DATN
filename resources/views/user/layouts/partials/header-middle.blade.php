@@ -4,19 +4,16 @@
             <i class="fas fa-bars"></i>
         </button>
         <a href="{{ route('home') }}" class="logo">
-            {{-- <img src="{{ asset('theme/client/images/logo.png') }}" width="111" height="44" alt="Porto Logo"> --}}
             <img src="{{ asset('assets/images/menu/logo/2.png') }}" width="111" height="44" alt="Header Logo">
         </a>
     </div>
     <!-- End .header-left -->
-
     <div class="header-right w-lg-max">
         <div class="header-icon header-search header-search-inline header-search-category w-lg-max text-right mt-0">
             <a href="#" class="search-toggle" role="button"><i class="icon-search-3"></i></a>
             <form action="{{ route('search') }}" method="GET">
                 <div class="header-search-wrapper">
-                    <input type="search" class="form-control" name="q" id="q" placeholder="Search..." required>
-                    <!-- End .select-custom -->
+                    <input type="search" class="form-control" name="q" id="q" placeholder="Tìm kiếm sản phẩm bạn yêu thích..." required>
                     <button class="btn icon-magnifier p-0" title="search" type="submit"></button>
                 </div>
                 <!-- End .header-search-wrapper -->
@@ -27,8 +24,8 @@
         <div class="header-contact d-none d-lg-flex pl-4 pr-4">
             <img alt="phone" src="{{ asset('theme/client/images/phone.png') }}" width="30" height="30" class="pb-1">
             <h6>
-                <span>Call us now</span>
-                <a href="tel:#" class="text-dark font1">0367253666</a>
+                <span>Gọi cho tôi:</span>
+                <a href="tel:#" class="text-dark font1">0368416230</a>
             </h6>
         </div>
 
@@ -44,12 +41,8 @@
         </a>
         @endguest
 
-        <a href="#" class="header-icon" title="Wishlist">
-            <i class="icon-wishlist-2"></i>
-        </a>
-
         <div class="dropdown cart-dropdown">
-            <a href="#123" title="Cart" class="dropdown-toggle dropdown-arrow cart-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static">
+            <a href="#123" title="Giỏ hàng" class="dropdown-toggle dropdown-arrow cart-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static">
                 <i class="minicart-icon"></i>
                 <span class="cart-count badge-circle">
                     {{ \App\Models\Cart::where('user_id', auth()->id())->distinct('product_variant_id')->count('product_variant_id') ?? 0 }}
@@ -62,7 +55,7 @@
                 <a href="#" title="Close (Esc)" class="btn-close">×</a>
 
                 <div class="dropdownmenu-wrapper custom-scrollbar">
-                    <div class="dropdown-cart-header">Shopping Cart</div>
+                    <div class="dropdown-cart-header">Giỏ Hàng</div>
                     <!-- End .dropdown-cart-header -->
 
                     <div class="dropdown-cart-products">
@@ -108,187 +101,13 @@
                                 <a href="#" class="btn-remove" title="Remove Product"><span>×</span></a>
                             </figure>
                         </div>
-                        <!-- End .product -->
-
-                        <div class="product">
-                            <div class="product-details">
-                                <h4 class="product-title">
-                                    <a href="product.html">Circled Ultimate 3D Speaker</a>
-                                </h4>
-
-                                <span class="cart-product-info">
-                                    <span class="cart-product-qty">1</span> × $35.00
-                                </span>
-                            </div>
-                            <!-- End .product-details -->
-
-                            <figure class="product-image-container">
-                                <a href="product.html" class="product-image">
-                                    <img src="{{ asset('theme/client/images/products/product-3.jpg') }}" alt="product" width="80" height="80">
-                                </a>
-                                <a href="#" class="btn-remove" title="Remove Product"><span>×</span></a>
-                            </figure>
-                        </div>
-                        <!-- End .product -->
-                        <div class="product">
-                            <div class="product-details">
-                                <h4 class="product-title">
-                                    <a href="product.html">Circled Ultimate 3D Speaker</a>
-                                </h4>
-
-                                <span class="cart-product-info">
-                                    <span class="cart-product-qty">1</span> × $35.00
-                                </span>
-                            </div>
-                            <!-- End .product-details -->
-
-                            <figure class="product-image-container">
-                                <a href="product.html" class="product-image">
-                                    <img src="{{ asset('theme/client/images/products/product-3.jpg') }}" alt="product" width="80" height="80">
-                                </a>
-                                <a href="#" class="btn-remove" title="Remove Product"><span>×</span></a>
-                            </figure>
-                        </div>
-                        <div class="product">
-                            <div class="product-details">
-                                <h4 class="product-title">
-                                    <a href="product.html">Circled Ultimate 3D Speaker</a>
-                                </h4>
-
-                                <span class="cart-product-info">
-                                    <span class="cart-product-qty">1</span> × $35.00
-                                </span>
-                            </div>
-                            <!-- End .product-details -->
-
-                            <figure class="product-image-container">
-                                <a href="product.html" class="product-image">
-                                    <img src="{{ asset('theme/client/images/products/product-3.jpg') }}" alt="product" width="80" height="80">
-                                </a>
-                                <a href="#" class="btn-remove" title="Remove Product"><span>×</span></a>
-                            </figure>
-                        </div>
-                        <div class="product">
-                            <div class="product-details">
-                                <h4 class="product-title">
-                                    <a href="product.html">Circled Ultimate 3D Speaker</a>
-                                </h4>
-
-                                <span class="cart-product-info">
-                                    <span class="cart-product-qty">1</span> × $35.00
-                                </span>
-                            </div>
-                            <!-- End .product-details -->
-
-                            <figure class="product-image-container">
-                                <a href="product.html" class="product-image">
-                                    <img src="{{ asset('theme/client/images/products/product-3.jpg') }}" alt="product" width="80" height="80">
-                                </a>
-                                <a href="#" class="btn-remove" title="Remove Product"><span>×</span></a>
-                            </figure>
-                        </div>
-                        <div class="product">
-                            <div class="product-details">
-                                <h4 class="product-title">
-                                    <a href="product.html">Circled Ultimate 3D Speaker</a>
-                                </h4>
-
-                                <span class="cart-product-info">
-                                    <span class="cart-product-qty">1</span> × $35.00
-                                </span>
-                            </div>
-                            <!-- End .product-details -->
-
-                            <figure class="product-image-container">
-                                <a href="product.html" class="product-image">
-                                    <img src="{{ asset('theme/client/images/products/product-3.jpg') }}" alt="product" width="80" height="80">
-                                </a>
-                                <a href="#" class="btn-remove" title="Remove Product"><span>×</span></a>
-                            </figure>
-                        </div>
-                        <div class="product">
-                            <div class="product-details">
-                                <h4 class="product-title">
-                                    <a href="product.html">Circled Ultimate 3D Speaker</a>
-                                </h4>
-
-                                <span class="cart-product-info">
-                                    <span class="cart-product-qty">1</span> × $35.00
-                                </span>
-                            </div>
-                            <!-- End .product-details -->
-
-                            <figure class="product-image-container">
-                                <a href="product.html" class="product-image">
-                                    <img src="{{ asset('theme/client/images/products/product-3.jpg') }}" alt="product" width="80" height="80">
-                                </a>
-                                <a href="#" class="btn-remove" title="Remove Product"><span>×</span></a>
-                            </figure>
-                        </div>
-                        <div class="product">
-                            <div class="product-details">
-                                <h4 class="product-title">
-                                    <a href="product.html">Circled Ultimate 3D Speaker</a>
-                                </h4>
-
-                                <span class="cart-product-info">
-                                    <span class="cart-product-qty">1</span> × $35.00
-                                </span>
-                            </div>
-                            <!-- End .product-details -->
-
-                            <figure class="product-image-container">
-                                <a href="product.html" class="product-image">
-                                    <img src="{{ asset('theme/client/images/products/product-3.jpg') }}" alt="product" width="80" height="80">
-                                </a>
-                                <a href="#" class="btn-remove" title="Remove Product"><span>×</span></a>
-                            </figure>
-                        </div>
-                        <div class="product">
-                            <div class="product-details">
-                                <h4 class="product-title">
-                                    <a href="product.html">Circled Ultimate 3D Speaker</a>
-                                </h4>
-
-                                <span class="cart-product-info">
-                                    <span class="cart-product-qty">1</span> × $35.00
-                                </span>
-                            </div>
-                            <!-- End .product-details -->
-
-                            <figure class="product-image-container">
-                                <a href="product.html" class="product-image">
-                                    <img src="{{ asset('theme/client/images/products/product-3.jpg') }}" alt="product" width="80" height="80">
-                                </a>
-                                <a href="#" class="btn-remove" title="Remove Product"><span>×</span></a>
-                            </figure>
-                        </div>
-                        <div class="product">
-                            <div class="product-details">
-                                <h4 class="product-title">
-                                    <a href="product.html">Circled Ultimate 3D Speaker</a>
-                                </h4>
-
-                                <span class="cart-product-info">
-                                    <span class="cart-product-qty">1</span> × $35.00
-                                </span>
-                            </div>
-                            <!-- End .product-details -->
-
-                            <figure class="product-image-container">
-                                <a href="product.html" class="product-image">
-                                    <img src="{{ asset('theme/client/images/products/product-3.jpg') }}" alt="product" width="80" height="80">
-                                </a>
-                                <a href="#" class="btn-remove" title="Remove Product"><span>×</span></a>
-                            </figure>
-                        </div>
                     </div>
                     <!-- End .cart-product -->
 
                     <div class="dropdown-cart-total">
-                        <span>SUBTOTAL:</span>
+                        <span>Tổng Tiền:</span>
 
-                        <span class="cart-total-price float-right">$134.00</span>
+                        <span class="cart-total-price float-right">1.200.000đ</span>
                     </div>
                     <!-- End .dropdown-cart-total -->
 
