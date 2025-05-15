@@ -76,12 +76,12 @@ if (!function_exists('getImageUrl')) {
 
                     <div class="price-box">
                         @if ($product->product_type === 'single')
-                        <hr>
+                        {{-- <hr> --}}
                         <p><strong>Giá:</strong> <span
                                 class="product-price">{{ number_format($product->price, 0, ',', '.') }}
                                 VNĐ</span></p>
                     @else
-                        <hr>
+                        {{-- <hr> --}}
                         @php
                             $prices = $product->variants->pluck('price')->sort();
                             $minPrice = $prices->first();
@@ -89,10 +89,20 @@ if (!function_exists('getImageUrl')) {
                         @endphp
                         <p><strong>Giá:</strong>
                             <span class="product-price">
-                                {{ number_format($minPrice, 0, ',', '.') }} VNĐ
+
+
+
+                                @if ($minPrice !== $maxPrice)
+                                <span class="product-price">
+                                    {{ formatPrice($maxPrice) }}
+                                </span>
+                                @endif
+
+                                <del class="old-price">{{ formatPrice($minPrice) }}đ</del>
+                                {{-- {{ number_format($minPrice, 0, ',', '.') }} VNĐ
                                 @if ($minPrice !== $maxPrice)
                                     - {{ number_format($maxPrice, 0, ',', '.') }} VNĐ
-                                @endif
+                                @endif --}}
                             </span>
                         </p>
                     @endif
@@ -104,7 +114,7 @@ if (!function_exists('getImageUrl')) {
                         </a>
                         <a href="{{ route('singleProduct', ['id' => $product->id]) }}" class="btn-icon btn-add-cart">
                             <i class="fa fa-arrow-right"></i>
-                            <span>SELECT OPTIONS</span>
+                            <span>Xem Hàng</span>
                         </a>
                         <a class="btn-quickview" title="Quick View">
                             <i class="fas fa-external-link-alt"></i>

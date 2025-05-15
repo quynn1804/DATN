@@ -3,7 +3,7 @@
     <div id="sidebar-menu">
         <!-- Left Menu Start -->
         <ul class="metismenu list-unstyled" id="side-menu">
-            <li class="menu-title" key="t-menu">Dashboards</li>
+            <li class="menu-title" key="t-menu">Admin</li>
 
 
             <li>
@@ -13,7 +13,24 @@
                 </a>
             </li>
 
-            <li class="menu-title" key="t-administration">Administration</li>
+            <li>
+                <a href="javascript: void(0);" class="has-arrow waves-effect">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span key="t-dashboards">Thống kê</span>
+                </a>
+                <ul class="sub-menu" aria-expanded="false">
+                    <li>
+                        <a href="{{ route('admin.statistical.products') }}" key="t-saas">
+                            Thống kê sản phẩm
+                        </a>
+                    </li>
+                    {{-- <li>
+                        <a href="{{ route('admin.statistical.users') }}" key="t-crypto">Thống kê người dùng</a>
+                    </li> --}}
+                </ul>
+            </li>
+
+            <li class="menu-title" key="t-administration">Quản lý</li>
 
             <li>
                 <a href="{{ route('admin.categories.index') }}" class="waves-effect">

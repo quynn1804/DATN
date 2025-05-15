@@ -9,6 +9,71 @@ return asset($default); // ảnh mặc định (đặt ở public/images/default
 }
 }
 @endphp
+<style>
+    .option-box {
+        position: relative;
+        display: inline-block;
+        padding: 10px 20px;
+        margin: 5px;
+        border: 2px solid #ccc;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+    }
+
+    .option-box:hover {
+        border-color: #888;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        transform: translateY(-2px);
+    }
+
+    .option-box.selected {
+        border-color: red;
+    }
+
+    .option-box .checkmark {
+        display: none;
+        position: absolute;
+        top: 4px;
+        right: 6px;
+        color: red;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .option-box.selected .checkmark {
+        display: block;
+    }
+
+    @keyframes shake {
+        0% { transform: translateX(0); }
+        25% { transform: translateX(-3px); }
+        50% { transform: translateX(3px); }
+        75% { transform: translateX(-3px); }
+        100% { transform: translateX(0); }
+    }
+
+    .option-box.shake {
+        animation: shake 0.3s ease;
+    }
+
+    .capacity-option:disabled {
+        pointer-events: none;
+        opacity: 0.5;
+    }
+    .main-image img.fade-out {
+        opacity: 0;
+    }
+
+    .main-image img.fade-in {
+        opacity: 1;
+    }
+    .thumbnail-img.active {
+    border: 2px solid #007bff;
+    transform: scale(1.05);
+    }
+
+</style>
 
 @extends('user.layouts.master')
 @section('title')
@@ -24,6 +89,9 @@ return asset($default); // ảnh mặc định (đặt ở public/images/default
                     <i class="icon-home"></i>
                 </a>
             </li>
+            <li class="breadcrumb-item">
+                <a href="product.html#">Shop</a>
+            </li>
             <li class="breadcrumb-item active" aria-current="page">
                 {{ $product->name }}
             </li>
@@ -33,7 +101,7 @@ return asset($default); // ảnh mặc định (đặt ở public/images/default
     <div class="product-single-container product-single-default">
         <div class="cart-message d-none">
             <strong class="single-cart-notice">“{{ $product->name }}”</strong>
-            <span>đã được thêm vào giỏ hàng</span>
+            <span>has been added to your cart.</span>
         </div>
 
         <div class="row">
@@ -49,16 +117,153 @@ return asset($default); // ảnh mặc định (đặt ở public/images/default
 
                     <div class="product-single-carousel owl-carousel owl-theme show-nav-hover">
                         <div class="product-item">
-                            <img class="product-single-image" src="{{ getImageUrl($product->image) }}" data-zoom-image="{{ getImageUrl($product->image) }}" width="468" height="468" alt="product" />
+
+                            @php
+
+                            $imageList = [];
+
+                            if (is_array($product->images) && count($product->images) > 0) {
+                                $imageList = $product->images;
+                            } elseif ($product->variants && $product->variants->count() > 0) {
+                                $firstVariant = $product->variants->first();
+                                if (is_array($firstVariant->images) && count($firstVariant->images) > 0) {
+                                    $imageList = $firstVariant->images;
+                                }
+                            }
+
+                            // $mainImageUrl = getImageUrl($imageList[0] ?? null);
+                            $firstVariant = $product->variants->first();
+                            $mainImageUrl = getImageUrl($firstVariant->images[0] ?? null);
+
+                            $mappedVariants = $product->variants->map(function($variant) {
+                            return [
+                                'id' => $variant->id,
+                                'color_id' => $variant->color_id,
+                                'capacity_id' => $variant->capacity_id,
+                                'price' => $variant->price,
+                                'images' => collect($variant->images)->map(function($img) {
+                                    return getImageUrl($img);
+                                })->toArray()
+                            ];
+                        });
+                        @endphp
+
                         </div>
                     </div>
 
-                    <!-- End .product-single-carousel -->
+
+                        <!-- Thumbnails -->
+                           <!-- Thumbnails -->
+
+                            <div class="thumbnail-list" id="thumbnailList" style="display: flex; gap: 10px; margin-top: 15px;">
+                                @foreach($product->variants as $variant)
+                                    @foreach($variant->images as $image)
+                                        <img src="{{ getImageUrl($image) }}"
+                                            class="thumbnail-img"
+                                            data-color-id="{{ $variant->color_id }}"
+                                            data-image-url="{{ getImageUrl($image) }}"
+                                            style="width: 70px; cursor: pointer;"
+                                            onclick="changeMainImage(this.src)">
+                                    @endforeach
+                                @endforeach
+                            </div>
+
+
+                            {{-- <div class="thumbnail-list" id="thumbnailList" style="display: flex; gap: 10px; margin-top: 15px;">
+                                @php $thumbIndex = 0; @endphp
+                                @foreach($product->variants as $variant)
+                                    @foreach($variant->images as $image)
+                                        <img src="{{ getImageUrl($image) }}"
+                                            class="thumbnail-img"
+                                            data-color-id="{{ $variant->color_id }}"
+                                            data-image-url="{{ getImageUrl($image) }}"
+                                            data-index="{{ $thumbIndex }}"
+                                            style="width: 70px; cursor: pointer;"
+                                            onclick="changeMainImage(this.src)">
+                                        @php $thumbIndex++; @endphp
+                                    @endforeach
+                                @endforeach
+                            </div>
+                            <script>
+                                let thumbnails = document.querySelectorAll('.thumbnail-img');
+                                let mainImage = document.getElementById('mainProductImage');
+                                let currentIndex = 0;
+                                let interval = 3000;
+                                let slideTimer;
+
+                                function changeMainImage(src) {
+                                    if (mainImage.src !== src) {
+                                        mainImage.style.opacity = 0;
+                                        setTimeout(() => {
+                                            mainImage.src = src;
+                                            mainImage.style.opacity = 1;
+                                        }, 300);
+                                    }
+                                }
+
+                                function highlightThumbnail(index) {
+                                    thumbnails.forEach(thumb => thumb.classList.remove('active-thumbnail'));
+                                    if (thumbnails[index]) {
+                                        thumbnails[index].classList.add('active-thumbnail');
+                                    }
+                                }
+
+                                function autoSlide() {
+                                    if (thumbnails.length === 0) return;
+
+                                    let thumbnail = thumbnails[currentIndex];
+                                    let newSrc = thumbnail.getAttribute('data-image-url');
+
+                                    changeMainImage(newSrc);
+                                    highlightThumbnail(currentIndex);
+
+                                    currentIndex = (currentIndex + 1) % thumbnails.length;
+                                }
+
+                                function startAutoSlide() {
+                                    slideTimer = setInterval(autoSlide, interval);
+                                }
+
+                                function resetAutoSlide() {
+                                    clearInterval(slideTimer);
+                                    startAutoSlide();
+                                }
+
+                                // Bắt đầu auto slide khi trang được tải
+                                window.onload = () => {
+                                    startAutoSlide();
+
+                                    // Gắn sự kiện click cho tất cả ảnh nhỏ
+                                    thumbnails.forEach((thumb, index) => {
+                                        thumb.addEventListener('click', () => {
+                                            let newSrc = thumb.getAttribute('data-image-url');
+                                            changeMainImage(newSrc);
+                                            currentIndex = index; // Cập nhật vị trí hiện tại
+                                            highlightThumbnail(index);
+                                            resetAutoSlide(); // Đặt lại bộ đếm auto
+                                        });
+                                    });
+                                };
+
+                                // CSS cho ảnh nhỏ đang được chọn
+                                const style = document.createElement('style');
+                                style.innerHTML = `
+                                    .active-thumbnail {
+                                        border: 2px solid #007bff;
+                                        padding: 2px;
+                                        border-radius: 4px;
+                                    }
+                                `;
+                                document.head.appendChild(style);
+                            </script> --}}
+
+
+                    </div>
+
                     <span class="prod-full-screen">
                         <i class="icon-plus"></i>
                     </span>
                 </div>
-
             </div>
             <!-- End .product-single-gallery -->
 
@@ -82,11 +287,11 @@ return asset($default); // ảnh mặc định (đặt ở public/images/default
                 <hr class="short-divider">
 
                 <div class="price-box">
-                    <span class="new-price text-danger">
+                    <span class="new-price text-danger" id="dynamicPrice">
                         @if ($product->variants->count() > 0)
-                        {{ number_format($product->variants->min('price'), 0, ',', '.') }} đ
+                            {{ number_format($product->variants->min('price'), 0, ',', '.') }} đ
                         @else
-                        {{ number_format($product->price, 0, ',', '.') }} đ
+                            {{ number_format($product->price, 0, ',', '.') }} đ
                         @endif
                     </span>
 
@@ -121,44 +326,61 @@ return asset($default); // ảnh mặc định (đặt ở public/images/default
                         </strong>
                     </li>
                 </ul>
+
+
                 <form action="{{ route('cart.add') }}" method="POST">
                     @csrf
                     <input type="hidden" name="product_id" value="{{ $product->id }}">
-
                     @if ($product->variants->count() > 0)
-                    <div class="form-group">
-                        <label for="capacity">Màu sắc:</label>
-                        <select name="color_id" id="color" class="form-control" style="height: 40px">
-                            @foreach ($product->variants->unique('color_id') as $variant)
-                            <option value="{{ $variant->color_id }}">
-                                {{ optional($variant->color)->name ?? 'Không có màu' }}
-                            </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    @endif
 
-                    @if ($product->variants->count() > 0)
-                    <div class="form-group">
-                        <label for="capacity">Chọn dung lượng:</label>
-                        <select name="capacity_id" id="capacity" class="form-control" style="height: 40px">
-                            @foreach ($product->variants->unique('capacity_id') as $variant)
-                            <option value="{{ $variant->capacity_id }}">
-                                {{ optional($variant->capacity)->name ?? 'Không có dung lượng' }}
-                            </option>
-                            @endforeach
-                        </select>
+                <!-- Màu sắc -->
+                <div class="form-group">
+                    <label for="color">Màu sắc:</label>
+                    <div id="color-options">
+                        @foreach ($product->variants->unique('color_id') as $colorVariant)
+                            @php
+                                $color = optional($colorVariant->color)->name ?? 'Không có màu';
+                            @endphp
+                            <div class="option-box" data-type="color" data-id="{{ $colorVariant->color_id }}">
+                                {{ $color }}
+                                <span class="checkmark">✓</span>
+                            </div>
+                        @endforeach
                     </div>
+                    <input type="hidden" name="color_id" id="selected-color" required>
+                </div>
+
+                <!-- Dung lượng -->
+                <div class="form-group">
+                    <label for="capacity">Chọn dung lượng:</label>
+                    <div id="capacity-options">
+                        @foreach ($product->variants->unique('capacity_id') as $capacityVariant)
+                            @php
+                                $capacity = optional($capacityVariant->capacity)->name ?? 'Không có dung lượng';
+                            @endphp
+                            <div class="option-box" data-type="capacity" data-id="{{ $capacityVariant->capacity_id }}">
+                                {{ $capacity }}
+                                <span class="checkmark">✓</span>
+                            </div>
+                        @endforeach
+                    </div>
+                    <input type="hidden" name="capacity_id" id="selected-capacity" required>
+                </div>
                     @endif
 
                     <div class="product-action">
                         <div class="product-single-qty">
-                            <input id="product-quantity" name="quantity" id="quantity" value="1" min="1" class="horizontal-quantity form-control" type="number">
+
+                            <input id="product-quantity" name="quantity" value="1" min="1" class="horizontal-quantity form-control" type="number">
                         </div>
 
-                        <button type="submit" class="btn btn-dark mr-2">Thêm vào giỏ hàng</button>
+                        @auth
+                            <button type="submit" class="btn btn-dark mr-2">Thêm vào giỏ hàng</button>
+                        @else
+                            <a href="{{ route('login') }}" class="btn btn-primary">Đăng nhập để mua hàng</a>
+                        @endauth
 
-                        <a href="cart.html" class="btn btn-gray view-cart d-none">View cart</a>
+                        <a href="{{ route('cart') }}" class="btn btn-gray view-cart d-none">Xem giỏ hàng</a>
                     </div>
                 </form>
                 <!-- End .product-action -->
@@ -492,36 +714,154 @@ return asset($default); // ảnh mặc định (đặt ở public/images/default
 </section>
 
 </div>
-@endsection
 
-@section('script')
-
-@if(Auth::check())
-@php
-$senderType = Auth::user()->role_id == 1 ? 'Admin' : 'User';
-$userCurrent = Auth::user();
-@endphp
 
 <script>
-    const handleShowModalChat = () => {
-        let myModal = new bootstrap.Modal(document.getElementById('myModal'));
+    const variants = @json($mappedVariants);
 
-        myModal.show();
-    }
+        // Hàm thay đổi ảnh chính
+        function changeMainImage(imageSrc) {
+            const mainImage = document.getElementById('mainProductImage');
+            mainImage.style.opacity = 0;
+            setTimeout(() => {
+                mainImage.src = imageSrc;
+                mainImage.onload = () => {
+                    mainImage.style.opacity = 1;
+                };
+            }, 200);
 
-    $(document).ready(function() {
-        let myModal = new bootstrap.Modal(document.getElementById('myModal'));
+        }
 
-        $('#modal-button-close').click(function() {
-            myModal.hide();
+        // Hàm thay đổi ảnh chính và thumbnail theo colorId
+        function updateImagesByColorId(colorId) {
+            // Tìm variant theo color_id
+            const selectedVariant = variants.find(v => v.color_id === colorId);
+
+            if (selectedVariant && selectedVariant.images.length > 0) {
+                // Đổi ảnh chính
+                changeMainImage(selectedVariant.images[0]);
+
+                // Xóa thumbnails cũ
+                const thumbnailList = document.getElementById('thumbnailList');
+                thumbnailList.innerHTML = '';
+
+                // Thêm lại thumbnails từ variant đã chọn
+                selectedVariant.images.forEach(img => {
+                    const thumb = document.createElement('img');
+                    thumb.src = img;
+                    thumb.classList.add('thumbnail-img');
+                    thumb.style.width = '70px';
+                    thumb.style.cursor = 'pointer';
+                    thumb.onclick = () => changeMainImage(img);
+                    thumbnailList.appendChild(thumb);
+                });
+            } else {
+                // Nếu không có ảnh cho colorId này, đặt lại ảnh mặc định hoặc thông báo lỗi
+                changeMainImage("default-image.jpg");  // Thay "default-image.jpg" bằng ảnh mặc định của bạn
+                alert("Không có ảnh cho màu này.");
+            }
+        }
+
+        // Hàm thêm hiệu ứng lắc
+        function addShakeEffect(element) {
+            element.classList.add("shake");
+            setTimeout(() => {
+                element.classList.remove("shake");
+            }, 300);
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const colorButtons = document.querySelectorAll('.option-box[data-type="color"]');
+            const capacityButtons = document.querySelectorAll('.option-box[data-type="capacity"]');
+            let selectedColorId = null;
+
+            // Lắng nghe sự kiện chọn màu
+            colorButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id = parseInt(btn.dataset.id);
+                    selectedColorId = id;
+                    document.getElementById('selected-color').value = id;
+
+                    // Highlight màu đã chọn
+                    colorButtons.forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                    addShakeEffect(btn);
+
+                    // Cập nhật ảnh chính và thumbnails theo màu
+                    updateImagesByColorId(id);
+
+                    // Lọc và hiển thị dung lượng phù hợp với màu đã chọn
+                    const validCapacities = variants
+                        .filter(v => v.color_id === id)
+                        .map(v => v.capacity_id);
+
+                    capacityButtons.forEach(btn => {
+                        const capId = parseInt(btn.dataset.id);
+                        btn.style.display = validCapacities.includes(capId) ? 'inline-block' : 'none';
+                        btn.disabled = !validCapacities.includes(capId);
+                    });
+
+                    // Reset dung lượng khi đổi màu
+                    document.getElementById('selected-capacity').value = '';
+                    capacityButtons.forEach(b => b.classList.remove('selected'));
+                });
+            });
+
+            // Lắng nghe sự kiện chọn dung lượng
+            capacityButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id = parseInt(btn.dataset.id);
+                    document.getElementById('selected-capacity').value = id;
+
+                    capacityButtons.forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                    addShakeEffect(btn);
+                });
+            });
+
+            // Lắng nghe sự kiện click vào thumbnail
+            document.querySelectorAll('.thumbnail-img').forEach(img => {
+                img.addEventListener('click', () => {
+                    changeMainImage(img.src);
+                });
+            });
         });
-    });
+        document.addEventListener('DOMContentLoaded', function () {
+            let selectedColorId = null;
+            let selectedCapacityId = null;
 
-    // const userCurrent = @json($userCurrent);
+            function updatePrice() {
+                if (selectedColorId && selectedCapacityId) {
+                    const matchedVariant = variants.find(v =>
+                        v.color_id == selectedColorId && v.capacity_id == selectedCapacityId
+                    );
+                    if (matchedVariant) {
+                        document.getElementById('dynamicPrice').textContent =
+                            Number(matchedVariant.price).toLocaleString('vi-VN') + ' đ';
+                    }
+                }
+            }
 
-</script>
+            document.querySelectorAll('.option-box[data-type="color"]').forEach(box => {
+                box.addEventListener('click', function () {
+                    document.querySelectorAll('.option-box[data-type="color"]').forEach(b => b.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedColorId = this.dataset.id;
+                    document.getElementById('selected-color').value = selectedColorId;
+                    updateImagesByColorId(Number(selectedColorId));
+                    updatePrice();
+                });
+            });
 
-@vite(['resources/js/product-detail.js'])
-
-@endif
+            document.querySelectorAll('.option-box[data-type="capacity"]').forEach(box => {
+                box.addEventListener('click', function () {
+                    document.querySelectorAll('.option-box[data-type="capacity"]').forEach(b => b.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedCapacityId = this.dataset.id;
+                    document.getElementById('selected-capacity').value = selectedCapacityId;
+                    updatePrice();
+                });
+            });
+        });
+    </script>
 @endsection

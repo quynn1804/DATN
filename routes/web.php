@@ -78,6 +78,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/chats', [MessageController::class, 'index'])->name('chats.index');
         Route::post('/chats/{userId}/write', [MessageController::class, 'store'])->name('chats.write');
         Route::get('/chats/{userId}/show', [MessageController::class, 'show'])->name('chats.detail');
+
+        Route::get('/statistical/products', [ProductController::class, 'statisticalProduct'])->name('statistical.products');
+        Route::get('/statistical/users', [AccountController::class, 'statisticalAccount'])->name('statistical.users');
     });
 
 

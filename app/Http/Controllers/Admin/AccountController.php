@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\Toastr;
 use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -154,5 +155,28 @@ class AccountController extends Controller
         $account->delete();
 
         return redirect()->route('admin.account.index')->with('success', 'Người dùng đã được xóa!');
+    }
+
+    public function statisticalAccount(Request $request)
+    {
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        if ($request->has(['start_date', 'end_date']) && (empty($startDate) || empty($endDate))) {
+            Toastr::error('', 'Vui lòng nhập đầy đủ ngày bắt đầu và ngày kết thúc.');
+            return back();
+        }
+
+        if (!empty($startDate) && !empty($endDate)) {
+            if (strtotime($startDate) > strtotime($endDate)) {
+                Toastr::error('', 'Ngày bắt đầu phải nhỏ hơn hoặc bằng ngày kết thúc.');
+                return redirect()->route('admin.statistical.users');
+            }
+        }
+
+        // doanh thu theo ngày
+        // doanh thu theo tháng
+
+        return view('admin.statistical.users', compact('startDate', 'endDate'));
     }
 }

@@ -40,7 +40,10 @@ class VoucherController extends Controller
         // Voucher::create($request->all());
         $voucher = Voucher::create($request->all());
 
-        broadcast(new VoucherNotification($voucher))->toOthers();
+        if($request->is_active == 1){
+            broadcast(new VoucherNotification($voucher))->toOthers();
+        }
+
 
         return redirect()->route('admin.vouchers.index')->with('success', 'Tạo voucher thành công');
     }
