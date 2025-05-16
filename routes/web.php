@@ -105,7 +105,7 @@ Route::middleware('auth')->group(function () {
     Route::get('user/orders/{order}', [UserOrderController::class, 'show'])
         ->middleware('auth')
         ->name('user.order.detail');
-        Route::post('user/orders/{order}/cancel', [UserOrderController::class, 'cancel'])->name('orders.cancel');
+    Route::post('user/orders/{order}/cancel', [UserOrderController::class, 'cancel'])->name('orders.cancel');
 
 });
 
@@ -130,5 +130,7 @@ Route::post('/process-payment', [PaymentController::class, 'processPayment'])->n
 Route::get('/payment/success', [PaymentController::class, 'paymentSuccess'])->name('payment.success');
 Route::get('/payment/failure', [PaymentController::class, 'paymentFailure'])->name('payment.failure');
 Route::get('/top-favorite-products', [ProductController::class, 'topFavorites'])->name('products.topFavorites');
+Route::get('google/login', [AuthController::class, 'redirectToGoogle'])->name('google.login');
+Route::get('auth/google/callback', [AuthController::class, 'handleGoogleCallback'])->name('google.callback');
 // Route::post('/checkout/apply-voucher', [CartController::class, 'apply'])->name('cart.apply');
 
