@@ -1,12 +1,11 @@
 @php
 if (!function_exists('getImageUrl')) {
-    if (!function_exists('getImageUrl')) {
-    function getImageUrl($path, $default = 'images/default.png') {
-        if ($path && file_exists(public_path('storage/' . $path))) {
-            return asset('storage/' . $path);
-        }
-        return asset($default); // ảnh mặc định
-    }
+function getImageUrl($path, $default = 'https://laravel.com/img/logomark.min.svg') {
+if ($path && file_exists(public_path('storage/' . $path))) {
+return asset('storage/' . $path);
+}
+
+return asset($default); // ảnh mặc định (đặt ở public/images/default.png)
 }
 }
 @endphp
@@ -118,6 +117,7 @@ if (!function_exists('getImageUrl')) {
 
                     <div class="product-single-carousel owl-carousel owl-theme show-nav-hover">
                         <div class="product-item">
+
                             @php
 
                             $imageList = [];
@@ -150,12 +150,7 @@ if (!function_exists('getImageUrl')) {
 
                         </div>
                     </div>
-                    <div class="product-gallery">
-                        <!-- Ảnh chính -->
-                        <div class="main-image">
-                            <img id="mainProductImage" src="{{ $mainImageUrl }}" alt="{{ $product->name }}"
-                                 style="width: 100%; max-width: 400px; transition: opacity 0.5s ease;" />
-                        </div>
+
 
                         <!-- Thumbnails -->
                            <!-- Thumbnails -->
@@ -332,6 +327,7 @@ if (!function_exists('getImageUrl')) {
                     </li>
                 </ul>
 
+
                 <form action="{{ route('cart.add') }}" method="POST">
                     @csrf
                     <input type="hidden" name="product_id" value="{{ $product->id }}">
@@ -374,6 +370,7 @@ if (!function_exists('getImageUrl')) {
 
                     <div class="product-action">
                         <div class="product-single-qty">
+
                             <input id="product-quantity" name="quantity" value="1" min="1" class="horizontal-quantity form-control" type="number">
                         </div>
 
@@ -402,8 +399,60 @@ if (!function_exists('getImageUrl')) {
                     </div>
                     <!-- End .social-icons -->
 
-                    <a href="wishlist.html" class="btn-icon-wish add-wishlist" title="Add to Wishlist"><i class="icon-wishlist-2"></i><span>Add to
-                            Wishlist</span></a>
+                    <a href="wishlist.html" class="btn-icon-wish add-wishlist" title="Add to Wishlist">
+                        <i class="icon-wishlist-2"></i>
+                        <span>Add to Wishlist</span>
+                    </a>
+
+                    @if(Auth::check())
+                    <a onclick="handleShowModalChat()" style="cursor: pointer" class="add-wishlist" title="Nhắn tin với shop 1-1">
+                        <i class="fa-regular fa-message"></i>
+                        <span>Nhắn Tin</span>
+                    </a>
+
+                    <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5 text-center" id="myModalLabel">
+                                        Tin nhắn
+                                    </h1>
+                                    <button id="modal-button-close" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng">
+                                        <i class="fa-solid fa-xmark"></i>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+
+                                    <ul class="box-chat-client-ul"></ul>
+
+                                    <form id="chat-box" action="{{ route('admin.chats.write', 1) }}" method="POST" class="row">
+                                        @csrf
+                                        <div class="col">
+                                            <div class="position-relative">
+                                                <input type="text" class="form-control chat-input" placeholder="Nhập tin nhắn của bạn..." name="message" id="chat-client-message">
+                                                <div class="chat-input-links" id="tooltip-container">
+                                                    <ul class="list-inline mb-0">
+                                                        <li class="list-inline-item"><a href="javascript: void(0);" title="Emoji"><i class="mdi mdi-emoticon-happy-outline"></i></a>
+                                                        </li>
+                                                        <li class="list-inline-item"><a href="javascript: void(0);" title="Images"><i class="mdi mdi-file-image-outline"></i></a></li>
+                                                        <li class="list-inline-item"><a href="javascript: void(0);" title="Add Files"><i class="mdi mdi-file-document-outline"></i></a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <button type="button" class="btn btn-primary btn-rounded chat-send w-md waves-effect waves-light" onclick="handleApply('1')">
+                                                <span class="d-none d-sm-inline-block me-2">Gửi</span>
+                                                <i class="mdi mdi-send"></i>
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
                 </div>
                 <!-- End .product single-share -->
             </div>
@@ -666,6 +715,7 @@ if (!function_exists('getImageUrl')) {
 
 </div>
 
+
 <script>
     const variants = @json($mappedVariants);
 
@@ -814,5 +864,4 @@ if (!function_exists('getImageUrl')) {
             });
         });
     </script>
-
 @endsection

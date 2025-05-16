@@ -2,6 +2,7 @@
 // use App\Http\Controllers\CommentController;
 use App\Http\Controllers\admin\ContactController;
 use App\Http\Controllers\Admin\StatisticController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\User\CartController;
 use App\Http\Controllers\Admin\AccountController;
 use App\Http\Controllers\Admin\AdminController;
@@ -54,7 +55,7 @@ Route::middleware('auth')->group(function () {
         return 'Chào mừng bạn đến trang Dashboard!';
     })->name('dashboard');
 
-    Route::prefix('admin')->name('admin.')->group(function () {
+    Route::prefix('admin')->middleware(['isAdmin'])->name('admin.')->group(function () {
         // Route::get('/', function () {
         //     return redirect()->route('admin.statistic.index');
         // })->name('dashboard');
@@ -73,6 +74,10 @@ Route::middleware('auth')->group(function () {
         Route::resource('orders', OrderController::class);
         Route::resource('stock-imports', StockImportController::class);
         Route::delete('/products/variant/{id}', [ProductController::class, 'destroyVariant'])->name('products.variant.destroy');
+
+        Route::get('/chats', [MessageController::class, 'index'])->name('chats.index');
+        Route::post('/chats/{userId}/write', [MessageController::class, 'store'])->name('chats.write');
+        Route::get('/chats/{userId}/show', [MessageController::class, 'show'])->name('chats.detail');
     });
 
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Conversation;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -53,6 +54,16 @@ class AuthController extends Controller
             'role_id' => $userRole->id,
         ]);
 
+        $conversation = Conversation::query()
+            ->where('user_id', $user->id)
+            ->first();
+
+        if (!$conversation || empty($conversation)) {
+            Conversation::create([
+                'user_id' => $user->id,
+            ]);
+        }
+
         // Đăng nhập người dùng ngay sau khi đăng ký
         Auth::login($user);
 
@@ -86,7 +97,8 @@ class AuthController extends Controller
             $userRoleId = Auth::user()->role_id;
 
             if ($userRoleId == 1) { // Admin
-                return redirect()->route('admin.statistic.index');
+                // return redirect()->route('admin.statistic.index');
+                 return redirect()->route('admin.dashboard');
             } elseif ($userRoleId == 2) { // users
                 return redirect()->route('home');
             } else {
