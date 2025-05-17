@@ -10,12 +10,14 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\VoucherController;
+use App\Http\Controllers\User\ForgotPasswordController;
+use App\Http\Controllers\user\ResetPasswordController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\User\UserOrderController;
 use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Admin\StockImportController;
 use App\Http\Controllers\AuthController;
-
+use Illuminate\Http\Request; 
 use App\Http\Controllers\Admin\ApplyVoucherController;
 use App\Http\Controllers\User\PaymentController;
 use App\Models\Cart;
@@ -135,7 +137,19 @@ Route::post('/process-payment', [PaymentController::class, 'processPayment'])->n
 Route::get('/payment/success', [PaymentController::class, 'paymentSuccess'])->name('payment.success');
 Route::get('/payment/failure', [PaymentController::class, 'paymentFailure'])->name('payment.failure');
 Route::get('/top-favorite-products', [ProductController::class, 'topFavorites'])->name('products.topFavorites');
+// login with google
 Route::get('google/login', [AuthController::class, 'redirectToGoogle'])->name('google.login');
 Route::get('auth/google/callback', [AuthController::class, 'handleGoogleCallback'])->name('google.callback');
+// forgot pasword
+Route::get('forgot-password', [ForgotPasswordController::class, 'showForgotPasswordForm'])->name('password.request');
+Route::post('forgot-password', [ForgotPasswordController::class, 'sendResetLink'])->name('password.email');
+
+Route::get('reset-password/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+Route::post('reset-password', [ResetPasswordController::class, 'ResetPassword'])->name('password.update');
+Route::get('/password-sent', function (Request $request) {
+    return view('auth.passwordSent', ['email' => $request->email]);
+})->name('password.sent');
+
+
 // Route::post('/checkout/apply-voucher', [CartController::class, 'apply'])->name('cart.apply');
 

@@ -21,6 +21,14 @@
 
 
     <div class="container login-container">
+        @if (session('success'))
+            <div style="background: #d4edda; color: #155724; padding: 15px; border-radius: 5px; margin-bottom: 15px;">
+                {{ session('success') }}
+            </div>
+        @endif
+
+
+
 
         <div class="row">
             <div class="col-lg-12 mx-auto">
@@ -47,7 +55,7 @@
 
                             <div>
                                 <label for="login-password">
-                                    Password
+                                    Mật Khẩu
                                     <span class="required">*</span>
                                 </label>
                                 <input type="password" class="form-input form-wide @error('password') is-invalid @enderror"
@@ -64,12 +72,11 @@
                             <div class="form-footer">
                                 <div class="custom-control custom-checkbox mb-0">
                                     <input type="checkbox" class="custom-control-input" id="lost-password" />
-                                    <label class="custom-control-label mb-0" for="lost-password">Remember
-                                        me</label>
+                                    <label class="custom-control-label mb-0" for="lost-password">Ghi Nhớ Tôi</label>
                                 </div>
 
-                                <a href="forgot-password.html" class="forget-password text-dark form-footer-right">Forgot
-                                    Password?</a>
+                                <a href="{{ route('password.request') }}"
+                                    class="forget-password text-dark form-footer-right">Bạn Quên Mật Khẩu?</a>
                             </div>
 
 
@@ -80,11 +87,12 @@
                                     <a href="{{ route('register') }}" class="text-blue-500 hover:underline">Đăng ký ngay</a>
                                 </p>
                             </div>
-                            <a href="{{route('google.login')}}" style="margin-bottom: 10px;" class="btn btn-block btn-danger">
-                                <i class="fab fa-google-plus mr-2"></i>Sign in with Google+
+                            <a href="{{ route('google.login') }}" style="margin-bottom: 10px;"
+                                class="btn btn-block btn-danger">
+                                <i class="fab fa-google-plus mr-2"></i>Đăng Nhập Với Google+
                             </a>
                             <button type="submit" class="btn btn-dark btn-md w-100">
-                                LOGIN
+                                Đăng Nhập
                             </button>
                         </form>
                     </div>
