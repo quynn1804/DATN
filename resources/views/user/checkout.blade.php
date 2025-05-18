@@ -77,7 +77,7 @@
                                         <div class="form-group">
                                             <label>Email
                                                 <abbr class="required" title="required">*</abbr></label>
-                                            <input type="email" name="email" class="form-control" value="{{ old('email') }}" />
+                                            <input type="email" name="email" class="form-control" value="{{ auth()->user()->email }}" readonly />
                                             @error('email')
                                             <span class="fst-italic text-danger">{{ $message }}</span>
                                             @enderror

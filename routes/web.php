@@ -149,6 +149,15 @@ Route::post('reset-password', [ResetPasswordController::class, 'ResetPassword'])
 Route::get('/password-sent', function (Request $request) {
     return view('auth.passwordSent', ['email' => $request->email]);
 })->name('password.sent');
+use Illuminate\Support\Facades\Mail;
+use App\Mail\OrderConfirmationMail;
+use App\Models\Order;
+
+Route::get('/test-mail', function () {
+    $order = Order::latest()->first();
+    Mail::to('chinhbanh24@gmail.com')->send(new OrderConfirmationMail($order));
+    return 'Mail đã gửi, kiểm tra hộp thư!';
+});
 
 
 // Route::post('/checkout/apply-voucher', [CartController::class, 'apply'])->name('cart.apply');

@@ -32,6 +32,7 @@ return [
     |            "postmark", "log", "array", "failover", "roundrobin"
     |
     */
+    'log_channel' => env('MAIL_LOG_CHANNEL', 'stack'),
 
     'mailers' => [
         'smtp' => [
