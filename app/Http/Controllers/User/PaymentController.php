@@ -22,11 +22,11 @@ class PaymentController extends Controller
     {
         try {
             $userEmail = auth()->user()->email;
-            \Log::info("Sending order confirmation to: " . $userEmail);
+            Log::info("Sending order confirmation to: " . $userEmail);
             Mail::to($userEmail)->send(new OrderConfirmationMail($order));
-            \Log::info("Mail sent successfully.");
+            Log::info("Mail sent successfully.");
         } catch (\Exception $e) {
-            \Log::error("Mail sending failed: " . $e->getMessage());
+            Log::error("Mail sending failed: " . $e->getMessage());
         }
     }
 
