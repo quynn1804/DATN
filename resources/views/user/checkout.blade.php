@@ -2,6 +2,17 @@
 @section('title', 'Check Out')
 
 @section('style')
+@if(Session::has('success'))
+    <div class="alert alert-success">
+        {{ Session::get('success') }}
+    </div>
+@endif
+
+@if(Session::has('error'))
+    <div class="alert alert-danger">
+        {{ Session::get('error') }}
+    </div>
+@endif
 
 <style>
     .checkout-area {
@@ -66,7 +77,7 @@
                                         <div class="form-group">
                                             <label>Email
                                                 <abbr class="required" title="required">*</abbr></label>
-                                            <input type="email" name="email" class="form-control" value="{{ old('email') }}" />
+                                            <input type="email" name="email" class="form-control" value="{{ auth()->user()->email }}" readonly />
                                             @error('email')
                                             <span class="fst-italic text-danger">{{ $message }}</span>
                                             @enderror
@@ -94,6 +105,18 @@
                                                 <abbr class="required" title="required">*</abbr></label>
                                             <input type="text" name="address" class="form-control" value="{{ old('address') }}" />
                                             @error('address')
+                                            <span class="fst-italic text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Note
+                                                <abbr class="required" title="required">*</abbr></label>
+                                            <textarea name="note" class="form-control" rows="4">{{ old('note') }}</textarea>
+                                            @error('note')
                                             <span class="fst-italic text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>

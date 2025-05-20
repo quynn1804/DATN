@@ -77,7 +77,11 @@
             <li class="breadcrumb-item active" aria-current="page">Chi tiết đơn hàng</li>
         </ol>
     </nav>
-
+    @if (session('success'))
+    <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+        {{ session('success') }}
+    </div>
+@endif
     <main class="page-content">
         <div class="order-details-area">
             <div class="container">

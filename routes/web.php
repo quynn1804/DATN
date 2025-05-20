@@ -2,6 +2,7 @@
 // use App\Http\Controllers\CommentController;
 use App\Http\Controllers\admin\ContactController;
 use App\Http\Controllers\Admin\StatisticController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\User\CartController;
 use App\Http\Controllers\Admin\AccountController;
 use App\Http\Controllers\Admin\AdminController;
@@ -9,12 +10,14 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\VoucherController;
+use App\Http\Controllers\User\ForgotPasswordController;
+use App\Http\Controllers\user\ResetPasswordController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\User\UserOrderController;
 use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Admin\StockImportController;
 use App\Http\Controllers\AuthController;
-
+use Illuminate\Http\Request; 
 use App\Http\Controllers\Admin\ApplyVoucherController;
 use App\Http\Controllers\User\PaymentController;
 use App\Models\Cart;
@@ -54,7 +57,7 @@ Route::middleware('auth')->group(function () {
         return 'Chào mừng bạn đến trang Dashboard!';
     })->name('dashboard');
 
-    Route::prefix('admin')->name('admin.')->group(function () {
+    Route::prefix('admin')->middleware(['isAdmin'])->name('admin.')->group(function () {
         // Route::get('/', function () {
         //     return redirect()->route('admin.statistic.index');
         // })->name('dashboard');
@@ -73,6 +76,10 @@ Route::middleware('auth')->group(function () {
         Route::resource('orders', OrderController::class);
         Route::resource('stock-imports', StockImportController::class);
         Route::delete('/products/variant/{id}', [ProductController::class, 'destroyVariant'])->name('products.variant.destroy');
+
+        Route::get('/chats', [MessageController::class, 'index'])->name('chats.index');
+        Route::post('/chats/{userId}/write', [MessageController::class, 'store'])->name('chats.write');
+        Route::get('/chats/{userId}/show', [MessageController::class, 'show'])->name('chats.detail');
     });
 
 
@@ -105,7 +112,7 @@ Route::middleware('auth')->group(function () {
     Route::get('user/orders/{order}', [UserOrderController::class, 'show'])
         ->middleware('auth')
         ->name('user.order.detail');
-        Route::post('user/orders/{order}/cancel', [UserOrderController::class, 'cancel'])->name('orders.cancel');
+    Route::post('user/orders/{order}/cancel', [UserOrderController::class, 'cancel'])->name('orders.cancel');
 
 });
 
@@ -130,5 +137,28 @@ Route::post('/process-payment', [PaymentController::class, 'processPayment'])->n
 Route::get('/payment/success', [PaymentController::class, 'paymentSuccess'])->name('payment.success');
 Route::get('/payment/failure', [PaymentController::class, 'paymentFailure'])->name('payment.failure');
 Route::get('/top-favorite-products', [ProductController::class, 'topFavorites'])->name('products.topFavorites');
+// login with google
+Route::get('google/login', [AuthController::class, 'redirectToGoogle'])->name('google.login');
+Route::get('auth/google/callback', [AuthController::class, 'handleGoogleCallback'])->name('google.callback');
+// forgot pasword
+Route::get('forgot-password', [ForgotPasswordController::class, 'showForgotPasswordForm'])->name('password.request');
+Route::post('forgot-password', [ForgotPasswordController::class, 'sendResetLink'])->name('password.email');
+
+Route::get('reset-password/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+Route::post('reset-password', [ResetPasswordController::class, 'ResetPassword'])->name('password.update');
+Route::get('/password-sent', function (Request $request) {
+    return view('auth.passwordSent', ['email' => $request->email]);
+})->name('password.sent');
+use Illuminate\Support\Facades\Mail;
+use App\Mail\OrderConfirmationMail;
+use App\Models\Order;
+
+Route::get('/test-mail', function () {
+    $order = Order::latest()->first();
+    Mail::to('chinhbanh24@gmail.com')->send(new OrderConfirmationMail($order));
+    return 'Mail đã gửi, kiểm tra hộp thư!';
+});
+
+
 // Route::post('/checkout/apply-voucher', [CartController::class, 'apply'])->name('cart.apply');
 
