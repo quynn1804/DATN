@@ -81,7 +81,7 @@ class ProductController extends Controller
             'name' => $validated['name'],
             'category_id' => $validated['category_id'],
             'description' => $validated['description'],
-            'images' => $imagePaths,
+            'images' => json_encode($imagePaths),
             'status' => true,
             'product_type' => $productType
         ];
@@ -127,7 +127,7 @@ class ProductController extends Controller
                     'price' => $variantData['price'],
                     'stock' => $variantData['stock'],
                     'description' => $variantData['description'] ?? null, // Sử dụng null nếu không có mô tả
-                    'images' => $variantImages,
+                    'images' => json_encode($variantImages),
                 ]);
             }
         }
@@ -182,7 +182,7 @@ class ProductController extends Controller
             'name' => $validated['name'],
             'category_id' => $validated['category_id'],
             'description' => $validated['description'],
-            'images' => $imagePaths, // ảnh mới hoặc giữ nguyên
+            'images' => json_encode($imagePaths), // ảnh mới hoặc giữ nguyên
             'product_type' => $productType,
             'status' => $request->status ?? $product->status, // giữ trạng thái nếu không thay đổi
         ];
@@ -239,7 +239,7 @@ class ProductController extends Controller
                     if ($variant) {
                         // Nếu không upload ảnh mới, giữ lại ảnh cũ
                         if (empty($variantImages)) {
-                            $variantImages = $variant->images ?? '[]';
+                            $variantImages = json_decode($variant->images ?? '[]', true);
                         }
 
                         $variant->update([
@@ -248,7 +248,7 @@ class ProductController extends Controller
                             'price' => $variantData['price'],
                             'stock' => $variantData['stock'],
                             'description' => $variantData['description'] ?? null,
-                            'images' => $variantImages,
+                            'images' => json_encode($variantImages),
                         ]);
                     }
                 } else {
@@ -259,7 +259,7 @@ class ProductController extends Controller
                         'price' => $variantData['price'],
                         'stock' => $variantData['stock'],
                         'description' => $variantData['description'] ?? null,
-                        'images' => $variantImages,
+                        'images' => json_encode($variantImages),
                     ]);
                 }
             }

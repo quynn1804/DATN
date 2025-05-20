@@ -1,12 +1,11 @@
 @php
 if (!function_exists('getImageUrl')) {
-    if (!function_exists('getImageUrl')) {
-    function getImageUrl($path, $default = 'images/default.png') {
-        if ($path && file_exists(public_path('storage/' . $path))) {
-            return asset('storage/' . $path);
-        }
-        return asset($default); // ảnh mặc định
-    }
+function getImageUrl($path, $default = 'https://laravel.com/img/logomark.min.svg') {
+if ($path && file_exists(public_path('storage/' . $path))) {
+return asset('storage/' . $path);
+}
+
+return asset($default); // ảnh mặc định (đặt ở public/images/default.png)
 }
 }
 @endphp
@@ -118,6 +117,7 @@ if (!function_exists('getImageUrl')) {
 
                     <div class="product-single-carousel owl-carousel owl-theme show-nav-hover">
                         <div class="product-item">
+                            <img class="product-single-image" src="{{ getImageUrl($product->image) }}" data-zoom-image="{{ getImageUrl($product->image) }}" width="468" height="468" alt="product" />
                             @php
 
                             $imageList = [];
@@ -150,13 +150,8 @@ if (!function_exists('getImageUrl')) {
 
                         </div>
                     </div>
-                    <div class="product-gallery">
-                        <!-- Ảnh chính -->
-                        <div class="main-image">
-                            <img id="mainProductImage" src="{{ $mainImageUrl }}" alt="{{ $product->name }}"
-                                 style="width: 100%; max-width: 400px; transition: opacity 0.5s ease;" />
-                        </div>
 
+                    <!-- End .product-single-carousel -->
                         <!-- Thumbnails -->
                            <!-- Thumbnails -->
 
@@ -172,96 +167,6 @@ if (!function_exists('getImageUrl')) {
                                     @endforeach
                                 @endforeach
                             </div>
-
-
-                            {{-- <div class="thumbnail-list" id="thumbnailList" style="display: flex; gap: 10px; margin-top: 15px;">
-                                @php $thumbIndex = 0; @endphp
-                                @foreach($product->variants as $variant)
-                                    @foreach($variant->images as $image)
-                                        <img src="{{ getImageUrl($image) }}"
-                                            class="thumbnail-img"
-                                            data-color-id="{{ $variant->color_id }}"
-                                            data-image-url="{{ getImageUrl($image) }}"
-                                            data-index="{{ $thumbIndex }}"
-                                            style="width: 70px; cursor: pointer;"
-                                            onclick="changeMainImage(this.src)">
-                                        @php $thumbIndex++; @endphp
-                                    @endforeach
-                                @endforeach
-                            </div>
-                            <script>
-                                let thumbnails = document.querySelectorAll('.thumbnail-img');
-                                let mainImage = document.getElementById('mainProductImage');
-                                let currentIndex = 0;
-                                let interval = 3000;
-                                let slideTimer;
-
-                                function changeMainImage(src) {
-                                    if (mainImage.src !== src) {
-                                        mainImage.style.opacity = 0;
-                                        setTimeout(() => {
-                                            mainImage.src = src;
-                                            mainImage.style.opacity = 1;
-                                        }, 300);
-                                    }
-                                }
-
-                                function highlightThumbnail(index) {
-                                    thumbnails.forEach(thumb => thumb.classList.remove('active-thumbnail'));
-                                    if (thumbnails[index]) {
-                                        thumbnails[index].classList.add('active-thumbnail');
-                                    }
-                                }
-
-                                function autoSlide() {
-                                    if (thumbnails.length === 0) return;
-
-                                    let thumbnail = thumbnails[currentIndex];
-                                    let newSrc = thumbnail.getAttribute('data-image-url');
-
-                                    changeMainImage(newSrc);
-                                    highlightThumbnail(currentIndex);
-
-                                    currentIndex = (currentIndex + 1) % thumbnails.length;
-                                }
-
-                                function startAutoSlide() {
-                                    slideTimer = setInterval(autoSlide, interval);
-                                }
-
-                                function resetAutoSlide() {
-                                    clearInterval(slideTimer);
-                                    startAutoSlide();
-                                }
-
-                                // Bắt đầu auto slide khi trang được tải
-                                window.onload = () => {
-                                    startAutoSlide();
-
-                                    // Gắn sự kiện click cho tất cả ảnh nhỏ
-                                    thumbnails.forEach((thumb, index) => {
-                                        thumb.addEventListener('click', () => {
-                                            let newSrc = thumb.getAttribute('data-image-url');
-                                            changeMainImage(newSrc);
-                                            currentIndex = index; // Cập nhật vị trí hiện tại
-                                            highlightThumbnail(index);
-                                            resetAutoSlide(); // Đặt lại bộ đếm auto
-                                        });
-                                    });
-                                };
-
-                                // CSS cho ảnh nhỏ đang được chọn
-                                const style = document.createElement('style');
-                                style.innerHTML = `
-                                    .active-thumbnail {
-                                        border: 2px solid #007bff;
-                                        padding: 2px;
-                                        border-radius: 4px;
-                                    }
-                                `;
-                                document.head.appendChild(style);
-                            </script> --}}
-
 
                     </div>
 
@@ -814,5 +719,4 @@ if (!function_exists('getImageUrl')) {
             });
         });
     </script>
-
 @endsection
