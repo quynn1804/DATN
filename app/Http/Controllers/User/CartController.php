@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\User;
 
 
@@ -10,10 +11,13 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+
 use App\Models\Voucher;
 
-class CartController extends Controller {
-    public function index() {
+class CartController extends Controller
+{
+    public function index()
+    {
         $cartItems = Cart::where('user_id', auth()->id())
             ->with('productVariant.product', 'productVariant.color', 'productVariant.capacity')
             ->get();
@@ -21,7 +25,9 @@ class CartController extends Controller {
         return view('user.cart', compact('cartItems'));
     }
 
-    public function addToCart(Request $request) {
+    public function addToCart(Request $request)
+    {
+        $cart = session()->get('cart', []);
         $request->validate([
             'product_id' => 'required|exists:products,id',
             'color_id' => 'nullable|exists:colors,id',
@@ -69,7 +75,8 @@ class CartController extends Controller {
         return redirect()->route('cart')->with('success', 'Sản phẩm đã được thêm vào giỏ hàng.');
     }
 
-    public function update(Request $request, $id) {
+    public function update(Request $request, $id)
+    {
         $cartItem = Cart::find($id);
         if (!$cartItem) {
             return response()->json(['success' => false, 'message' => 'Sản phẩm không tồn tại trong giỏ hàng!']);
@@ -88,52 +95,83 @@ class CartController extends Controller {
         ]);
     }
 
-    public function destroy($id) {
+    public function destroy(Request $request, $id)
+    {
         $cartItem = Cart::where('id', $id)->where('user_id', auth()->id())->first();
-        if ($cartItem) {
-            $cartItem->delete();
+
+        if (!$cartItem) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Không tìm thấy sản phẩm trong giỏ hàng.'
+                ], 404);
+            }
+            return redirect()->route('cart')->with('error', 'Không tìm thấy sản phẩm trong giỏ hàng.');
+        }
+
+        $cartItem->delete();
+
+        $cartTotal = Cart::where('user_id', auth()->id())
+            ->selectRaw('SUM(quantity * price_at_time) as total')
+            ->value('total');
+
+        session(['cart_total' => $cartTotal]);
+
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Xóa sản phẩm khỏi giỏ hàng thành công.',
+                'cart_total' => number_format($cartTotal ?? 0),
+            ], 200); // Cố gắng luôn trả status 200
         }
 
         return redirect()->route('cart')->with('success', 'Xóa sản phẩm khỏi giỏ hàng thành công.');
     }
+
     public function applyVoucher(Request $request)
     {
-        $request->validate([
-            'voucher_code' => 'required|string',
-            'cart_total' => 'required|numeric'
-        ]);
+        try {
+            $request->validate([
+                'voucher_code' => 'required|string',
+                'cart_total' => 'required|numeric'
+            ]);
 
-        $voucher = Voucher::where('code', $request->voucher_code)
-            ->where('is_active', 1)
-            ->whereDate('start', '<=', now())
-            ->whereDate('end', '>=', now())
-            ->first();
+            $voucher = Voucher::where('code', $request->voucher_code)
+                ->where('is_active', 1)
+                ->whereDate('start', '<=', now())
+                ->whereDate('end', '>=', now())
+                ->first();
 
-        if (!$voucher) {
-            return response()->json(['success' => false, 'message' => 'Mã giảm giá không hợp lệ hoặc đã hết hạn!']);
+            if (!$voucher) {
+                return response()->json(['success' => false, 'message' => 'Mã giảm giá không hợp lệ hoặc đã hết hạn!']);
+            }
+
+            $cartTotal = $request->cart_total;
+            $discountAmount = 0;
+
+            if ($voucher->discount_type === 'fixed') {
+                $discountAmount = min($voucher->discount_value, $cartTotal);
+            } elseif ($voucher->discount_type === 'percentage') {
+                $discountAmount = min($cartTotal * ($voucher->discount_value / 100), $voucher->max_discount_amount);
+            }
+
+            $newTotal = max(0, $cartTotal - $discountAmount);
+
+            session([
+                'voucher_code' => $voucher->code,
+                'discount_amount' => $discountAmount
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'discount_amount' => $discountAmount,
+                'new_total' => $newTotal
+            ]);
+        } catch (\Exception $e) {
+            Log::info('Apply voucher request data: ', [
+                'voucher_code' => $request->voucher_code,
+                'cart_total' => $request->cart_total,
+            ]);
         }
-
-        $cartTotal = $request->cart_total;
-        $discountAmount = 0;
-
-        if ($voucher->discount_type === 'fixed') {
-            $discountAmount = min($voucher->discount_value, $cartTotal);
-        } elseif ($voucher->discount_type === 'percentage') {
-            $discountAmount = min($cartTotal * ($voucher->discount_value / 100), $voucher->max_discount_amount);
-        }
-
-        $newTotal = max(0, $cartTotal - $discountAmount);
-
-        // Lưu vào session
-        session([
-            'voucher_code' => $voucher->code,
-            'discount_amount' => $discountAmount
-        ]);
-
-        return response()->json([
-            'success' => true,
-            'discount_amount' => $discountAmount,
-            'new_total' => $newTotal
-        ]);
     }
 }
