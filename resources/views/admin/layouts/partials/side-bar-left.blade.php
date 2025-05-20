@@ -80,7 +80,12 @@
                     <span key="t-vouchers">Mã giảm giá</span>
                 </a>
             </li>
-
+            <li>
+                <a href="{{ route('admin.stock-imports.index') }}" class="waves-effect">
+                    <i class="fas fa-receipt"></i>
+                    <span key="t-stockimports">Quản Lý Nhập Kho </span>
+                </a>
+            </li>
             <li>
                 <a href="{{ route('admin.chats.index') }}" class="waves-effect">
                     <i class="bx bx-chat"></i>

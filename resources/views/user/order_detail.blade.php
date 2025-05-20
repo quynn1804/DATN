@@ -174,7 +174,7 @@
                                     };
 
                                     $.ajax({
-                                        url: "{{ route('comments.store', ['order' => $order->id]) }}"
+                                        url: "{{ route('comments.store', ['id' => $order->id]) }}"
                                         , type: "POST"
                                         , data: formData
                                         , dataType: "json"
@@ -197,9 +197,7 @@
 
                         </script>
                     </div>
-                    @else
-                    <p><a href="{{ route('login') }}">Đăng nhập</a> để bình luận.</p>
-                    @endif
+                        @endif
 
                     <div class="col-lg-12 text-right mt-3">
                         <a href="{{ route('myAccount') }}" class="btn btn-secondary">Quay lại danh sách đơn hàng</a>

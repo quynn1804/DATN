@@ -159,34 +159,34 @@
 
                                         <div class="price-box">
 
-                            <span class="product-price">  @if($product->product_type === 'single')
-                                {{ number_format($product->price, 0, ',', '.') }}₫
-                            @else
-                                @php
-                                    $minPrice = $product->variants->min('price');
-                                    $maxPrice = $product->variants->max('price');
-                                @endphp
-                                {{ number_format($minPrice, 0, ',', '.') }}₫ - {{ number_format($maxPrice, 0, ',', '.') }}₫
-                            @endif</span>
-                            @if ($product->old_price)
-                            <span class="old-price"><del>{{ number_format($product->old_price, 0, ',', '.') }}đ</del></span>
-                            @endif
+                                            <span class="product-price">
+                                                @if ($product->product_type === 'single')
+                                                    {{ number_format($product->price, 0, ',', '.') }}₫
+                                                @else
+                                                    @php
+                                                        $minPrice = $product->variants->min('price');
+                                                        $maxPrice = $product->variants->max('price');
+                                                    @endphp
+                                                    {{ number_format($minPrice, 0, ',', '.') }}₫ -
+                                                    {{ number_format($maxPrice, 0, ',', '.') }}₫
+                                                @endif
+                                            </span>
+                                            @if ($product->old_price)
+                                                <span
+                                                    class="old-price"><del>{{ number_format($product->old_price, 0, ',', '.') }}đ</del></span>
+                                            @endif
 
                                         </div>
                                         <!-- End .price-box -->
 
                                         <div class="product-action">
-                                            <a href="wishlist.html" class="btn-icon-wish" title="wishlist">
-                                                <i class="icon-heart"></i>
-                                            </a>
+
                                             <a href="{{ route('singleProduct', $product->id) }}"
                                                 class="btn-icon btn-add-cart">
                                                 <i class="fa fa-arrow-right"></i>
-                                                <span>SELECT OPTIONS</span>
+                                                <span>Chi tiết sản phẩm</span>
                                             </a>
-                                            <a class="btn-quickview" title="Quick View">
-                                                <i class="fas fa-external-link-alt"></i>
-                                            </a>
+
                                         </div>
                                     </div>
                                     <!-- End .product-details -->
@@ -198,13 +198,12 @@
 
                     <nav class="toolbox toolbox-pagination">
                         <div class="toolbox-item toolbox-show">
-                            <label>Show:</label>
+                            <label></label>
 
-                            <div class="select-custom">
-                                <select name="count" class="form-control">
-                                    <option value="12">12</option>
-                                    <option value="24">24</option>
-                                    <option value="36">36</option>
+                            <div class="select">
+
+                                <label></label>
+
                                 </select>
                             </div>
                             <!-- End .select-custom -->
@@ -212,21 +211,9 @@
                         <!-- End .toolbox-item -->
 
                         <ul class="pagination toolbox-item">
-                            <li class="page-item disabled">
-                                <a class="page-link page-link-btn" href="category-4col.html#"><i
-                                        class="icon-angle-left"></i></a>
-                            </li>
-                            <li class="page-item active">
-                                <a class="page-link" href="category-4col.html#">1 <span
-                                        class="sr-only">(current)</span></a>
-                            </li>
-                            <li class="page-item"><a class="page-link" href="category-4col.html#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="category-4col.html#">3</a></li>
-                            <li class="page-item"><span class="page-link">...</span></li>
-                            <li class="page-item">
-                                <a class="page-link page-link-btn" href="category-4col.html#"><i
-                                        class="icon-angle-right"></i></a>
-                            </li>
+
+                            {{ $products->links('pagination::bootstrap-5') }}
+
                         </ul>
                     </nav>
                 @else

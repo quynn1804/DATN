@@ -3,9 +3,9 @@
         <span class="mobile-menu-close"><i class="fa fa-times"></i></span>
         <nav class="mobile-nav">
             <ul class="mobile-menu">
-                <li><a href="demo4.html">Home</a></li>
+                <li><a href="demo4.html">Trang Chủ</a></li>
                 <li>
-                    <a href="category.html">Categories</a>
+                    <a href="{{ route('pageCategory') }}">Categories</a>
                     <ul>
                         <li><a href="category.html">Full Width Banner</a></li>
                         <li><a href="category-banner-boxed-slider.html">Boxed Slider Banner</a></li>

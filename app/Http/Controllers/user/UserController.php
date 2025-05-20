@@ -8,7 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Capacity;
 use App\Models\Category;
 use App\Models\Color;
-
+use App\Models\Comment;
 use App\Models\Cart;
 
 use App\Models\Order;
@@ -69,7 +69,7 @@ class UserController extends Controller
         }
 
         // Lấy sản phẩm với phân trang (9 sản phẩm mỗi trang)
-        $products = $query->paginate(9);
+        $products = $query->paginate(12);
 
         return view('user.pageCategory', compact('products', 'categories', 'Capacities', 'colors'));
     }
@@ -116,18 +116,22 @@ class UserController extends Controller
     }
 
     public function updateAccount(Request $request)
-    {
+    {/** @var \App\Models\User $user */
         $user = Auth::user();
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
             'password' => 'nullable|string|min:6|confirmed',
+            'gender' => 'required|in:Nam,Nữ,Khác',
+            'phone' => 'required|numeric|digits_between:10,15'
         ]);
 
         // Cập nhật thông tin người dùng
         $user->name = $validated['name'];
         $user->email = $validated['email'];
+        $user->gender = $validated['gender'];
+        $user->phone = $validated['phone'];
 
         // Nếu có mật khẩu mới, cập nhật mật khẩu
         if (!empty($validated['password'])) {
@@ -142,6 +146,8 @@ class UserController extends Controller
 
     public function singleProduct($id)
     {
+          $comments = Comment::where('product_id', $id)->with('user')->get();
+
         $product = Product::with(['variants.color', 'variants.capacity'])->findOrFail($id);
         $productt = Product::all();
         $relatedProducts = Product::where('category_id', $product->category_id)
@@ -152,7 +158,7 @@ class UserController extends Controller
         $capacities = $product->variants->pluck('capacity')->unique('id');
 
 
-        return view('user.singleProduct', compact('product', 'colors', 'capacities', 'productt','relatedProducts'));
+        return view('user.singleProduct', compact('product', 'colors', 'capacities', 'productt','relatedProducts', 'comments'));
 
     }
 

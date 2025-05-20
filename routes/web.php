@@ -10,17 +10,22 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\VoucherController;
+use App\Http\Controllers\User\ForgotPasswordController;
+use App\Http\Controllers\user\ResetPasswordController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\User\UserOrderController;
 use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Admin\StockImportController;
 use App\Http\Controllers\AuthController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\OrderConfirmationMail;
+use App\Models\Order;
 
 use App\Http\Controllers\Admin\ApplyVoucherController;
 use App\Http\Controllers\User\PaymentController;
 use App\Models\Cart;
 use Illuminate\Support\Facades\Route;
-
 // Trang chủ
 Route::get('/', [UserController::class, 'index'])->name('home');
 
@@ -88,6 +93,7 @@ Route::middleware('auth')->group(function () {
 
     // Giỏ hàng (yêu cầu đăng nhập)
     Route::middleware('auth')->group(function () {
+        Route::post('/account/update', [UserController::class, 'updateAccount'])->name('updateAccount');
         Route::post('/orders/{order}/comment', [CommentController::class, 'store'])
             ->name('comments.store');
         Route::post('products/{id}/cart', [CartController::class, 'store'])->name('cart.store');
@@ -113,8 +119,7 @@ Route::middleware('auth')->group(function () {
     Route::get('user/orders/{order}', [UserOrderController::class, 'show'])
         ->middleware('auth')
         ->name('user.order.detail');
-        Route::post('user/orders/{order}/cancel', [UserOrderController::class, 'cancel'])->name('orders.cancel');
-
+    Route::post('user/orders/{order}/cancel', [UserOrderController::class, 'cancel'])->name('orders.cancel');
 });
 
 
@@ -130,6 +135,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/vnpay_payment', [PaymentController::class, 'vnpay_payment']);
     Route::post('/momo_payment', [PaymentController::class, 'momo_payment']);
     Route::post('/momoQr_payment', [PaymentController::class, 'momoQr_payment']);
+    Route::get('/test-mail', function () {
+        $order = Order::latest()->first();
+        Mail::to('chinhbanh24@gmail.com')->send(new OrderConfirmationMail($order));
+        return 'Mail đã gửi, kiểm tra hộp thư!';
+    });
     Route::get('/momo-callback', [PaymentController::class, 'momoCallback'])->name('momo.callback');
 });
 
@@ -139,4 +149,15 @@ Route::get('/payment/success', [PaymentController::class, 'paymentSuccess'])->na
 Route::get('/payment/failure', [PaymentController::class, 'paymentFailure'])->name('payment.failure');
 Route::get('/top-favorite-products', [ProductController::class, 'topFavorites'])->name('products.topFavorites');
 // Route::post('/checkout/apply-voucher', [CartController::class, 'apply'])->name('cart.apply');
+// login with google
+Route::get('google/login', [AuthController::class, 'redirectToGoogle'])->name('google.login');
+Route::get('auth/google/callback', [AuthController::class, 'handleGoogleCallback'])->name('google.callback');
+// forgot pasword
+Route::get('forgot-password', [ForgotPasswordController::class, 'showForgotPasswordForm'])->name('password.request');
+Route::post('forgot-password', [ForgotPasswordController::class, 'sendResetLink'])->name('password.email');
 
+Route::get('reset-password/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+Route::post('reset-password', [ResetPasswordController::class, 'ResetPassword'])->name('password.update');
+Route::get('/password-sent', function (Request $request) {
+    return view('auth.passwordSent', ['email' => $request->email]);
+})->name('password.sent');

@@ -3,17 +3,32 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Mail\OrderConfirmationMail;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\ProductVariant;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 
 class PaymentController extends Controller
 {
+      private function sendOrderConfirmationEmail($order)
+    {
+        try {
+            $userEmail = auth()->user()->email;
+            Log::info("Sending order confirmation to: " . $userEmail);
+            Mail::to($userEmail)->send(new OrderConfirmationMail($order));
+            Log::info("Mail sent successfully.");
+        } catch (\Exception $e) {
+            Log::error("Mail sending failed: " . $e->getMessage());
+        }
+    }
+
     public function execPostRequest($url, $data)
     {
         $ch = curl_init($url);
@@ -148,7 +163,7 @@ class PaymentController extends Controller
                     $fullname = $checkoutInfo['fullname'] ?? 'Khách hàng chưa nhập';
                     $phone = $checkoutInfo['phone'] ?? '0000000000';
                     $address = $checkoutInfo['address'] ?? 'Chưa có địa chỉ';
-                    $note = $checkoutInfo['voucher'] ?? null;
+                    $note = $checkoutInfo['note'] ?? null;
 
                     // Kiểm tra nếu đơn hàng đã tồn tại
                     $order = Order::where('order_code', $orderId)->first();
@@ -160,7 +175,7 @@ class PaymentController extends Controller
                         ]);
                     } else {
                         $order = Order::create([
-                            'order_code' => $orderId,
+                            'order_code' =>  'ORD-' .$orderId,
                             'user_id' => $userId,
                             'name' => $fullname,
                             'phone' => $phone,
@@ -180,6 +195,24 @@ class PaymentController extends Controller
                             'price_at_time' => $item->price_at_time,
                             'total_price' => $item->price_at_time * $item->quantity,
                         ]);
+                            // Giảm tồn kho
+                            $variant = ProductVariant::find($item->product_variant_id);
+
+                            if ($variant && $variant->stock >= $item->quantity) {
+                                $variant->stock -= $item->quantity;
+                                $variant->save();
+                            } else {
+                                Log::error("Không đủ hàng trong kho cho biến thể ID {$item->product_variant_id}");
+                            // Có thể huỷ đơn và thông báo tùy bạn xử lý
+                                return redirect()->route('checkout')->with('error', 'Một số sản phẩm không đủ số lượng trong kho.');
+                            }
+
+                            // Nếu là sản phẩm đơn thì giảm tồn kho ở bảng products
+                            $product = $variant->product;
+                            if ($product && $product->product_type === 'single' && $product->quantity >= $item->quantity) {
+                                $product->quantity -= $item->quantity;
+                                $product->save();
+                            }
                     }
 
                     Cart::where('user_id', $userId)->delete();
@@ -294,11 +327,11 @@ class PaymentController extends Controller
             $fullname = $checkoutInfo['fullname'] ?? 'Khách hàng chưa nhập';
             $phone = $checkoutInfo['phone'] ?? '0000000000';
             $address = $checkoutInfo['address'] ?? 'Chưa có địa chỉ';
-            $note = $checkoutInfo['voucher'] ?? null;
+            $note = $checkoutInfo['note'] ?? null;
 
             // Tạo đơn hàng
             $order = Order::create([
-                'order_code' => $vnp_TxnRef,
+                'order_code' =>  'ORD-' .$vnp_TxnRef,
                 'user_id' => $userId,
                 'name' => $fullname,
                 'phone' => $phone,
@@ -320,6 +353,24 @@ class PaymentController extends Controller
                     'price_at_time' => $item->price_at_time,
                     'total_price' => $item->price_at_time * $item->quantity,
                 ]);
+                    // Giảm tồn kho
+                    $variant = ProductVariant::find($item->product_variant_id);
+
+                    if ($variant && $variant->stock >= $item->quantity) {
+                        $variant->stock -= $item->quantity;
+                        $variant->save();
+                    } else {
+                        Log::error("Không đủ hàng trong kho cho biến thể ID {$item->product_variant_id}");
+                    // Có thể huỷ đơn và thông báo tùy bạn xử lý
+                        return redirect()->route('checkout')->with('error', 'Một số sản phẩm không đủ số lượng trong kho.');
+                    }
+
+                    // Nếu là sản phẩm đơn thì giảm tồn kho ở bảng products
+                    $product = $variant->product;
+                    if ($product && $product->product_type === 'single' && $product->quantity >= $item->quantity) {
+                        $product->quantity -= $item->quantity;
+                        $product->save();
+                    }
             }
 
             // Dọn dẹp giỏ hàng và session
@@ -354,6 +405,7 @@ class PaymentController extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
             'address' => $request->address,
+            'note' => $request->note,
             'voucher' => $request->input('voucher_code'), // nếu có
         ]]);
 
@@ -362,27 +414,93 @@ class PaymentController extends Controller
         $finalAmount = $data['amount'];
 
         // Kiểm tra phương thức thanh toán
+        // if ($data['payment_method'] === 'cod') {
+        //     try {
+        //         // Tạo mã đơn hàng duy nhất
+        //         $orderCode = 'ORD-' . strtoupper(uniqid());
+        //         $cartItems = Cart::where('user_id', auth()->id())->get();
+
+        //         // Lưu đơn hàng vào bảng orders
+        //         $order = Order::create([
+        //             'order_code' => $orderCode,
+        //             'user_id' => auth()->check() ? auth()->id() : null,
+        //             'name' => $data['fullname'],
+        //             'phone' => $data['phone'],
+        //             'address' => $data['address'],
+        //             'total_money' => $finalAmount, // ✅ Lưu giá trị đã trừ giảm giá
+        //             'status' => 'pending',
+        //             'payment_method' => 'cash',
+        //             'note' => $data['voucher'] ?? null,
+        //         ]);
+
+        //         // Lưu các sản phẩm trong giỏ hàng vào bảng `order_details`
+        //         foreach ($cartItems as $item) {
+        //             OrderDetail::create([
+        //                 'order_id' => $order->id,
+        //                 'product_variant_id' => $item->product_variant_id,
+        //                 'quantity' => $item->quantity,
+        //                 'price_at_time' => $item->price_at_time,
+        //                 'total_price' => $item->price_at_time * $item->quantity,
+        //             ]);
+
+        //             // Lấy biến thể sản phẩm
+        //             $variant = ProductVariant::find($item->product_variant_id);
+
+        //             if ($variant && $variant->product_id) {
+        //                 // Lấy sản phẩm chính từ bảng products
+        //                 $product = \App\Models\Product::find($variant->product_id);
+
+        //                 if ($product && $product->quantity >= $item->quantity) {
+        //                     $product->quantity -= $item->quantity;
+        //                     $product->save();
+        //                 } else {
+        //                     // Không đủ hàng trong kho, hủy đơn
+        //                     $order->delete();
+        //                     return back()->with('error', 'Một số sản phẩm không đủ số lượng trong kho.');
+        //                 }
+        //             }
+        //         }
+
+
+        //         // Xoá giỏ hàng sau khi đặt hàng thành công
+        //         Cart::where('user_id', auth()->id())->delete();
+
+        //         // Chuyển hướng về trang cảm ơn hoặc trang chủ
+        //         return redirect()->route('home')->with('success', 'Đơn hàng của bạn đã được tạo thành công!');
+        //     } catch (\Exception $e) {
+        //         return back()->with('error', 'Có lỗi xảy ra khi tạo đơn hàng. Vui lòng thử lại.');
+        //     }
+        // }
+
         if ($data['payment_method'] === 'cod') {
             try {
+                DB::beginTransaction(); // ⚠️ Đảm bảo rollback nếu có lỗi
+
+                $userId = auth()->id();
+                $cartItems = Cart::where('user_id', $userId)->get();
+
+                if ($cartItems->isEmpty()) {
+                    return back()->with('error', 'Giỏ hàng trống.');
+                }
+
                 // Tạo mã đơn hàng duy nhất
                 $orderCode = 'ORD-' . strtoupper(uniqid());
-                $cartItems = Cart::where('user_id', auth()->id())->get();
 
-                // Lưu đơn hàng vào bảng orders
                 $order = Order::create([
                     'order_code' => $orderCode,
-                    'user_id' => auth()->check() ? auth()->id() : null,
+                    'user_id' => $userId,
                     'name' => $data['fullname'],
                     'phone' => $data['phone'],
                     'address' => $data['address'],
-                    'total_money' => $finalAmount, // ✅ Lưu giá trị đã trừ giảm giá
+                    'total_money' => $finalAmount,
                     'status' => 'pending',
                     'payment_method' => 'cash',
                     'note' => $data['voucher'] ?? null,
                 ]);
 
-                // Lưu các sản phẩm trong giỏ hàng vào bảng `order_details`
+                // Duyệt từng sản phẩm trong giỏ
                 foreach ($cartItems as $item) {
+                    // Tạo dòng chi tiết đơn hàng
                     OrderDetail::create([
                         'order_id' => $order->id,
                         'product_variant_id' => $item->product_variant_id,
@@ -391,34 +509,36 @@ class PaymentController extends Controller
                         'total_price' => $item->price_at_time * $item->quantity,
                     ]);
 
-                    // Lấy biến thể sản phẩm
+                    // Giảm tồn kho
                     $variant = ProductVariant::find($item->product_variant_id);
 
-                    if ($variant && $variant->product_id) {
-                        // Lấy sản phẩm chính từ bảng products
-                        $product = \App\Models\Product::find($variant->product_id);
+                    if ($variant && $variant->stock >= $item->quantity) {
+                        $variant->stock -= $item->quantity;
+                        $variant->save();
+                    } else {
+                        DB::rollBack();
+                        return back()->with('error', 'Một số sản phẩm không đủ số lượng trong kho.');
+                    }
 
-                        if ($product && $product->quantity >= $item->quantity) {
-                            $product->quantity -= $item->quantity;
-                            $product->save();
-                        } else {
-                            // Không đủ hàng trong kho, hủy đơn
-                            $order->delete();
-                            return back()->with('error', 'Một số sản phẩm không đủ số lượng trong kho.');
-                        }
+                    // Nếu sản phẩm cha là loại sản phẩm đơn, trừ luôn số lượng tổng của sản phẩm chính
+                    $product = $variant->product;
+                    if ($product && $product->product_type === 'single' && $product->quantity >= $item->quantity) {
+                        $product->quantity -= $item->quantity;
+                        $product->save();
                     }
                 }
 
+                Cart::where('user_id', $userId)->delete();
 
-                // Xoá giỏ hàng sau khi đặt hàng thành công
-                Cart::where('user_id', auth()->id())->delete();
-
-                // Chuyển hướng về trang cảm ơn hoặc trang chủ
+                DB::commit();
                 return redirect()->route('home')->with('success', 'Đơn hàng của bạn đã được tạo thành công!');
             } catch (\Exception $e) {
+                DB::rollBack();
+                Log::error('Lỗi khi thanh toán COD: ' . $e->getMessage());
                 return back()->with('error', 'Có lỗi xảy ra khi tạo đơn hàng. Vui lòng thử lại.');
             }
         }
+
 
         // Các phương thức thanh toán khác
         if ($data['payment_method'] === 'momo') {

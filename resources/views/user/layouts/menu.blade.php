@@ -60,7 +60,7 @@
                                 </form>
                             </div>
                             <div class="header-logo_area">
-                                <a href="#">
+                                <a href="{{ route('home') }}">
                                     <img src="{{ asset('assets/images/menu/logo/2.png') }}" height="300px"
                                         alt="Header Logo">
                                 </a>

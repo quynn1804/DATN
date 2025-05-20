@@ -1,73 +1,301 @@
 @php
-if (!function_exists('getImageUrl')) {
-function getImageUrl($path, $default = 'https://laravel.com/img/logomark.min.svg') {
-if ($path && file_exists(public_path('storage/' . $path))) {
-return asset('storage/' . $path);
-}
-
-return asset($default); // ảnh mặc định (đặt ở public/images/default.png)
-}
-}
+    if (!function_exists('getImageUrl')) {
+        if (!function_exists('getImageUrl')) {
+            function getImageUrl($path, $default = 'images/default.png')
+            {
+                if ($path && file_exists(public_path('storage/' . $path))) {
+                    return asset('storage/' . $path);
+                }
+                return asset($default); // ảnh mặc định
+            }
+        }
+    }
 @endphp
+<style>
+    .option-box {
+        position: relative;
+        display: inline-block;
+        padding: 10px 20px;
+        margin: 5px;
+        border: 2px solid #ccc;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+    }
+
+    .option-box:hover {
+        border-color: #888;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        transform: translateY(-2px);
+    }
+
+    .option-box.selected {
+        border-color: red;
+    }
+
+    .option-box .checkmark {
+        display: none;
+        position: absolute;
+        top: 4px;
+        right: 6px;
+        color: red;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .option-box.selected .checkmark {
+        display: block;
+    }
+
+    @keyframes shake {
+        0% {
+            transform: translateX(0);
+        }
+
+        25% {
+            transform: translateX(-3px);
+        }
+
+        50% {
+            transform: translateX(3px);
+        }
+
+        75% {
+            transform: translateX(-3px);
+        }
+
+        100% {
+            transform: translateX(0);
+        }
+    }
+
+    .option-box:hover {
+        background-color: gray;
+        color: black;
+    }
+
+    .capacity-option:disabled {
+        pointer-events: none;
+        opacity: 0.5;
+    }
+
+    .main-image img.fade-out {
+        opacity: 0;
+    }
+
+    .main-image img.fade-in {
+        opacity: 1;
+    }
+
+    .thumbnail-img.active {
+        border: 2px solid #007bff;
+        transform: scale(1.05);
+    }
+</style>
 
 @extends('user.layouts.master')
 @section('title')
-{{ $product->name }}
+    {{ $product->name }}
 @endsection
 
 @section('content')
-<div class="container">
-    <nav aria-label="breadcrumb" class="breadcrumb-nav">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item">
-                <a href="demo4.html">
-                    <i class="icon-home"></i>
-                </a>
-            </li>
-            <li class="breadcrumb-item active" aria-current="page">
-                {{ $product->name }}
-            </li>
-        </ol>
-    </nav>
-
-    <div class="product-single-container product-single-default">
-        <div class="cart-message d-none">
-            <strong class="single-cart-notice">“{{ $product->name }}”</strong>
-            <span>đã được thêm vào giỏ hàng</span>
-        </div>
-
-        <div class="row">
-            <div class="col-lg-5 col-md-6 product-single-gallery">
-                <div class="product-slider-container">
-                    <div class="label-group">
-                        @if ($product->price_sale > 0)
-                        <div class="product-label label-sale">
-                            -16%
-                        </div>
-                        @endif
-                    </div>
-
-                    <div class="product-single-carousel owl-carousel owl-theme show-nav-hover">
-                        <div class="product-item">
-                            <img class="product-single-image" src="{{ getImageUrl($product->image) }}" data-zoom-image="{{ getImageUrl($product->image) }}" width="468" height="468" alt="product" />
-                        </div>
-                    </div>
-
-                    <!-- End .product-single-carousel -->
-                    <span class="prod-full-screen">
-                        <i class="icon-plus"></i>
-                    </span>
-                </div>
-
-            </div>
-            <!-- End .product-single-gallery -->
-
-            <div class="col-lg-7 col-md-6 product-single-details">
-                <h1 class="product-title">
+    <div class="container">
+        <nav aria-label="breadcrumb" class="breadcrumb-nav">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="demo4.html">
+                        <i class="icon-home"></i>
+                    </a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="product.html#">Shop</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">
                     {{ $product->name }}
-                </h1>
+                </li>
+            </ol>
+        </nav>
 
-                <div class="ratings-container">
+        <div class="product-single-container product-single-default">
+            <div class="cart-message d-none">
+                <strong class="single-cart-notice">“{{ $product->name }}”</strong>
+                <span>has been added to your cart.</span>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-5 col-md-6 product-single-gallery">
+                    <div class="product-slider-container">
+                        <div class="label-group">
+                            @if ($product->price_sale > 0)
+                                <div class="product-label label-sale">
+                                    -16%
+                                </div>
+                            @endif
+                        </div>
+
+                        <div class="product-single-carousel owl-carousel owl-theme show-nav-hover">
+                            <div class="product-item">
+                                @php
+
+                                    $imageList = [];
+
+                                    if (is_array($product->images) && count($product->images) > 0) {
+                                        $imageList = $product->images;
+                                    } elseif ($product->variants && $product->variants->count() > 0) {
+                                        $firstVariant = $product->variants->first();
+                                        if (is_array($firstVariant->images) && count($firstVariant->images) > 0) {
+                                            $imageList = $firstVariant->images;
+                                        }
+                                    }
+
+                                    // $mainImageUrl = getImageUrl($imageList[0] ?? null);
+                                    $firstVariant = $product->variants->first();
+                                    $mainImageUrl = getImageUrl($firstVariant->images[0] ?? null);
+
+                                    $mappedVariants = $product->variants->map(function ($variant) {
+                                        return [
+                                            'id' => $variant->id,
+                                            'color_id' => $variant->color_id,
+                                            'capacity_id' => $variant->capacity_id,
+                                            'price' => $variant->price,
+                                            'images' => collect($variant->images)
+                                                ->map(function ($img) {
+                                                    return getImageUrl($img);
+                                                })
+                                                ->toArray(),
+                                        ];
+                                    });
+                                @endphp
+
+                            </div>
+                        </div>
+                        <div class="product-gallery">
+                            <!-- Ảnh chính -->
+                            <div class="main-image">
+                                <img id="mainProductImage" src="{{ $mainImageUrl }}" alt="{{ $product->name }}"
+                                    style="width: 100%; max-width: 400px; transition: opacity 0.5s ease;" />
+                            </div>
+
+                            <!-- Thumbnails -->
+                            <!-- Thumbnails -->
+
+                            <div class="thumbnail-list" id="thumbnailList"
+                                style="display: flex; gap: 10px; margin-top: 15px;">
+                                @foreach ($product->variants as $variant)
+                                    @foreach ($variant->images as $image)
+                                        <img src="{{ getImageUrl($image) }}" class="thumbnail-img"
+                                            data-color-id="{{ $variant->color_id }}"
+                                            data-image-url="{{ getImageUrl($image) }}" style="width: 70px; cursor: pointer;"
+                                            onclick="changeMainImage(this.src)">
+                                    @endforeach
+                                @endforeach
+                            </div>
+
+
+                            {{-- <div class="thumbnail-list" id="thumbnailList" style="display: flex; gap: 10px; margin-top: 15px;">
+                                @php $thumbIndex = 0; @endphp
+                                @foreach ($product->variants as $variant)
+                                    @foreach ($variant->images as $image)
+                                        <img src="{{ getImageUrl($image) }}"
+                                            class="thumbnail-img"
+                                            data-color-id="{{ $variant->color_id }}"
+                                            data-image-url="{{ getImageUrl($image) }}"
+                                            data-index="{{ $thumbIndex }}"
+                                            style="width: 70px; cursor: pointer;"
+                                            onclick="changeMainImage(this.src)">
+                                        @php $thumbIndex++; @endphp
+                                    @endforeach
+                                @endforeach
+                            </div>
+                            <script>
+                                let thumbnails = document.querySelectorAll('.thumbnail-img');
+                                let mainImage = document.getElementById('mainProductImage');
+                                let currentIndex = 0;
+                                let interval = 3000;
+                                let slideTimer;
+
+                                function changeMainImage(src) {
+                                    if (mainImage.src !== src) {
+                                        mainImage.style.opacity = 0;
+                                        setTimeout(() => {
+                                            mainImage.src = src;
+                                            mainImage.style.opacity = 1;
+                                        }, 300);
+                                    }
+                                }
+
+                                function highlightThumbnail(index) {
+                                    thumbnails.forEach(thumb => thumb.classList.remove('active-thumbnail'));
+                                    if (thumbnails[index]) {
+                                        thumbnails[index].classList.add('active-thumbnail');
+                                    }
+                                }
+
+                                function autoSlide() {
+                                    if (thumbnails.length === 0) return;
+
+                                    let thumbnail = thumbnails[currentIndex];
+                                    let newSrc = thumbnail.getAttribute('data-image-url');
+
+                                    changeMainImage(newSrc);
+                                    highlightThumbnail(currentIndex);
+
+                                    currentIndex = (currentIndex + 1) % thumbnails.length;
+                                }
+
+                                function startAutoSlide() {
+                                    slideTimer = setInterval(autoSlide, interval);
+                                }
+
+                                function resetAutoSlide() {
+                                    clearInterval(slideTimer);
+                                    startAutoSlide();
+                                }
+
+                                // Bắt đầu auto slide khi trang được tải
+                                window.onload = () => {
+                                    startAutoSlide();
+
+                                    // Gắn sự kiện click cho tất cả ảnh nhỏ
+                                    thumbnails.forEach((thumb, index) => {
+                                        thumb.addEventListener('click', () => {
+                                            let newSrc = thumb.getAttribute('data-image-url');
+                                            changeMainImage(newSrc);
+                                            currentIndex = index; // Cập nhật vị trí hiện tại
+                                            highlightThumbnail(index);
+                                            resetAutoSlide(); // Đặt lại bộ đếm auto
+                                        });
+                                    });
+                                };
+
+                                // CSS cho ảnh nhỏ đang được chọn
+                                const style = document.createElement('style');
+                                style.innerHTML = `
+                                    .active-thumbnail {
+                                        border: 2px solid #007bff;
+                                        padding: 2px;
+                                        border-radius: 4px;
+                                    }
+                                `;
+                                document.head.appendChild(style);
+                            </script> --}}
+
+
+                        </div>
+
+                        <span class="prod-full-screen">
+                            <i class="icon-plus"></i>
+                        </span>
+                    </div>
+                </div>
+                <!-- End .product-single-gallery -->
+
+                <div class="col-lg-7 col-md-6 product-single-details">
+                    <h1 class="product-title">
+                        {{ $product->name }}
+                    </h1>
+
+                    {{-- <div class="ratings-container">
                     <div class="product-ratings">
                         <span class="ratings" style="width:60%"></span>
                         <!-- End .ratings -->
@@ -76,216 +304,163 @@ return asset($default); // ảnh mặc định (đặt ở public/images/default
                     <!-- End .product-ratings -->
 
                     <a href="product-variable.html#" class="rating-link">( 6 Reviews )</a>
-                </div>
-                <!-- End .ratings-container -->
+                </div> --}}
+                    <!-- End .ratings-container -->
 
-                <hr class="short-divider">
+                    <hr class="short-divider">
 
-                <div class="price-box">
-                    <span class="new-price text-danger">
-                        @if ($product->variants->count() > 0)
-                        {{ number_format($product->variants->min('price'), 0, ',', '.') }} đ
-                        @else
-                        {{ number_format($product->price, 0, ',', '.') }} đ
+                    <div class="price-box">
+                        <span class="new-price text-danger" id="dynamicPrice">
+                            @if ($product->variants->count() > 0)
+                                {{ number_format($product->variants->min('price'), 0, ',', '.') }} đ
+                            @else
+                                {{ number_format($product->price, 0, ',', '.') }} đ
+                            @endif
+                        </span>
+
+                        @if ($product->price_sale > 0)
+                            <span class="old-price">
+                                {{ formatPrice($product->price_regular) }}đ
+                            </span>
                         @endif
-                    </span>
-
-                    @if ($product->price_sale > 0)
-                    <span class="old-price">
-                        {{ formatPrice($product->price_regular) }}đ
-                    </span>
-                    @endif
-                </div>
-                <!-- End .price-box -->
-
-                <div class="product-desc">
-                    @if ($product->content)
-                    <p>
-                        Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis
-                        egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet,
-                        ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est.
-                        Mauris
-                        placerat eleifend leo.
-                    </p>
-                    @endif
-                </div>
-                <!-- End .product-desc -->
-
-                <ul class="single-info-list">
-                    <li>
-                        CATEGORY:
-                        <strong>
-                            <a href="{{ route('products.filter', ['category_id' => $product->category->id]) }}" class="product-category">
-                                {{ $product->category->name }}
-                            </a>
-                        </strong>
-                    </li>
-                </ul>
-                <form action="{{ route('cart.add') }}" method="POST">
-                    @csrf
-                    <input type="hidden" name="product_id" value="{{ $product->id }}">
-
-                    @if ($product->variants->count() > 0)
-                    <div class="form-group">
-                        <label for="capacity">Màu sắc:</label>
-                        <select name="color_id" id="color" class="form-control" style="height: 40px">
-                            @foreach ($product->variants->unique('color_id') as $variant)
-                            <option value="{{ $variant->color_id }}">
-                                {{ optional($variant->color)->name ?? 'Không có màu' }}
-                            </option>
-                            @endforeach
-                        </select>
                     </div>
-                    @endif
+                    <!-- End .price-box -->
 
-                    @if ($product->variants->count() > 0)
-                    <div class="form-group">
-                        <label for="capacity">Chọn dung lượng:</label>
-                        <select name="capacity_id" id="capacity" class="form-control" style="height: 40px">
-                            @foreach ($product->variants->unique('capacity_id') as $variant)
-                            <option value="{{ $variant->capacity_id }}">
-                                {{ optional($variant->capacity)->name ?? 'Không có dung lượng' }}
-                            </option>
-                            @endforeach
-                        </select>
+                    <div class="product-desc">
+                        @if ($product->content)
+                            <p>
+
+                            </p>
+                        @endif
                     </div>
-                    @endif
+                    <!-- End .product-desc -->
 
-                    <div class="product-action">
-                        <div class="product-single-qty">
-                            <input id="product-quantity" name="quantity" id="quantity" value="1" min="1" class="horizontal-quantity form-control" type="number">
-                        </div>
-
-                        <button type="submit" class="btn btn-dark mr-2">Thêm vào giỏ hàng</button>
-
-                        <a href="cart.html" class="btn btn-gray view-cart d-none">View cart</a>
-                    </div>
-                </form>
-                <!-- End .product-action -->
-
-                <hr class="divider mb-0 mt-0">
-
-                <div class="product-single-share mb-2">
-                    <label class="sr-only">Share:</label>
-
-                    <div class="social-icons mr-2">
-                        <a href="product-variable.html#" class="social-icon social-facebook icon-facebook" target="_blank" title="Facebook"></a>
-                        <a href="product-variable.html#" class="social-icon social-twitter icon-twitter" target="_blank" title="Twitter"></a>
-                        <a href="product-variable.html#" class="social-icon social-linkedin fab fa-linkedin-in" target="_blank" title="Linkedin"></a>
-                        <a href="product-variable.html#" class="social-icon social-gplus fab fa-google-plus-g" target="_blank" title="Google +"></a>
-                        <a href="product-variable.html#" class="social-icon social-mail icon-mail-alt" target="_blank" title="Mail"></a>
-                    </div>
-                    <!-- End .social-icons -->
-
-                    <a href="wishlist.html" class="btn-icon-wish add-wishlist" title="Add to Wishlist">
-                        <i class="icon-wishlist-2"></i>
-                        <span>Add to Wishlist</span>
-                    </a>
-
-                    @if(Auth::check())
-                    <a onclick="handleShowModalChat()" style="cursor: pointer" class="add-wishlist" title="Nhắn tin với shop 1-1">
-                        <i class="fa-regular fa-message"></i>
-                        <span>Nhắn Tin</span>
-                    </a>
-
-                    <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h1 class="modal-title fs-5 text-center" id="myModalLabel">
-                                        Tin nhắn
-                                    </h1>
-                                    <button id="modal-button-close" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng">
-                                        <i class="fa-solid fa-xmark"></i>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-
-                                    <ul class="box-chat-client-ul"></ul>
-
-                                    <form id="chat-box" action="{{ route('admin.chats.write', 1) }}" method="POST" class="row">
-                                        @csrf
-                                        <div class="col">
-                                            <div class="position-relative">
-                                                <input type="text" class="form-control chat-input" placeholder="Nhập tin nhắn của bạn..." name="message" id="chat-client-message">
-                                                <div class="chat-input-links" id="tooltip-container">
-                                                    <ul class="list-inline mb-0">
-                                                        <li class="list-inline-item"><a href="javascript: void(0);" title="Emoji"><i class="mdi mdi-emoticon-happy-outline"></i></a>
-                                                        </li>
-                                                        <li class="list-inline-item"><a href="javascript: void(0);" title="Images"><i class="mdi mdi-file-image-outline"></i></a></li>
-                                                        <li class="list-inline-item"><a href="javascript: void(0);" title="Add Files"><i class="mdi mdi-file-document-outline"></i></a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <button type="button" class="btn btn-primary btn-rounded chat-send w-md waves-effect waves-light" onclick="handleApply('1')">
-                                                <span class="d-none d-sm-inline-block me-2">Gửi</span>
-                                                <i class="mdi mdi-send"></i>
-                                            </button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    @endif
-                </div>
-                <!-- End .product single-share -->
-            </div>
-            <!-- End .product-single-details -->
-        </div>
-        <!-- End .row -->
-    </div>
-
-    <div class="product-single-tabs">
-        <ul class="nav nav-tabs" role="tablist">
-            <li class="nav-item">
-                <a class="nav-link active" id="product-tab-desc" data-toggle="tab" href="#product-desc-content" role="tab" aria-controls="product-desc-content" aria-selected="true">Description</a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link" id="product-tab-size" data-toggle="tab" href="#product-size-content" role="tab" aria-controls="product-size-content" aria-selected="true">Size Guide</a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link" id="product-tab-tags" data-toggle="tab" href="#product-tags-content" role="tab" aria-controls="product-tags-content" aria-selected="false">Additional
-                    Information</a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link" id="product-tab-reviews" data-toggle="tab" href="#product-reviews-content" role="tab" aria-controls="product-reviews-content" aria-selected="false">Reviews
-                    (1)</a>
-            </li>
-        </ul>
-
-        <div class="tab-content">
-            <div class="tab-pane fade show active" id="product-desc-content" role="tabpanel" aria-labelledby="product-tab-desc">
-                <div class="product-desc-content">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                        incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, nostrud ipsum
-                        consectetur sed do, quis nostrud exercitation ullamco laboris
-                        nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
-                        voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-                        occaecat.</p>
-                    <ul>
-                        <li>Any Product types that You want - Simple, Configurable
-                        </li>
-                        <li>Downloadable/Digital Products, Virtual Products
-                        </li>
-                        <li>Inventory Management with Backordered items
+                    <ul class="single-info-list">
+                        <li>
+                            DANH MỤC:
+                            <strong>
+                                <a href="{{ route('products.filter', ['category_id' => $product->category->id]) }}"
+                                    class="product-category">
+                                    {{ $product->category->name }}
+                                </a>
+                            </strong>
                         </li>
                     </ul>
-                    <p>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-                        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                        consequat. </p>
-                </div>
-                <!-- End .product-desc-content -->
-            </div>
-            <!-- End .tab-pane -->
 
-            <div class="tab-pane fade" id="product-size-content" role="tabpanel" aria-labelledby="product-tab-size">
+                    <form action="{{ route('cart.add') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                        @if ($product->variants->count() > 0)
+                            <!-- Màu sắc -->
+                            <div class="form-group">
+                                <label for="color">Màu sắc:</label>
+                                <div id="color-options">
+                                    @foreach ($product->variants->unique('color_id') as $colorVariant)
+                                        @php
+                                            $color = optional($colorVariant->color)->name ?? 'Không có màu';
+                                        @endphp
+                                        <div class="option-box" data-type="color" data-id="{{ $colorVariant->color_id }}">
+                                            {{ $color }}
+                                            <span class="checkmark">✓</span>
+                                        </div>
+                                    @endforeach
+                                </div>
+                                <input type="hidden" name="color_id" id="selected-color" required>
+                            </div>
+
+                            <!-- Dung lượng -->
+                            <div class="form-group">
+                                <label for="capacity">Chọn dung lượng:</label>
+                                <div id="capacity-options">
+                                    @foreach ($product->variants->unique('capacity_id') as $capacityVariant)
+                                        @php
+                                            $capacity =
+                                                optional($capacityVariant->capacity)->name ?? 'Không có dung lượng';
+                                        @endphp
+                                        <div class="option-box" data-type="capacity"
+                                            data-id="{{ $capacityVariant->capacity_id }}">
+                                            {{ $capacity }}
+                                            <span class="checkmark">✓</span>
+                                        </div>
+                                    @endforeach
+                                </div>
+                                <input type="hidden" name="capacity_id" id="selected-capacity" required>
+                            </div>
+                        @endif
+
+                        <div class="product-action">
+                            <div class="product-single-qty">
+                                <input id="product-quantity" name="quantity" value="1" min="1"
+                                    class="horizontal-quantity form-control" type="number">
+                            </div>
+
+                            @auth
+                                <button type="submit" class="btn btn-dark mr-2">Thêm vào giỏ hàng</button>
+                            @else
+                                <a href="{{ route('login') }}" class="btn btn-primary">Đăng nhập để mua hàng</a>
+                            @endauth
+
+                            <a href="{{ route('cart') }}" class="btn btn-gray view-cart d-none">Xem giỏ hàng</a>
+                        </div>
+                    </form>
+                    <!-- End .product-action -->
+
+                    <hr class="divider mb-0 mt-0">
+
+                    <div class="product-single-share mb-2">
+                        <label class="sr-only">Share:</label>
+
+                        <div class="social-icons mr-2">
+                            <a href="product-variable.html#" class="social-icon social-facebook icon-facebook"
+                                target="_blank" title="Facebook"></a>
+                            <a href="product-variable.html#" class="social-icon social-mail icon-mail-alt" target="_blank"
+                                title="Mail"></a>
+                        </div>
+                        
+                        <!-- End .social-icons -->
+
+
+                    </div>
+                    <!-- End .product single-share -->
+                </div>
+                <!-- End .product-single-details -->
+            </div>
+            <!-- End .row -->
+        </div>
+
+        <div class="product-single-tabs">
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="product-tab-desc" data-toggle="tab" href="#product-desc-content"
+                        role="tab" aria-controls="product-desc-content" aria-selected="true">Mô tả sản phẩm </a>
+                </li>
+
+
+
+                <li class="nav-item">
+                    <a class="nav-link" id="product-tab-reviews" data-toggle="tab" href="#product-reviews-content"
+                        role="tab" aria-controls="product-reviews-content" aria-selected="false">Đánh giá sản phẩm
+                    </a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="product-desc-content" role="tabpanel"
+                    aria-labelledby="product-tab-desc">
+                    <div class="product-desc-content">
+                        @if ($product->description)
+                            <div class="product-desc-content">
+                                {!! $product->description !!}
+                            </div>
+                        @endif
+
+
+                    </div>
+                    <!-- End .product-desc-content -->
+                </div>
+                <!-- End .tab-pane -->
+
+                {{-- <div class="tab-pane fade" id="product-size-content" role="tabpanel" aria-labelledby="product-tab-size">
                 <div class="product-size-content">
                     <div class="row">
                         <div class="col-md-4">
@@ -347,10 +522,10 @@ return asset($default); // ảnh mặc định (đặt ở public/images/default
                     <!-- End .row -->
                 </div>
                 <!-- End .product-size-content -->
-            </div>
-            <!-- End .tab-pane -->
+            </div> --}}
+                <!-- End .tab-pane -->
 
-            <div class="tab-pane fade" id="product-tags-content" role="tabpanel" aria-labelledby="product-tab-tags">
+                {{-- <div class="tab-pane fade" id="product-tags-content" role="tabpanel" aria-labelledby="product-tab-tags">
                 <table class="table table-striped mt-2">
                     <tbody>
                         <tr>
@@ -374,66 +549,70 @@ return asset($default); // ảnh mặc định (đặt ở public/images/default
                         </tr>
                     </tbody>
                 </table>
-            </div>
-            <!-- End .tab-pane -->
-
-            <div class="tab-pane fade" id="product-reviews-content" role="tabpanel" aria-labelledby="product-tab-reviews">
-                <div class="product-reviews-content">
-                    {{-- <h3 class="reviews-title">1 review for Men Black Sports Shoes</h3> --}}
-
-                    {{-- <div class="comment-list">
-                    @if ($comments->isNotEmpty())
-                    @foreach ($comments as $comment)
-                    <div class="comments mb-1">
-                        <figure class="img-thumbnail">
-
-                            @php
-                            $image = $comment->user->avatar;
-                            @endphp
-
-                            @if ($image && Storage::exists($image))
-                            <img src="{{ Storage::url($image) }}" alt="{{ $comment->user->name }}" width="80" height="80">
-                    @else
-                    <img src="https://laravel.com/img/logomark.min.svg" alt="Default" width="80" height="80">
-                    @endif
-                    </figure>
-
-                    <div class="comment-block">
-                        <div class="comment-header">
-                            <div class="comment-arrow"></div>
-
-                            <div class="ratings-container float-sm-right">
-                                <div class="product-ratings">
-                                    <span class="ratings" style="width:{{ matchRatings($comment->rating) }}"></span>
-                                    <!-- End .ratings -->
-                                    <span class="tooltiptext tooltip-top"></span>
-                                </div>
-                                <!-- End .product-ratings -->
-                            </div>
-
-                            <span class="comment-by">
-                                <strong>{{ $comment->user->name }}</strong>
-                                – {{ $comment->created_at }}
-                            </span>
-                        </div>
-
-                        <div class="comment-content">
-                            <p>
-                                {{ $comment->content }}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                @endforeach
-                @else
-                <h1>Chua co comment nao</h1>
-                @endif
             </div> --}}
+                <!-- End .tab-pane -->
+
+                <div class="tab-pane fade" id="product-reviews-content" role="tabpanel"
+                    aria-labelledby="product-tab-reviews">
+                    <div class="product-reviews-content">
 
 
-            <div class="divider"></div>
+                        <div class="comment-list">
+                            @if ($comments->isNotEmpty())
+                                @foreach ($comments as $comment)
+                                    <div class="comments mb-1">
+                                        <figure class="img-thumbnail">
 
-            {{-- <div class="add-product-review">
+                                            @php
+                                                $image = $comment->user->avatar;
+                                            @endphp
+
+                                            @if ($image && Storage::exists($image))
+                                                <img src="{{ Storage::url($image) }}" alt="{{ $comment->user->name }}"
+                                                    width="80" height="80">
+                                            @else
+                                                <img src="https://laravel.com/img/logomark.min.svg" alt="Default"
+                                                    width="80" height="80">
+                                            @endif
+                                        </figure>
+
+                                        <div class="comment-block">
+                                            <div class="comment-header">
+                                                <div class="comment-arrow"></div>
+
+                                                <div class="ratings-container float-sm-right">
+                                                    @for ($i = 1; $i <= 5; $i++)
+                                                        @if ($i <= $comment->rating)
+                                                            <i class="fas fa-star text-warning"></i>
+                                                        @else
+                                                            <i class="far fa-star text-muted"></i>
+                                                        @endif
+                                                    @endfor
+                                                </div>
+
+                                                <span class="comment-by">
+                                                    <strong>{{ $comment->user->name }}</strong>
+                                                    – {{ $comment->created_at }}
+                                                </span>
+                                            </div>
+
+                                            <div class="comment-content">
+                                                <p>
+                                                    {{ $comment->content }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            @else
+                                <p>Chưa có đánh giá </p>
+                            @endif
+                        </div>
+
+
+                        <div class="divider"></div>
+
+                        {{-- <div class="add-product-review">
                     <h3 class="review-title">Add a review</h3>
 
                     @guest
@@ -475,53 +654,174 @@ return asset($default); // ảnh mặc định (đặt ở public/images/default
             </form>
             @endguest
         </div> --}}
-        <!-- End .add-product-review -->
+                        <!-- End .add-product-review -->
+                    </div>
+                    <!-- End .product-reviews-content -->
+                </div>
+                <!-- End .tab-pane -->
+            </div>
+            <!-- End .tab-content -->
+        </div>
+
+        <section class="products-section pt-0">
+            @include('user.layouts.components.products-slider', [
+                'products' => $relatedProducts,
+                'title' => 'Sản phẩm liên quan',
+            ])
+        </section>
+
     </div>
-    <!-- End .product-reviews-content -->
-</div>
-<!-- End .tab-pane -->
-</div>
-<!-- End .tab-content -->
-</div>
 
-<section class="products-section pt-0">
-    @include('user.layouts.components.products-slider', [
-    'products' => $relatedProducts,
-    'title' => 'Sản phẩm liên quan',
-    ])
-</section>
+    <script>
+        const variants = @json($mappedVariants);
 
-</div>
-@endsection
+        // Hàm thay đổi ảnh chính
+        function changeMainImage(imageSrc) {
+            const mainImage = document.getElementById('mainProductImage');
+            mainImage.style.opacity = 0;
+            setTimeout(() => {
+                mainImage.src = imageSrc;
+                mainImage.onload = () => {
+                    mainImage.style.opacity = 1;
+                };
+            }, 200);
 
-@section('script')
+        }
 
-@if(Auth::check())
-@php
-$senderType = Auth::user()->role_id == 1 ? 'Admin' : 'User';
-$userCurrent = Auth::user();
-@endphp
+        // Hàm thay đổi ảnh chính và thumbnail theo colorId
+        function updateImagesByColorId(colorId) {
+            // Tìm variant theo color_id
+            const selectedVariant = variants.find(v => v.color_id === colorId);
 
-<script>
-    const handleShowModalChat = () => {
-        let myModal = new bootstrap.Modal(document.getElementById('myModal'));
+            if (selectedVariant && selectedVariant.images.length > 0) {
+                // Đổi ảnh chính
+                changeMainImage(selectedVariant.images[0]);
 
-        myModal.show();
-    }
+                // Xóa thumbnails cũ
+                const thumbnailList = document.getElementById('thumbnailList');
+                thumbnailList.innerHTML = '';
 
-    $(document).ready(function() {
-        let myModal = new bootstrap.Modal(document.getElementById('myModal'));
+                // Thêm lại thumbnails từ variant đã chọn
+                selectedVariant.images.forEach(img => {
+                    const thumb = document.createElement('img');
+                    thumb.src = img;
+                    thumb.classList.add('thumbnail-img');
+                    thumb.style.width = '70px';
+                    thumb.style.cursor = 'pointer';
+                    thumb.onclick = () => changeMainImage(img);
+                    thumbnailList.appendChild(thumb);
+                });
+            } else {
+                // Nếu không có ảnh cho colorId này, đặt lại ảnh mặc định hoặc thông báo lỗi
+                changeMainImage("default-image.jpg"); // Thay "default-image.jpg" bằng ảnh mặc định của bạn
+                alert("Không có ảnh cho màu này.");
+            }
+        }
 
-        $('#modal-button-close').click(function() {
-            myModal.hide();
+        // Hàm thêm hiệu ứng lắc
+        function addShakeEffect(element) {
+            element.classList.add("shake");
+            setTimeout(() => {
+                element.classList.remove("shake");
+            }, 300);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const colorButtons = document.querySelectorAll('.option-box[data-type="color"]');
+            const capacityButtons = document.querySelectorAll('.option-box[data-type="capacity"]');
+            let selectedColorId = null;
+
+            // Lắng nghe sự kiện chọn màu
+            colorButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id = parseInt(btn.dataset.id);
+                    selectedColorId = id;
+                    document.getElementById('selected-color').value = id;
+
+                    // Highlight màu đã chọn
+                    colorButtons.forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                    addShakeEffect(btn);
+
+                    // Cập nhật ảnh chính và thumbnails theo màu
+                    updateImagesByColorId(id);
+
+                    // Lọc và hiển thị dung lượng phù hợp với màu đã chọn
+                    const validCapacities = variants
+                        .filter(v => v.color_id === id)
+                        .map(v => v.capacity_id);
+
+                    capacityButtons.forEach(btn => {
+                        const capId = parseInt(btn.dataset.id);
+                        btn.style.display = validCapacities.includes(capId) ?
+                            'inline-block' : 'none';
+                        btn.disabled = !validCapacities.includes(capId);
+                    });
+
+                    // Reset dung lượng khi đổi màu
+                    document.getElementById('selected-capacity').value = '';
+                    capacityButtons.forEach(b => b.classList.remove('selected'));
+                });
+            });
+
+            // Lắng nghe sự kiện chọn dung lượng
+            capacityButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id = parseInt(btn.dataset.id);
+                    document.getElementById('selected-capacity').value = id;
+
+                    capacityButtons.forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                    addShakeEffect(btn);
+                });
+            });
+
+            // Lắng nghe sự kiện click vào thumbnail
+            document.querySelectorAll('.thumbnail-img').forEach(img => {
+                img.addEventListener('click', () => {
+                    changeMainImage(img.src);
+                });
+            });
         });
-    });
+        document.addEventListener('DOMContentLoaded', function() {
+            let selectedColorId = null;
+            let selectedCapacityId = null;
 
-    // const userCurrent = @json($userCurrent);
+            function updatePrice() {
+                if (selectedColorId && selectedCapacityId) {
+                    const matchedVariant = variants.find(v =>
+                        v.color_id == selectedColorId && v.capacity_id == selectedCapacityId
+                    );
+                    if (matchedVariant) {
+                        document.getElementById('dynamicPrice').textContent =
+                            Number(matchedVariant.price).toLocaleString('vi-VN') + ' đ';
+                    }
+                }
+            }
 
-</script>
+            document.querySelectorAll('.option-box[data-type="color"]').forEach(box => {
+                box.addEventListener('click', function() {
+                    document.querySelectorAll('.option-box[data-type="color"]').forEach(b => b
+                        .classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedColorId = this.dataset.id;
+                    document.getElementById('selected-color').value = selectedColorId;
+                    updateImagesByColorId(Number(selectedColorId));
+                    updatePrice();
+                });
+            });
 
-@vite(['resources/js/product-detail.js'])
+            document.querySelectorAll('.option-box[data-type="capacity"]').forEach(box => {
+                box.addEventListener('click', function() {
+                    document.querySelectorAll('.option-box[data-type="capacity"]').forEach(b => b
+                        .classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedCapacityId = this.dataset.id;
+                    document.getElementById('selected-capacity').value = selectedCapacityId;
+                    updatePrice();
+                });
+            });
+        });
+    </script>
 
-@endif
 @endsection
