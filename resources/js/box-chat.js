@@ -17,7 +17,7 @@ const renderViewChat = ({
       <div class="conversation-list">
         <div class="ctext-wrap">
           <div class="conversation-name">
-            ${senderName}    
+            ${senderName}
           </div>
           <p>
             ${message}
@@ -47,7 +47,7 @@ const renderViewChatList = (data) => {
                       ${message.sender.name}
                     </div>
                     <p>
-                      ${message.message}    
+                      ${message.message}
                     </p>
                       <p class="chat-time mb-0">
                         <i class="bx bx-time-five align-middle me-1"></i>
@@ -77,12 +77,17 @@ Echo.channel(`conversation.${conversationId}`).listen("ChatMessage", (e) => {
   ulElement.innerHTML += messageElement;
 });
 
-fetch(`https://datn.me/api/conversation/${userCurrent.id}/detail`, {})
+// console.log(userCurrent);
+
+
+fetch(`${APP_URL}/api/conversation/${userCurrent.id}/detail`, {})
   .then((response) => {
     return response.json();
   })
   .then((data) => {
-    console.log(data.data);
+    // console.log(data.data);
+
+
 
     localStorage.setItem("conversation_id", data.data.id);
 
@@ -127,7 +132,7 @@ window.handleApply = (id) => {
   message.value = "";
 
   axios
-    .post(`https://datn.me/api/chats/${conversationId}/write`, formData, {
+    .post(`${APP_URL}/api/chats/${conversationId}/write`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
         Accept: "application/json",

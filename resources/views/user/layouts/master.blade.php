@@ -236,6 +236,14 @@
 
         const userCurrent = @json($userCurrent);
 
+        // console.log('hehee');
+        // console.log(userCurrent.id);
+
+
+    </script>
+
+    <script>
+        const APP_URL = "{{ env('APP_URL') }}"
     </script>
 
     @vite(['resources/js/box-chat.js'])

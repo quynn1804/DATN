@@ -1,13 +1,18 @@
 <?php
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\Toastr;
 use App\Models\Category;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\Color;
 use App\Models\Capacity;
+use App\Models\Order;
+use App\Models\OrderDetail;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
@@ -299,5 +304,115 @@ class ProductController extends Controller
 
         $topProducts = Product::topFavoriteProducts();
         return view('user.top_favorites', compact('topProducts'));
+    }
+
+    public function statisticalProduct(Request $request)
+    {
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        $titleTotalPrice = 'Doanh thu hôm nay';
+
+        if ($request->has(['start_date', 'end_date']) && (empty($startDate) || empty($endDate))) {
+            Toastr::error('', 'Vui lòng nhập đầy đủ ngày bắt đầu và ngày kết thúc.');
+            return back();
+        }
+
+        if (!empty($startDate) && !empty($endDate)) {
+            if (strtotime($startDate) > strtotime($endDate)) {
+                Toastr::error('', 'Ngày bắt đầu phải nhỏ hơn hoặc bằng ngày kết thúc.');
+                return redirect()->route('admin.statistical.products');
+            }
+
+            $titleTotalPrice = 'Doanh thu từ ' . date('d/m', strtotime($startDate)) . ' đến ' . date('d/m', strtotime($endDate));
+        }
+
+        $topProductSale = OrderDetail::with(['productVariant.product'])
+            ->selectRaw('product_variant_id, SUM(quantity) as total_quantity, SUM(total_price) as total_revenue')
+            ->when($startDate && $endDate, function ($q) use ($startDate, $endDate) {
+                $q->whereHas('order', function ($q2) use ($startDate, $endDate) {
+                    $q2->whereBetween('created_at', [
+                        Carbon::parse($startDate)->startOfDay(),
+                        Carbon::parse($endDate)->endOfDay()
+                    ]);
+                });
+            })
+            ->groupBy('product_variant_id')
+            ->orderByDesc('total_revenue')
+            ->limit(3)
+            ->get();
+
+        $productStats = OrderDetail::selectRaw('
+        products.name as product_name,
+        SUM(order_details.total_price) as total_revenue,
+        CONCAT("Số lượng: ", SUM(order_details.quantity), ", Doanh thu: ", FORMAT(SUM(order_details.total_price), 0)) as summary
+    ')
+            ->join('product_variants', 'order_details.product_variant_id', '=', 'product_variants.id')
+            ->join('products', 'product_variants.product_id', '=', 'products.id')
+            ->when($startDate && $endDate, function ($query) use ($startDate, $endDate) {
+                $query->whereHas('order', function ($q) use ($startDate, $endDate) {
+                    $q->whereBetween('created_at', [
+                        Carbon::parse($startDate)->startOfDay(),
+                        Carbon::parse($endDate)->endOfDay()
+                    ]);
+                });
+            })
+            ->groupBy('products.name')
+            ->orderByDesc(DB::raw('SUM(order_details.total_price)'))
+            ->get();
+
+        $foodNames = $productStats->pluck('product_name');
+        $foodRevenues = $productStats->pluck('total_revenue')->map(fn($val) => round($val))->toArray();
+        $foodSummaries = $productStats->pluck('summary');
+
+        /**
+         * Sản phẩm sắp hết hàng (dưới 10 sản phẩm)
+         */
+        $lowStockProducts = Product::where(function ($query) {
+            $query->where('product_type', 'single')
+                ->where('quantity', '<=', 10);
+        })->orWhere(function ($query) {
+            $query->where('product_type', 'variant')
+                ->whereHas('variants', function ($variantQuery) {
+                    $variantQuery->where('stock', '<=', 10);
+                });
+        })->with(['variants' => function ($q) {
+            $q->where('stock', '<=', 10);
+        }])->get();
+
+
+        /**
+         * Tổng số sản phẩm được active
+         */
+        $countProduct = Product::query()->where('status', 1)->count();
+        /**
+         * Tổng số danh mục sản phẩm
+         */
+        $countCategory = Category::query()->where('is_active', 1)->count();
+        /**
+         * Tổng số đơn hàng chưa xử lý
+         */
+        $countOrderPending = Order::query()->where('status', 'pending')->count();
+        /**
+         * Tổng số đơn hàng giao thành công
+         */
+        $countOrderCompleted = Order::query()->where('status', 'completed')->count();
+        /**
+         * Doanh thu hôm nay hoặc theo ngày xx -> ngày xx
+         */
+
+        $totalPriceOrderQuery = Order::query()->where('status', 'completed');
+
+        if (!empty($startDate) && !empty($endDate)) {
+            $totalPriceOrderQuery->whereDate('created_at', '>=', $startDate)
+                ->whereDate('created_at', '<=', $endDate);
+        } else {
+            // Nếu không, mặc định là ngày hôm nay
+            $totalPriceOrderQuery->whereDate('created_at', Carbon::today());
+        }
+
+        $totalPriceOrder = $totalPriceOrderQuery->sum('total_money');
+
+        return view('admin.statistical.products', compact('startDate', 'endDate', 'topProductSale', 'foodNames', 'foodRevenues', 'foodSummaries', 'lowStockProducts', 'countProduct', 'countCategory', 'countOrderPending', 'countOrderCompleted', 'titleTotalPrice', 'totalPriceOrder'));
     }
 }

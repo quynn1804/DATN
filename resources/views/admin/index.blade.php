@@ -1,785 +1,456 @@
 @extends('admin.layouts.master')
-@section('title', 'GunDam DashBoard')
+@section('title', 'Trang Chủ')
 @section('content')
-<div class="row mb-4">
-    <div class="col-lg-12">
-        <div class="d-flex align-items-center">
-            <img src="{{ auth()->user()->image }}" alt="" class="avatar-sm rounded">
-            <div class="ms-3 flex-grow-1">
-                <h5 class="mb-2 card-title">Hello, {{ auth()->user()->name }}</h5>
-                <p class="text-muted mb-0">Ready to jump back in?</p>
-            </div>
-            <div>
-                <a href="javascript:void(0);" class="btn btn-primary">
-                    <i class="bx bx-plus align-middle"></i>
-                    Add New Jobs
-                </a>
-            </div>
-        </div>
-    </div>
-    <!--end col-->
-</div>
-<!--end row-->
+    <div class="row">
+        <form method="GET">
 
-<div class="row">
-    <div class="col-lg-3">
-        <div class="card mini-stats-wid">
-            <div class="card-body">
-                <div class="d-flex">
-                    <div class="flex-grow-1">
-                        <p class="text-muted fw-medium">Job View</p>
-                        <h4 class="mb-0">14,487</h4>
-                    </div>
-
-                    <div class="flex-shrink-0 align-self-center">
-                        <div data-colors='["--bs-success", "--bs-transparent"]' dir="ltr" id="eathereum_sparkline_charts">
-                        </div>
-                    </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <label class="mb-0">Ngày</label>
+                </div>
+                <div class="col-md-2">
+                    <label class="mb-0">Tháng</label>
+                </div>
+                <div class="col-md-2">
+                    <label class="mb-0">Năm</label>
                 </div>
             </div>
-            <div class="card-body border-top py-3">
-                <p class="mb-0">
-                    <span class="badge badge-soft-success me-1">
-                        <i class="bx bx-trending-up align-bottom me-1"></i>
-                        18.89%
-                    </span>
-                    Increase
-                </p>
-            </div>
-        </div>
-    </div>
-    <!--end col-->
-    <div class="col-lg-3">
-        <div class="card mini-stats-wid">
-            <div class="card-body">
-                <div class="d-flex">
-                    <div class="flex-grow-1">
-                        <p class="text-muted fw-medium">New Application</p>
-                        <h4 class="mb-0">7,402</h4>
-                    </div>
 
-                    <div class="flex-shrink-0 align-self-center">
-                        <div data-colors='["--bs-success", "--bs-transparent"]' dir="ltr" id="new_application_charts">
-                        </div>
+            <div class="row mb-3">
+                <div class="col-md-2">
+                    <input type="date" name="date" class="form-control" value="{{ $selectedDay ?: '' }}">
+                </div>
+
+                <div class="col-md-2">
+                    <select name="month" class="form-select">
+                        @for($i = 1; $i <= 12; $i++)
+                            <option value="{{ $i }}" {{ $selectedMonth == $i ? 'selected' : '' }}>
+                                Tháng {{ $i }}
+                            </option>
+                        @endfor
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <select name="year" class="form-select">
+
+                        @foreach ($years as $year)
+                            <option value="{{ $year }}" {{ $selectedYear == $year ? 'selected' : '' }}>
+                                Năm {{ $year }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <div class="d-flex gap-2">
+                        <button type="submit"
+                            class="btn btn-sm btn-success rounded-circle p-2 d-flex align-items-center justify-content-center"
+                            title="Lọc dữ liệu" style="width: 36px; height: 36px;">
+                            <i class="fa-solid fa-filter"></i>
+                        </button>
+
+                        <button type="button"
+                            class="btn btn-sm btn-primary rounded-circle p-2 d-flex align-items-center justify-content-center"
+                            title="Reset bộ lọc" style="width: 36px; height: 36px;" onclick="resetFilter()">
+                            <i class="fa-solid fa-arrow-rotate-left"></i>
+                        </button>
                     </div>
                 </div>
             </div>
-            <div class="card-body border-top py-3">
-                <p class="mb-0">
-                    <span class="badge badge-soft-success me-1">
-                        <i class="bx bx-trending-up align-bottom me-1"></i>
-                        24.07%
-                    </span>
-                    Increase
-                </p>
-            </div>
-        </div>
+        </form>
     </div>
-    <!--end col-->
-    <div class="col-lg-3">
-        <div class="card mini-stats-wid">
-            <div class="card-body">
-                <div class="d-flex">
-                    <div class="flex-grow-1">
-                        <p class="text-muted fw-medium">Total Approved</p>
-                        <h4 class="mb-0">12,487</h4>
-                    </div>
 
-                    <div class="flex-shrink-0 align-self-center">
-                        <div data-colors='["--bs-success", "--bs-transparent"]' dir="ltr" id="total_approved_charts">
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="card mini-stats-wid">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div class="flex-grow-1">
+                            <p class="text-muted fw-medium">
+                                {{ $selectedDay ? "Doanh thu ngày " . date('d/m', strtotime($selectedDay)) : 'Doanh thu hôm nay' }}
+                            </p>
+                            <h4 class="mb-0">
+                                {{ number_format($dailyRevenue, 0, ',', '.') }}đ
+                            </h4>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="card-body border-top py-3">
-                <p class="mb-0"> <span class="badge badge-soft-success me-1"><i class="bx bx-trending-up align-bottom me-1"></i> 8.41%</span> Increase
-                    last month</p>
-            </div>
-        </div>
-    </div>
-    <!--end col-->
-    <div class="col-lg-3">
-        <div class="card mini-stats-wid">
-            <div class="card-body">
-                <div class="d-flex">
-                    <div class="flex-grow-1">
-                        <p class="text-muted fw-medium">Total Rejected</p>
-                        <h4 class="mb-0">12,487</h4>
-                    </div>
+                <div class="card-body border-top py-3">
+                    @php
+                        $changePercentage = 0;
 
-                    <div class="flex-shrink-0 align-self-center">
-                        <div data-colors='["--bs-danger", "--bs-transparent"]' dir="ltr" id="total_rejected_charts">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card-body border-top py-3">
-                <p class="mb-0"> <span class="badge badge-soft-danger me-1"><i class="bx bx-trending-down align-bottom me-1"></i> 20.63%</span>
-                    Decrease last month</p>
-            </div>
-        </div>
-    </div>
-    <!--end col-->
-</div>
-<!--end row-->
+                        if ($previousRevenue == 0) {
+                            $changePercentage = $dailyRevenue > 0 ? 100 : 0;
+                        } else {
+                            $changePercentage = (($dailyRevenue - $previousRevenue) / $previousRevenue) * 100;
+                        }
 
-<div class="row">
-    <div class="col-lg-8">
-        <div class="card">
-            <div class="card-body">
-                <div class="d-sm-flex flex-wrap">
-                    <h4 class="card-title mb-4">Statistics Applications</h4>
-                    <div class="ms-auto">
-                        <ul class="nav nav-pills">
-                            <li class="nav-item">
-                                <a class="nav-link" href="javascript:void(0);">Week</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="javascript:void(0);">Month</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link active" href="javascript:void(0);">Year</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+                        $changeClass = 'badge-soft-secondary';
+                        $changeIcon = 'bx bx-minus';
 
-                <div data-colors='["--bs-primary", "--bs-success", "--bs-warning", "--bs-info"]' dir="ltr" id="chart">
+                        if ($changePercentage > 0) {
+                            $changeClass = 'badge-soft-success';
+                            $changeIcon = 'bx bx-trending-up';
+                        } elseif ($changePercentage < 0) {
+                            $changeClass = 'badge-soft-danger';
+                            $changeIcon = 'bx bx-trending-down';
+                        }
+
+                        $changePercentageFormatted = number_format(abs($changePercentage), 0);
+                    @endphp
+
+                    <p class="mb-0">
+                        <span class="badge {{ $changeClass }} me-1">
+                            <i class="{{ $changeIcon }} align-bottom me-1"></i>
+                            {{ $changePercentageFormatted }}%
+                        </span>
+                        So với hôm qua
+                    </p>
                 </div>
             </div>
         </div>
-    </div>
-    <!--end col-->
-    <div class="col-lg-4">
-        <div class="card">
-            <div class="card-body">
-                <div class="d-flex">
-                    <div>
-                        <h4 class="card-title mb-3">Invite your friends to Skote</h4>
-                        <p class="text-muted">Nor again is there anyone who loves or pursues or
-                            desires to obtain pain of itself, because it is pain, but because
-                            occasionally.</p>
-                        <div>
-                            <a href="javascript:void(0);" class="btn btn-primary btn-sm"><i class='bx bx-user-plus align-middle'></i> Invite Friends</a>
-                        </div>
-                    </div>
-                    <div>
-                        <img src="theme/admin/images/jobs.png" alt="" height="130">
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!--end card-->
-        <div class="card">
-            <div class="card-body">
-                <h4 class="card-title mb-3">Popular Candidate</h4>
-                <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
-                    <div class="carousel-inner">
-                        <div class="carousel-item active" data-bs-interval="3000">
-                            <div class="bg-light p-3 d-flex mb-3 rounded">
-                                <img src="theme/admin/images/users/avatar-4.jpg" alt="" class="avatar-sm rounded me-3">
-                                <div class="flex-grow-1">
-                                    <h5 class="font-size-15 mb-2"><a href="candidate-overview.html" class="text-body">Stephen Hadley</a> <span class="badge badge-soft-info">Freelance</span></h5>
-                                    <p class="mb-0 text-muted"><i class="bx bx-map text-body align-middle"></i>
-                                        Germany
-                                    </p>
-                                </div>
-                                <div>
-                                    <div class="dropdown">
-                                        <button class="btn btn-soft-primary" type="button" id="dropdownMenuButton11" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class='bx bx-dots-vertical-rounded'></i>
-                                        </button>
-                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton11">
-                                            <li><a class="dropdown-item" href="candidate-overview.html">View
-                                                    Details</a>
-                                            </li>
-                                            <li><a class="dropdown-item" href="dashboard-job.html#">Download CV</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="bg-light p-3 d-flex">
-                                <img src="theme/admin/images/users/avatar-2.jpg" alt="" class="avatar-sm rounded me-3">
-                                <div class="flex-grow-1">
-                                    <h5 class="font-size-15 mb-2"><a href="candidate-overview.html" class="text-body">Charles Brown</a> <span class="badge badge-soft-success">Full Time</span></h5>
-                                    <p class="mb-0 text-muted"><i class="bx bx-map text-body align-middle"></i>
-                                        Cambodia
-                                    </p>
-                                </div>
-                                <div>
-                                    <div class="dropdown">
-                                        <button class="btn btn-soft-primary" type="button" id="dropdownMenuButton12" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class='bx bx-dots-vertical-rounded'></i>
-                                        </button>
-                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton12">
-                                            <li><a class="dropdown-item" href="candidate-overview.html">View
-                                                    Details</a>
-                                            </li>
-                                            <li><a class="dropdown-item" href="dashboard-job.html#">Download CV</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="carousel-item" data-bs-interval="3000">
-                            <div class="bg-light p-3 d-flex mb-3 rounded">
-                                <img src="theme/admin/images/users/avatar-1.jpg" alt="" class="avatar-sm rounded me-3">
-                                <div class="flex-grow-1">
-                                    <h5 class="font-size-15 mb-2"><a href="candidate-overview.html" class="text-body">Adam Miller</a> <span class="badge badge-soft-warning">Internship</span></h5>
-                                    <p class="mb-0 text-muted"><i class="bx bx-map text-body align-middle"></i>
-                                        Australia
-                                    </p>
-                                </div>
-                                <div>
-                                    <div class="dropdown">
-                                        <button class="btn btn-soft-primary" type="button" id="dropdownMenuButton13" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class='bx bx-dots-vertical-rounded'></i>
-                                        </button>
-                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton13">
-                                            <li><a class="dropdown-item" href="candidate-overview.html">View
-                                                    Details</a>
-                                            </li>
-                                            <li><a class="dropdown-item" href="dashboard-job.html#">Download CV</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="bg-light p-3 d-flex">
-                                <img src="theme/admin/images/users/avatar-3.jpg" alt="" class="avatar-sm rounded me-3">
-                                <div class="flex-grow-1">
-                                    <h5 class="font-size-15 mb-2"><a href="candidate-overview.html" class="text-body">Keith Gonzales</a> <span class="badge badge-soft-info">Freelance</span></h5>
-                                    <p class="mb-0 text-muted"><i class="bx bx-map text-body align-middle"></i>
-                                        Belgium
-                                    </p>
-                                </div>
-                                <div>
-                                    <div class="dropdown">
-                                        <button class="btn btn-soft-primary" type="button" id="dropdownMenuButton14" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class='bx bx-dots-vertical-rounded'></i>
-                                        </button>
-                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton14">
-                                            <li><a class="dropdown-item" href="candidate-overview.html">View
-                                                    Details</a>
-                                            </li>
-                                            <li><a class="dropdown-item" href="dashboard-job.html#">Download CV</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="carousel-item" data-bs-interval="3000">
-                            <div class="bg-light p-3 d-flex mb-3 rounded">
-                                <img src="theme/admin/images/users/avatar-4.jpg" alt="" class="avatar-sm rounded me-3">
-                                <div class="flex-grow-1">
-                                    <h5 class="font-size-15 mb-2"><a href="candidate-overview.html" class="text-body">Bonnie Harney</a> <span class="badge badge-soft-success">Full Timer</span></h5>
-                                    <p class="mb-0 text-muted"><i class="bx bx-map text-body align-middle"></i> Syria
-                                    </p>
-                                </div>
-                                <div>
-                                    <div class="dropdown">
-                                        <button class="btn btn-soft-primary" type="button" id="dropdownMenuButton15" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class='bx bx-dots-vertical-rounded'></i>
-                                        </button>
-                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton15">
-                                            <li><a class="dropdown-item" href="candidate-overview.html">View
-                                                    Details</a>
-                                            </li>
-                                            <li><a class="dropdown-item" href="dashboard-job.html#">Download CV</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="bg-light p-3 d-flex">
-                                <img src="theme/admin/images/users/avatar-2.jpg" alt="" class="avatar-sm rounded me-3">
-                                <div class="flex-grow-1">
-                                    <h5 class="font-size-15 mb-2"><a href="candidate-overview.html" class="text-body">Dolores Minter</a> <span class="badge badge-soft-danger">Part Time</span></h5>
-                                    <p class="mb-0 text-muted"><i class="bx bx-map text-body align-middle"></i> San
-                                        Marino
-                                    </p>
-                                </div>
-                                <div>
-                                    <div class="dropdown">
-                                        <button class="btn btn-soft-primary" type="button" id="dropdownMenuButton16" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class='bx bx-dots-vertical-rounded'></i>
-                                        </button>
-                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton16">
-                                            <li><a class="dropdown-item" href="candidate-overview.html">View
-                                                    Details</a>
-                                            </li>
-                                            <li><a class="dropdown-item" href="dashboard-job.html#">Download CV</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
+        <!--end col-->
+        <div class="col-lg-3">
+            <div class="card mini-stats-wid">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div class="flex-grow-1">
+                            <p class="text-muted fw-medium">
+                                Doanh thu tháng {{ $selectedMonth ?: date('n')  }}
+                            </p>
+                            <h4 class="mb-0">
+                                {{ number_format($monthlyRevenue, 0, ',', '.') }}đ
+                            </h4>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <!--end card-->
-    </div>
-    <!--end col-->
-</div>
-<!--end row-->
+                <div class="card-body border-top py-3">
+                    @php
+                        $changePercentageMonth = 0;
 
-<div class="row">
-    <div class="col-lg-12">
-        <div class="d-flex">
-            <h4 class="card-title mb-4 flex-grow-1">New Job Vacancy</h4>
-            <div>
-                <a href="job-list.html" class="btn btn-primary btn-sm">View All <i class="bx bx-right-arrow-alt"></i></a>
-            </div>
-        </div>
-    </div>
-    <!--end col-->
-    <div class="col-lg-2">
-        <div class="card">
-            <div class="card-body p-4">
-                <div class="text-center mb-3">
-                    <img src="theme/admin/images/companies/airbnb.svg" alt="" class="avatar-sm">
-                    <a href="job-details.html" class="text-body">
-                        <h5 class="mt-4 mb-2 font-size-15">Project Manager</h5>
-                    </a>
-                    <p class="mb-0 text-muted">Themesbrand</p>
-                </div>
+                        if ($previousRevenueMonth == 0) {
+                            $changePercentageMonth = $monthlyRevenue > 0 ? 100 : 0;
+                        } else {
+                            $changePercentageMonth = (($monthlyRevenue - $previousRevenueMonth) / $previousRevenueMonth) * 100;
+                        }
 
-                <div class="d-flex">
-                    <p class="mb-0 flex-grow-1 text-muted"><i class="bx bx-map text-body"></i>
-                        California</p>
-                    <p class="mb-0 text-muted"><b>8</b> Vacancy</p>
-                </div>
-            </div>
-        </div>
-        <!--end card-->
-    </div>
-    <!--end col-->
-    <div class="col-lg-2">
-        <div class="card">
-            <div class="card-body p-4">
-                <div class="text-center mb-3">
-                    <img src="theme/admin/images/companies/mailchimp.svg" alt="" class="avatar-sm">
-                    <a href="job-details.html" class="text-body">
-                        <h5 class="mt-4 mb-2 font-size-15">Marketing Director</h5>
-                    </a>
-                    <p class="mb-0 text-muted">Themesbrand</p>
-                </div>
-                <div class="d-flex">
-                    <p class="mb-0 flex-grow-1 text-muted"><i class="bx bx-map text-body"></i>
-                        Danemark</p>
-                    <p class="mb-0 text-muted"><b>12</b> Vacancy</p>
-                </div>
-            </div>
-        </div>
-        <!--end card-->
-    </div>
-    <!--end col-->
-    <div class="col-lg-2">
-        <div class="card">
-            <div class="card-body p-4">
-                <div class="text-center mb-3">
-                    <img src="theme/admin/images/companies/reddit.svg" alt="" class="avatar-sm">
-                    <a href="job-details.html" class="text-body">
-                        <h5 class="mt-4 mb-2 font-size-15">Product Designer</h5>
-                    </a>
-                    <p class="mb-0 text-muted">Themesbrand</p>
-                </div>
-                <div class="d-flex">
-                    <p class="mb-0 flex-grow-1 text-muted"><i class="bx bx-map text-body"></i>
-                        France</p>
-                    <p class="mb-0 text-muted"><b>25</b> Vacancy</p>
-                </div>
-            </div>
-        </div>
-        <!--end card-->
-    </div>
-    <!--end col-->
-    <div class="col-lg-2">
-        <div class="card">
-            <div class="card-body p-4">
-                <div class="text-center mb-3">
-                    <img src="theme/admin/images/companies/amazon.svg" alt="" class="avatar-sm">
-                    <a href="job-details.html" class="text-body">
-                        <h5 class="mt-4 mb-2 font-size-15">Magento Developer</h5>
-                    </a>
-                    <p class="mb-0 text-muted">Themesbrand</p>
-                </div>
-                <div class="d-flex">
-                    <p class="mb-0 flex-grow-1 text-muted"><i class="bx bx-map text-body"></i>
-                        Hong-Kong</p>
-                    <p class="mb-0 text-muted"><b>8</b> Vacancy</p>
-                </div>
-            </div>
-        </div>
-        <!--end card-->
-    </div>
-    <!--end col-->
-    <div class="col-lg-2">
-        <div class="card">
-            <div class="card-body p-4">
-                <div class="text-center mb-3">
-                    <img src="theme/admin/images/companies/adobe-photoshop.svg" alt="" class="avatar-sm">
-                    <a href="job-details.html" class="text-body">
-                        <h5 class="mt-4 mb-2 font-size-15">Product Sales Specialist</h5>
-                    </a>
-                    <p class="mb-0 text-muted">Themesbrand</p>
-                </div>
-                <div class="d-flex">
-                    <p class="mb-0 flex-grow-1 text-muted"><i class="bx bx-map text-body"></i>
-                        Louisiana</p>
-                    <p class="mb-0 text-muted"><b>1</b> Vacancy</p>
-                </div>
-            </div>
-        </div>
-        <!--end card-->
-    </div>
-    <!--end col-->
-    <div class="col-lg-2">
-        <div class="card">
-            <div class="card-body p-4">
-                <div class="text-center mb-3">
-                    <img src="theme/admin/images/companies/line.svg" alt="" class="avatar-sm">
-                    <a href="job-details.html" class="text-body">
-                        <h5 class="mt-4 mb-2 font-size-15">Business Associate</h5>
-                    </a>
-                    <p class="mb-0 text-muted">Themesbrand</p>
-                </div>
-                <div class="d-flex">
-                    <p class="mb-0 flex-grow-1 text-muted"><i class="bx bx-map text-body"></i>
-                        Phoenix</p>
-                    <p class="mb-0 text-muted"><b>15</b> Vacancy</p>
-                </div>
-            </div>
-        </div>
-        <!--end card-->
-    </div>
-    <!--end col-->
-</div>
-<!--end row-->
+                        $changeClassMonth = 'badge-soft-secondary';
+                        $changeIconMonth = 'bx bx-minus';
 
-<div class="row">
-    <div class="col-lg-4">
-        <div class="card">
-            <div class="card-body">
-                <div class="d-flex">
-                    <h4 class="card-title">Applications Received Time</h4>
-                    <div class="dropdown ms-auto">
-                        <a class="text-muted font-size-16" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
-                            <i class="mdi mdi-dots-horizontal"></i>
-                        </a>
+                        if ($changePercentageMonth > 0) {
+                            $changeClassMonth = 'badge-soft-success';
+                            $changeIconMonth = 'bx bx-trending-up';
+                        } elseif ($changePercentageMonth < 0) {
+                            $changeClassMonth = 'badge-soft-danger';
+                            $changeIconMonth = 'bx bx-trending-down';
+                        }
 
-                        <div class="dropdown-menu dropdown-menu-end">
-                            <a class="dropdown-item" href="dashboard-job.html#">Action</a>
-                            <a class="dropdown-item" href="dashboard-job.html#">Another action</a>
-                            <a class="dropdown-item" href="dashboard-job.html#">Something else
-                                here</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="dashboard-job.html#">Separated link</a>
+                        $changePercentageFormattedMonth = number_format(abs($changePercentageMonth), 0);
+                    @endphp
+
+                    <p class="mb-0">
+                        <span class="badge {{ $changeClassMonth }} me-1">
+                            <i class="{{ $changeIconMonth }} align-bottom me-1"></i>
+                            {{ $changePercentageFormattedMonth }}%
+                        </span>
+                        So với tháng trước
+                    </p>
+
+                </div>
+            </div>
+        </div>
+        <!--end col-->
+        <div class="col-lg-3">
+            <div class="card mini-stats-wid">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div class="flex-grow-1">
+                            <p class="text-muted fw-medium">Khách hàng</p>
+                            <h4 class="mb-0">
+                                {{ $countUser }}
+                            </h4>
                         </div>
                     </div>
                 </div>
-
-                <div data-colors='["--bs-primary", "--bs-success", "--bs-warning", "--bs-info"]' dir="ltr" id="application-received-time"></div>
-            </div>
-        </div>
-        <!--end card-->
-    </div>
-    <!--end col-->
-    <div class="col-lg-4">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="card-title mb-4">Activity Feed</h4>
-                <div data-simplebar style="max-height: 376px;">
-                    <ul class="verti-timeline list-unstyled">
-                        <li class="event-list">
-                            <div class="event-timeline-dot">
-                                <i class="bx bx-right-arrow-circle font-size-18"></i>
-                            </div>
-                            <div class="d-flex">
-                                <div class="flex-shrink-0 me-3">
-                                    <img src="theme/admin/images/users/avatar-5.jpg" alt="" class="avatar-xs rounded-circle">
-                                </div>
-                                <div class="flex-grow-1">
-                                    <div>
-                                        <b>Charles Brown</b> applied for the job <b>Sr.frontend
-                                            Developer</b>
-                                        <p class="mb-0 text-muted">3 min ago</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="event-list">
-                            <div class="event-timeline-dot">
-                                <i class="bx bx-right-arrow-circle font-size-18"></i>
-                            </div>
-                            <div class="d-flex">
-                                <div class="flex-shrink-0 me-3">
-                                    <div class="avatar-xs">
-                                        <div class="avatar-title bg-primary-subtle text-primary rounded-circle">
-                                            <i class='bx bx-revision font-size-14'></i>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="flex-grow-1">
-                                    <div>
-                                        Your subscription expires today <a href="javascript: void(0);">Renew Now</a>
-                                        <p class="text-muted mb-0">53 min ago</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="event-list">
-                            <div class="event-timeline-dot">
-                                <i class="bx bx-right-arrow-circle font-size-18"></i>
-                            </div>
-                            <div class="d-flex">
-                                <div class="flex-shrink-0 me-3">
-                                    <div class="avatar-xs">
-                                        <div class="avatar-title bg-primary-subtle text-primary rounded-circle">
-                                            JA
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="flex-grow-1">
-                                    <div>
-                                        <b>Jennifer Alexandar</b> created a new account as a
-                                        <b>Freelance</b>.
-                                        <p class="text-muted mb-0">1 hrs ago</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="event-list">
-                            <div class="event-timeline-dot">
-                                <i class="bx bx-right-arrow-circle font-size-18"></i>
-                            </div>
-                            <div class="d-flex">
-                                <div class="flex-shrink-0 me-3">
-                                    <img src="theme/admin/images/users/avatar-2.jpg" alt="" class="avatar-xs rounded-circle">
-                                </div>
-                                <div class="flex-grow-1">
-                                    <div>
-                                        <b>Mark Ellison</b> applied for the job <b>Project
-                                            Manager</b>
-                                        <p class="mb-0 text-muted">3 hrs ago</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="event-list">
-                            <div class="event-timeline-dot">
-                                <i class="bx bx-right-arrow-circle font-size-18"></i>
-                            </div>
-                            <div class="d-flex">
-                                <div class="flex-shrink-0 me-3">
-                                    <div class="avatar-xs">
-                                        <div class="avatar-title bg-primary-subtle text-primary rounded-circle">
-                                            AZ
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="flex-grow-1">
-                                    <div>
-                                        <b>Acolin Zelton</b> created a new account as a
-                                        <b>Freelance</b>.
-                                        <p class="text-muted mb-0">1 hrs ago</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                    <div class="text-center mt-4"><a href="javascript: void(0);" class="btn btn-primary waves-effect waves-light btn-sm">View More <i class="mdi mdi-arrow-right ms-1"></i></a></div>
+                <div class="card-body border-top py-3">
+                    <p class="mb-0">
+                        <span class="badge badge-soft-success me-1">
+                            <i class="bx bx-trending-up align-bottom me-1"></i>
+                            8.41%
+                        </span>
+                        Tháng trước
+                    </p>
                 </div>
             </div>
         </div>
-        <!--end card-->
-    </div>
-    <!--end col-->
-    <div class="col-lg-4">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="card-title mb-4">Recent Added Jobs</h4>
-                <div data-simplebar style="max-height: 376px;">
-                    <div class="vstack gap-4">
-                        <div class="d-flex">
-                            <img src="theme/admin/images/companies/wechat.svg" alt="" height="40" class="rounded">
-                            <div class="ms-2 flex-grow-1">
-                                <h6 class="mb-1 font-size-15"><a href="job-details.html" class="text-body">Marketing
-                                        Director</a></h6>
-                                <p class="text-muted mb-0">Themesbrand, USA - <b>53</b> sec ago</p>
-                            </div>
-                            <div class="dropdown">
-                                <button class="btn btn-light" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="bx bx-dots-vertical-rounded"></i>
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                    <li><a class="dropdown-item" href="job-details.html">View
-                                            Details</a></li>
-                                    <li><a class="dropdown-item" href="dashboard-job.html#">Apply
-                                            Now</a></li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <div class="d-flex">
-                            <img src="theme/admin/images/companies/sass.svg" alt="" height="40" class="rounded">
-                            <div class="ms-2 flex-grow-1">
-                                <h6 class="mb-1 font-size-15"><a href="job-details.html" class="text-body">Frontend
-                                        Developer</a></h6>
-                                <p class="text-muted mb-0">Themesbrand, Hong-Kong - <b>47</b> min
-                                    ago</p>
-                            </div>
-                            <div class="dropdown">
-                                <button class="btn btn-light" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="bx bx-dots-vertical-rounded"></i>
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
-                                    <li><a class="dropdown-item" href="job-details.html">View
-                                            Details</a></li>
-                                    <li><a class="dropdown-item" href="dashboard-job.html#">Apply
-                                            Now</a></li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <div class="d-flex">
-                            <img src="theme/admin/images/companies/adobe.svg" alt="" height="40" class="rounded">
-                            <div class="ms-2 flex-grow-1">
-                                <h6 class="mb-1 font-size-15"><a href="job-details.html" class="text-body">React
-                                        Developer</a></h6>
-                                <p class="text-muted mb-0">Creative Agency, Danemark - <b>1</b> hrs
-                                    ago</p>
-                            </div>
-                            <div class="dropdown">
-                                <button class="btn btn-light" type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="bx bx-dots-vertical-rounded"></i>
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton3">
-                                    <li><a class="dropdown-item" href="job-details.html">View
-                                            Details</a></li>
-                                    <li><a class="dropdown-item" href="dashboard-job.html#">Apply
-                                            Now</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="d-flex">
-                            <img src="theme/admin/images/companies/airbnb.svg" alt="" height="40" class="rounded">
-                            <div class="ms-2 flex-grow-1">
-                                <h6 class="mb-1 font-size-15"><a href="job-details.html" class="text-body">NodeJs
-                                        Developer</a></h6>
-                                <p class="text-muted mb-0">Skote Themes, Louisiana - <b>2</b> hrs
-                                    ago</p>
-                            </div>
-                            <div class="dropdown">
-                                <button class="btn btn-light" type="button" id="dropdownMenuButton4" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="bx bx-dots-vertical-rounded"></i>
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton4">
-                                    <li><a class="dropdown-item" href="job-details.html">View
-                                            Details</a></li>
-                                    <li><a class="dropdown-item" href="dashboard-job.html#">Apply
-                                            Now</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="d-flex">
-                            <img src="theme/admin/images/companies/flutter.svg" alt="" height="40" class="rounded">
-                            <div class="ms-2 flex-grow-1">
-                                <h6 class="mb-1 font-size-15"><a href="job-details.html" class="text-body">Digital
-                                        Marketing</a></h6>
-                                <p class="text-muted mb-0">Web Technology pvt.Ltd, Danemark -
-                                    <b>8</b> hrs ago
-                                </p>
-                            </div>
-                            <div class="dropdown">
-                                <button class="btn btn-light" type="button" id="dropdownMenuButton5" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="bx bx-dots-vertical-rounded"></i>
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton5">
-                                    <li><a class="dropdown-item" href="job-details.html">View
-                                            Details</a></li>
-                                    <li><a class="dropdown-item" href="dashboard-job.html#">Apply
-                                            Now</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="d-flex">
-                            <img src="theme/admin/images/companies/mailchimp.svg" alt="" height="40" class="rounded">
-                            <div class="ms-2 flex-grow-1">
-                                <h6 class="mb-1 font-size-15"><a href="job-details.html" class="text-body">Marketing
-                                        Director</a></h6>
-                                <p class="text-muted mb-0">Skote Technology, Dominica - <b>1</b>
-                                    days ago</p>
-                            </div>
-                            <div class="dropdown">
-                                <button class="btn btn-light" type="button" id="dropdownMenuButton6" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="bx bx-dots-vertical-rounded"></i>
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton6">
-                                    <li><a class="dropdown-item" href="job-details.html">View
-                                            Details</a></li>
-                                    <li><a class="dropdown-item" href="dashboard-job.html#">Apply
-                                            Now</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="d-flex">
-                            <img src="theme/admin/images/companies/spotify.svg" alt="" height="40" class="rounded">
-                            <div class="ms-2 flex-grow-1">
-                                <h6 class="mb-1 font-size-15"><a href="job-details.html" class="text-body">Business
-                                        Associate</a></h6>
-                                <p class="text-muted mb-0">Themesbrand, Russia - <b>2</b> days ago
-                                </p>
-                            </div>
-                            <div class="dropdown">
-                                <button class="btn btn-light" type="button" id="dropdownMenuButton7" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="bx bx-dots-vertical-rounded"></i>
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton7">
-                                    <li><a class="dropdown-item" href="job-details.html">View
-                                            Details</a></li>
-                                    <li><a class="dropdown-item" href="dashboard-job.html#">Apply
-                                            Now</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="d-flex">
-                            <img src="theme/admin/images/companies/reddit.svg" alt="" height="40" class="rounded">
-                            <div class="ms-2 flex-grow-1">
-                                <h6 class="mb-1 font-size-15"><a href="job-details.html" class="text-body">Backend
-                                        Developer</a></h6>
-                                <p class="text-muted mb-0">Adobe Agency, Malaysia - <b>3</b> days
-                                    ago</p>
-                            </div>
-                            <div class="dropdown">
-                                <button class="btn btn-light" type="button" id="dropdownMenuButton8" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="bx bx-dots-vertical-rounded"></i>
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton8">
-                                    <li><a class="dropdown-item" href="job-details.html">View
-                                            Details</a></li>
-                                    <li><a class="dropdown-item" href="dashboard-job.html#">Apply
-                                            Now</a></li>
-                                </ul>
-                            </div>
+        <!--end col-->
+        <div class="col-lg-3">
+            <div class="card mini-stats-wid">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div class="flex-grow-1">
+                            <p class="text-muted fw-medium">
+                                Đơn hàng tháng {{ $selectedMonth }}
+                            </p>
+                            <h4 class="mb-0">
+                                {{ $orderCountByMonth }}
+                            </h4>
                         </div>
                     </div>
                 </div>
+                <div class="card-body border-top py-3">
+                    @php
+                        $changePercentageOrderCount = 0;
+
+                        if ($orderCountPreviousMonth == 0) {
+                            $changePercentageOrderCount = $orderCountByMonth > 0 ? 100 : 0;
+                        } else {
+                            $changePercentageOrderCount = (($orderCountByMonth - $orderCountPreviousMonth) / $orderCountPreviousMonth) * 100;
+                        }
+
+                        $changeOrderClass = 'badge-soft-secondary';
+                        $changeOrderIcon = 'bx bx-minus';
+                        $changeText = 'So với tháng trước';
+
+                        if ($changePercentageOrderCount > 0) {
+                            $changeOrderClass = 'badge-soft-success';
+                            $changeOrderIcon = 'bx bx-trending-up';
+                            $changeText = 'So với tháng trước';
+                        } elseif ($changePercentageOrderCount < 0) {
+                            $changeOrderClass = 'badge-soft-danger';
+                            $changeOrderIcon = 'bx bx-trending-down';
+                            $changeText = 'So với tháng trước';
+                        }
+
+                        $changePercentageOrderFormatted = number_format(abs($changePercentageOrderCount), 0);
+                    @endphp
+
+                    <p class="mb-0">
+                        <span class="badge {{ $changeOrderClass }} me-1">
+                            <i class="{{ $changeOrderIcon }} align-bottom me-1"></i>
+                            {{ $changePercentageOrderFormatted }}%
+                        </span>
+                        {{ $changeText }}
+                    </p>
+
+                </div>
             </div>
         </div>
-        <!--end card-->
+        <!--end col-->
     </div>
-    <!--end col-->
-</div>
-<!--end row-->
+
+    <div class="row">
+
+        <div class="col-lg-6">
+            <div class="card card-h-100">
+                <div class="card-body">
+                    <div id="orderStatusChart" style="width: 100%; height: 400px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card card-h-100">
+                <div class="card-body">
+                    <div id="orderStatusPaymentChart" style="width: 100%; height: 400px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card card-h-100">
+                <div class="card-body">
+                    <div id="totalPriceOrder" style="width: 100%; height: 400px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--end row-->
 @endsection
 
 @section('script')
-<!-- dashboard blog init -->
-<script src="{{ asset('theme/admin/js/pages/dashboard-job.init.js') }}"></script>
+    <!-- dashboard blog init -->
+    <script src="{{ asset('theme/admin/js/pages/dashboard-job.init.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+
+    <script>
+
+        const APP_URL = "{{ env('APP_URL') }}"
+
+        const resetFilter = () => {
+            window.location.href = `${APP_URL}/admin`
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const revenues = @json($monthlyRevenues);
+            const orderCounts = @json($monthlyOrderCounts);
+
+            if (revenues.length > 0) {
+                Highcharts.chart('totalPriceOrder', {
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: 'Doanh thu theo năm'
+                    },
+                    xAxis: {
+                        categories: [
+                            "Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
+                            "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"
+                        ],
+                        crosshair: true,
+                        title: {
+                            text: 'Tháng'
+                        }
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: 'Doanh thu (VNĐ)'
+                        }
+                    },
+                    tooltip: {
+                        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                        pointFormat:
+                            '<tr><td style="color:{series.color};padding:0">Doanh thu: </td>' +
+                            '<td style="padding:0"><b>{point.y:,.0f} VND</b></td></tr>' +
+                            '<tr><td style="padding:0">Số đơn hàng:</td><td><b>{point.orderCount}</b></td></tr>',
+                        footerFormat: '</table>',
+                        shared: true,
+                        useHTML: true
+                    },
+                    plotOptions: {
+                        column: {
+                            minPointLength: 3,
+                            pointPadding: 0.2,
+                            borderWidth: 0,
+                            color: '#191970'
+                        }
+                    },
+                    series: [{
+                        name: 'Doanh thu (VNĐ)',
+                        data: revenues.map((rev, i) => ({
+                            y: rev,
+                            orderCount: orderCounts[i] || 0
+                        }))
+                    }],
+                    credits: {
+                        enabled: false
+                    }
+                });
+            } else {
+                document.getElementById('totalPriceOrder').innerHTML =
+                    '<p style="font: 20px Arial; text-align: center; margin-top: 200px;">Không có dữ liệu để hiển thị</p>';
+            }
+
+            /*
+                Biểu đồ trạng thái đơn hàng
+            */
+            Highcharts.setOptions({
+                colors: Highcharts.getOptions().colors.map(function (color) {
+                    return {
+                        radialGradient: {
+                            cx: 0.5,
+                            cy: 0.3,
+                            r: 0.7
+                        },
+                        stops: [
+                            [0, color],
+                            [1, Highcharts.color(color).brighten(-0.3).get('rgb')]
+                        ]
+                    };
+                })
+            });
+
+            const orderStatusData = @json($orderStatusData);
+
+            Highcharts.chart('orderStatusChart', {
+                chart: {
+                    type: 'pie',
+                    plotShadow: false
+                },
+                title: {
+                    text: 'Tỷ lệ trạng thái đơn hàng'
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                },
+                accessibility: {
+                    point: {
+                        valueSuffix: '%'
+                    }
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            format: '<span style="font-size: 1.1em"><b>{point.name}</b></span><br>' +
+                                '<span style="opacity: 0.7">{point.percentage:.1f}%</span>',
+                            connectorColor: 'rgba(128,128,128,0.5)'
+                        }
+                    }
+                },
+                credits: {
+                    enabled: false
+                },
+                series: [{
+                    name: 'Tỷ lệ',
+                    colorByPoint: true,
+                    data: orderStatusData
+                }]
+            });
+
+            /*
+                Tỉ lệ phương thức thanh toán
+            */
+            Highcharts.chart('orderStatusPaymentChart', {
+                chart: {
+                    type: 'pie',
+                    plotShadow: false
+                },
+                title: {
+                    text: 'Tỷ lệ phương thức thanh toán'
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                },
+                accessibility: {
+                    point: {
+                        valueSuffix: '%'
+                    }
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            format: '<span style="font-size: 1.1em"><b>{point.name}</b></span><br>' +
+                                '<span style="opacity: 0.7">{point.percentage:.1f}%</span>',
+                            connectorColor: 'rgba(128,128,128,0.5)'
+                        }
+                    }
+                },
+                credits: {
+                    enabled: false
+                },
+                series: [{
+                    name: 'Tỷ lệ',
+                    colorByPoint: true,
+                    data: @json($orderStatusPayment)
+                }]
+            });
+
+
+        });
+
+
+    </script>
 @endsection
