@@ -68,6 +68,31 @@
                 </div>
 
                 <div id="single-fields" style="display: {{ old('product_type', $product->product_type) === 'single' ? 'block' : 'none' }};">
+                <!-- Color -->
+                    <div class="mb-3">
+                        <label for="color_id" class="form-label">Màu sắc</label>
+                        <select name="color_id" id="color_id" class="form-control">
+                            <option value="">-- Chọn màu sắc --</option>
+                            @foreach($colors as $color)
+                                <option value="{{ $color->id }}" {{ old('color_id', $product->color_id ?? '') == $color->id ? 'selected' : '' }}>
+                                    {{ $color->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- Capacity -->
+                    <div class="mb-3">
+                        <label for="capacity_id" class="form-label">Dung lượng</label>
+                        <select name="capacity_id" id="capacity_id" class="form-control">
+                            <option value="">-- Chọn dung lượng --</option>
+                            @foreach($capacities as $capacity)
+                                <option value="{{ $capacity->id }}" {{ old('capacity_id', $product->capacity_id ?? '') == $capacity->id ? 'selected' : '' }}>
+                                    {{ $capacity->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
                     <div class="mb-3">
                         <label for="price" class="form-label">Giá</label>
                         <input type="number" name="price" id="price" class="form-control" value="{{ old('price', $product->price) }}">

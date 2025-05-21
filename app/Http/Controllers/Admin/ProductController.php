@@ -96,6 +96,8 @@ class ProductController extends Controller
 
             $productData['price'] = $request->price;
             $productData['quantity'] = $request->quantity;
+            $productData['color_id'] = $request->color_id;
+            $productData['capacity_id'] = $request->capacity_id;
         }
 
         $product = Product::create($productData);
@@ -192,9 +194,13 @@ class ProductController extends Controller
             $request->validate([
                 'price' => 'required|numeric',
                 'quantity' => 'required|integer',
+                'color_id' => 'required|exists:colors,id',
+                'capacity_id' => 'required|exists:capacities,id',
             ]);
             $updateData['price'] = $request->price;
             $updateData['quantity'] = $request->quantity;
+            $updateData['color_id'] = $request->color_id;           
+            $updateData['capacity_id'] = $request->capacity_id;
             $product->variants()->delete();
         }
 

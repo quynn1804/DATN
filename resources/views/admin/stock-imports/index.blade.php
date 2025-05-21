@@ -22,7 +22,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($imports as $import)
+            @forelse($imports as $import)
             <tr>
                 <td>{{ $import->code }}</td>
                 <td>{{ $import->supplier_name ?? '-' }}</td>
@@ -31,15 +31,19 @@
                 <td>{{ $import->note }}</td>
                 <td>
                     <a href="{{ route('admin.stock-imports.show', $import->id) }}" class="btn btn-sm btn-info">Xem</a>
-                    <a href="{{ route('admin.stock-imports.edit', $import->id) }}" class="btn btn-sm btn-warning">Sửa</a>
-                    <form action="{{ route('admin.stock-imports.destroy', $import->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Bạn có chắc chắn muốn xóa phiếu nhập này?');">
+
+                    <form action="{{ route('admin.stock-imports.destroy', $import->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Bạn có chắc chắn muốn ẩn phiếu nhập này không?');">
                         @csrf
                         @method('DELETE')
-                        <button class="btn btn-sm btn-danger">Xóa</button>
+                        <button class="btn btn-sm btn-secondary">Ẩn</button>
                     </form>
                 </td>
             </tr>
-            @endforeach
+            @empty
+            <tr>
+                <td colspan="6" class="text-center">Không có phiếu nhập nào.</td>
+            </tr>
+            @endforelse
         </tbody>
     </table>
 

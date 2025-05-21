@@ -12,7 +12,8 @@ class Product extends Model
 
     protected $fillable = [
         'name', 'price', 'description', 'images', 'quantity', 'status'
-        ,'category_id','product_type'];
+        ,'category_id','product_type','color_id',
+        'capacity_id',];
 
         protected $casts = [
             'images' => 'array',
@@ -32,6 +33,17 @@ class Product extends Model
     public function comments()
     {
         return $this->hasMany(Comment::class);
+    }
+    // Quan hệ với màu sắc (chỉ áp dụng cho sản phẩm đơn)
+    public function color()
+    {
+        return $this->belongsTo(Color::class, 'color_id');
+    }
+
+    // Quan hệ với dung lượng (chỉ áp dụng cho sản phẩm đơn)
+    public function capacity()
+    {
+        return $this->belongsTo(Capacity::class, 'capacity_id');
     }
     public function orderDetails()
     {

@@ -4,7 +4,7 @@
 <div class="container">
     <h1>Tạo phiếu nhập kho</h1>
 
-    <form action="{{ route('admin.stock-imports.store') }}" method="POST">
+    <form action="{{ route('admin.stock-imports.store') }}" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn tạo phiếu nhập kho này không?');">
         @csrf
 
         <div class="mb-3">
@@ -19,7 +19,7 @@
 
         <div class="mb-3">
             <label>Ghi chú</label>
-            <textarea name="note" class="form-control" rows="3"></textarea>
+            <textarea name="note" class="form-control" rows="3" placeholder="Ghi chú (nếu có)..."></textarea>
         </div>
 
         <hr>
@@ -31,14 +31,16 @@
                     <th>Biến thể (nếu có)</th>
                     <th>Số lượng</th>
                     <th>Giá nhập</th>
-                    <th><button type="button" class="btn btn-sm btn-success" onclick="addRow()">+</button></th>
+                    <th>
+                        <button type="button" class="btn btn-sm btn-success" onclick="addRow()">+</button>
+                    </th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td>
-                        <select name="items[0][product_id]" class="form-control">
-                            <option value="">-- Chọn --</option>
+                        <select name="items[0][product_id]" class="form-control" required>
+                            <option value="">-- Chọn sản phẩm --</option>
                             @foreach ($products as $product)
                                 <option value="{{ $product->id }}">{{ $product->name }}</option>
                             @endforeach
@@ -49,19 +51,25 @@
                             <option value="">-- Không có --</option>
                             @foreach ($products as $product)
                                 @foreach ($product->variants as $variant)
-                                    <option value="{{ $variant->id }}">{{ $product->name }} - {{ $variant->color->name ?? '' }} / {{ $variant->capacity->name ?? '' }}</option>
+                                    <option value="{{ $variant->id }}">
+                                        {{ $product->name }} - {{ $variant->color->name ?? '' }} / {{ $variant->capacity->name ?? '' }}
+                                    </option>
                                 @endforeach
                             @endforeach
                         </select>
                     </td>
-                    <td><input type="number" name="items[0][quantity]" class="form-control" value="1" min="1"></td>
-                    <td><input type="number" name="items[0][price_import]" class="form-control" value="0" min="0"></td>
+                    <td>
+                        <input type="number" name="items[0][quantity]" class="form-control" value="1" min="1" required>
+                    </td>
+                    <td>
+                        <input type="number" name="items[0][price_import]" class="form-control" value="0" min="0" required>
+                    </td>
                     <td></td>
                 </tr>
             </tbody>
         </table>
 
-        <button type="submit" class="btn btn-primary">Lưu phiếu nhập</button>
+        <button type="submit" class="btn btn-primary mt-3">Lưu phiếu nhập</button>
     </form>
 </div>
 
@@ -71,8 +79,8 @@
         const row = `
         <tr>
             <td>
-                <select name="items[${rowIndex}][product_id]" class="form-control">
-                    <option value="">-- Chọn --</option>
+                <select name="items[${rowIndex}][product_id]" class="form-control" required>
+                    <option value="">-- Chọn sản phẩm --</option>
                     @foreach ($products as $product)
                         <option value="{{ $product->id }}">{{ $product->name }}</option>
                     @endforeach
@@ -83,14 +91,22 @@
                     <option value="">-- Không có --</option>
                     @foreach ($products as $product)
                         @foreach ($product->variants as $variant)
-                            <option value="{{ $variant->id }}">{{ $product->name }} - {{ $variant->color->name ?? '' }} / {{ $variant->capacity->name ?? '' }}</option>
+                            <option value="{{ $variant->id }}">
+                                {{ $product->name }} - {{ $variant->color->name ?? '' }} / {{ $variant->capacity->name ?? '' }}
+                            </option>
                         @endforeach
                     @endforeach
                 </select>
             </td>
-            <td><input type="number" name="items[${rowIndex}][quantity]" class="form-control" value="1" min="1"></td>
-            <td><input type="number" name="items[${rowIndex}][price_import]" class="form-control" value="0" min="0"></td>
-            <td><button type="button" class="btn btn-sm btn-danger" onclick="this.closest('tr').remove()">X</button></td>
+            <td>
+                <input type="number" name="items[${rowIndex}][quantity]" class="form-control" value="1" min="1" required>
+            </td>
+            <td>
+                <input type="number" name="items[${rowIndex}][price_import]" class="form-control" value="0" min="0" required>
+            </td>
+            <td>
+                <button type="button" class="btn btn-sm btn-danger" onclick="this.closest('tr').remove()">X</button>
+            </td>
         </tr>`;
         document.querySelector('#import-items tbody').insertAdjacentHTML('beforeend', row);
         rowIndex++;

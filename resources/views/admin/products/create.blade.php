@@ -75,22 +75,28 @@
                 </div>
 
                 <div id="single-fields" style="display: {{ old('product_type', 'single') === 'single' ? 'block' : 'none' }};">
+                    <!-- Color -->
                     <div class="mb-3">
-                        <label class="form-label"> <span class="text-danger">*</span>Màu sắc</label>
-                        <select name="color_id" class="form-select">
-                            <option value="">-- Chọn màu --</option>
+                        <label for="color_id" class="form-label">Màu sắc</label>
+                        <select name="color_id" id="color_id" class="form-control">
+                            <option value="">-- Chọn màu sắc --</option>
                             @foreach($colors as $color)
-                                <option value="{{ $color->id }}">{{ $color->name }}</option>
+                                <option value="{{ $color->id }}" {{ old('color_id', $product->color_id ?? '') == $color->id ? 'selected' : '' }}>
+                                    {{ $color->name }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
 
+                    <!-- Capacity -->
                     <div class="mb-3">
-                        <label class="form-label"> <span class="text-danger">*</span>Dung lượng</label>
-                        <select name="capacity_id" class="form-select">
+                        <label for="capacity_id" class="form-label">Dung lượng</label>
+                        <select name="capacity_id" id="capacity_id" class="form-control">
                             <option value="">-- Chọn dung lượng --</option>
                             @foreach($capacities as $capacity)
-                                <option value="{{ $capacity->id }}">{{ $capacity->name }}</option>
+                                <option value="{{ $capacity->id }}" {{ old('capacity_id', $product->capacity_id ?? '') == $capacity->id ? 'selected' : '' }}>
+                                    {{ $capacity->name }}
+                                </option>
                             @endforeach
                         </select>
                     </div>

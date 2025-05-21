@@ -42,6 +42,8 @@
 
             @if ($product->product_type === 'single')
                 <hr>
+                <p><strong>Màu sắc:</strong> {{ $product->color->name ?? 'N/A' }}</p>
+                <p><strong>Dung lượng:</strong> {{ $product->capacity->name ?? 'N/A' }}</p>
                 <p><strong>Giá:</strong> <span class="text-danger">{{ number_format($product->price, 0, ',', '.') }} VNĐ</span></p>
                 <p><strong>Số lượng:</strong> <span class="text-success">{{ $product->quantity }}</span></p>
             @else
