@@ -40,13 +40,13 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-md-3">
+                                {{-- <div class="col-md-3">
                                     <select name="product_type" class="form-select">
                                         <option value="">Tất cả loại</option>
                                         <option value="single" {{ request('product_type') == 'single' ? 'selected' : '' }}>Sản phẩm đơn</option>
                                         <option value="variant" {{ request('product_type') == 'variant' ? 'selected' : '' }}>Có biến thể</option>
                                     </select>
-                                </div>
+                                </div> --}}
                                 <div class="col-md-2">
                                     <button class="btn btn-primary w-100" type="submit">Tìm kiếm</button>
                                 </div>
@@ -72,7 +72,7 @@
                                     <th>ID</th>
                                     <th>Tên sản phẩm</th>
                                     <th>Danh mục</th>
-                                    <th>Loại</th>
+                                    {{-- <th>Loại</th> --}}
                                     <th>Giá</th>
                                     <th>Số lượng</th>
                                     <th>Ảnh</th>
@@ -87,13 +87,13 @@
                                         <td>{{ $product->id }}</td>
                                         <td>{{ $product->name }}</td>
                                         <td>{{ $product->category->name ?? 'Không rõ' }}</td>
-                                        <td>
+                                        {{-- <td>
                                             @if($product->product_type === 'single')
                                                 <span class="badge bg-primary">Sản phẩm đơn</span>
                                             @else
                                                 <span class="badge bg-warning text-dark">Có biến thể</span>
                                             @endif
-                                        </td>
+                                        </td> --}}
                                         <td>
                                             @if($product->product_type === 'single')
                                                 {{ number_format($product->price, 0, ',', '.') }}₫

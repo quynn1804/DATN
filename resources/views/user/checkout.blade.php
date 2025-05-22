@@ -65,7 +65,7 @@
                                                     <abbr class="required" title="required">*</abbr>
                                                 </label>
                                                 <input type="text" name="fullname" class="form-control"
-                                                    value="{{ old('fullname') }}" />
+                                                    value="{{ old('fullname') }}" required/>
 
                                                 @error('fullname')
                                                     <span class="fst-italic text-danger">{{ $message }}</span>
@@ -93,7 +93,7 @@
                                                     <abbr class="required" title="required">*</abbr>
                                                 </label>
                                                 <input type="tel" name="phone" class="form-control"
-                                                    value="{{ old('phone') }}" />
+                                                    value="{{ old('phone') }}" required/>
                                                 @error('phone')
                                                     <span class="fst-italic text-danger">{{ $message }}</span>
                                                 @enderror
@@ -105,7 +105,7 @@
                                                 <label>Địa chỉ
                                                     <abbr class="required" title="required">*</abbr></label>
                                                 <input type="text" name="address" class="form-control"
-                                                    value="{{ old('address') }}" />
+                                                    value="{{ old('address') }}" required/>
                                                 @error('address')
                                                     <span class="fst-italic text-danger">{{ $message }}</span>
                                                 @enderror
@@ -116,7 +116,7 @@
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label>Note
-                                                    <abbr class="required" title="required">*</abbr></label>
+                                                    <abbr class="required" title="required"></abbr></label>
                                                 <textarea name="note" class="form-control" rows="4">{{ old('note') }}</textarea>
                                                 @error('note')
                                                     <span class="fst-italic text-danger">{{ $message }}</span>

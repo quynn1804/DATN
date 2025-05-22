@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Comment;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class CommentController extends Controller
 {
@@ -23,6 +24,7 @@ class CommentController extends Controller
 
     public function store(Request $request)
     {
+         Log::info('Dữ liệu request:', $request->all());  // Dùng Log đúng namespace
         // dd($request->all()); // Kiểm tra dữ liệu gửi lên có đúng không
 
         $request->validate([

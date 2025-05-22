@@ -70,12 +70,18 @@
                         </h3>
 
                         <div class="ratings-container">
-                            <div class="product-ratings">
-                                <span class="ratings" style="width:80%"></span>
-                                <span class="tooltiptext tooltip-top"></span>
-                            </div>
-                        </div>
+                            @php
+                                $rating = $product->rating ?? 0; // nếu null thì gán 0
+                                $ratingPercent = ($rating / 5) * 100;
+                            @endphp
 
+                            <div class="product-ratings">
+                                <span class="ratings" style="width: {{ $ratingPercent }}%"></span>
+                                <span class="tooltiptext tooltip-top">{{ number_format($rating, 1) }} /
+                                    5</span>
+                            </div>
+                            <!-- End .product-ratings -->
+                        </div>
                         <div class="price-box">
                             @if ($product->product_type === 'single')
                                 {{-- <hr> --}}
@@ -96,11 +102,11 @@
 
                                         @if ($minPrice !== $maxPrice)
                                             <span class="product-price">
-                                                {{ formatPrice($maxPrice) }}
+                                                {{ formatPrice($minPrice) }}
                                             </span>
                                         @endif
 
-                                        <del class="old-price">{{ formatPrice($minPrice) }}đ</del>
+                                        <del class="old-price">{{ formatPrice($maxPrice) }}đ</del>
                                         {{-- {{ number_format($minPrice, 0, ',', '.') }} VNĐ
                                 @if ($minPrice !== $maxPrice)
                                     - {{ number_format($maxPrice, 0, ',', '.') }} VNĐ
@@ -111,16 +117,16 @@
                         </div>
 
                         <div class="product-action">
-                            <a href="#" title="Wishlist" class="btn-icon-wish">
+                            {{-- <a href="#" title="Wishlist" class="btn-icon-wish">
                                 <i class="icon-heart"></i>
-                            </a>
+                            </a> --}}
                             <a href="{{ route('singleProduct', ['id' => $product->id]) }}" class="btn-icon btn-add-cart">
                                 <i class="fa fa-arrow-right"></i>
                                 <span>Xem Hàng</span>
                             </a>
-                            <a class="btn-quickview" title="Quick View">
+                            {{-- <a class="btn-quickview" title="Quick View">
                                 <i class="fas fa-external-link-alt"></i>
-                            </a>
+                            </a> --}}
                         </div>
                     </div>
                 </div>

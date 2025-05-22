@@ -12,6 +12,7 @@
     </div>
 
 
+
     <div class="container account-container custom-account-container">
         <div class="row">
             <div class="sidebar widget widget-dashboard mb-lg-0 mb-3 col-lg-3 order-0">
@@ -186,9 +187,7 @@
                     <h3 class="account-sub-title d-none d-md-block mt-0 pt-1 ml-1"><i
                             class="icon-user-2 align-middle mr-3 pr-1"></i>Thông tin cá nhân </h3>
                     <div class="account-content">
-                        @if (session('success'))
-                            <div class="alert alert-success">{{ session('success') }}</div>
-                        @endif
+
 
 
                         <form action="{{ route('updateAccount') }}" method="POST">
@@ -206,7 +205,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="name">First name <span class="required">*</span></label>
+                                        <label for="name">Tên <span class="required">*</span></label>
                                         <input type="text" class="form-control" id="name" name="name"
                                             required value="{{ old('name', $user->name) }}" />
                                     </div>
@@ -214,15 +213,15 @@
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="email">Email address <span class="required">*</span></label>
+                                        <label for="email">Email <span class="required">*</span></label>
                                         <input type="email" class="form-control" id="email" name="email"
-                                            required value="{{ old('email', $user->email) }}" disabled />
+                                            required value="{{ old('email', $user->email) }}" readonly />
                                     </div>
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label for="gender">Gender <span class="required">*</span></label>
+                                <label for="gender">Giới tính <span class="required">*</span></label>
                                 <select id="gender" name="gender" class="form-control" required>
                                     <option value="Nam" {{ old('gender', $user->gender) == 'Nam' ? 'selected' : '' }}>
                                         Nam</option>
@@ -234,7 +233,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="phone">Phone <span class="required">*</span></label>
+                                <label for="phone">Số điện thoại <span class="required">*</span></label>
                                 <input type="text" class="form-control" id="phone" name="phone" required
                                     value="{{ old('phone', $user->phone) }}" />
                             </div>
@@ -243,21 +242,22 @@
                                 <h3 class="text-uppercase mb-2">Password Change</h3>
 
                                 <div class="form-group">
-                                    <label for="password">New Password (leave blank to leave unchanged)</label>
+                                    <label for="password">Mật khẩu mới (để trống nếu như không đổi )</label>
                                     <input type="password" class="form-control" id="password" name="password" />
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="password_confirmation">Confirm New Password</label>
+                                    <label for="password_confirmation">Xác nhận mật khẩu </label>
                                     <input type="password" class="form-control" id="password_confirmation"
                                         name="password_confirmation" />
                                 </div>
                             </div>
 
                             <div class="form-footer mt-3 mb-0">
-                                <button type="submit" class="btn btn-dark mr-0">Save changes</button>
+                                <button type="submit" class="btn btn-dark mr-0">Lưu thay đổi </button>
                             </div>
                         </form>
+
 
                     </div>
                 </div><!-- End .tab-pane -->
@@ -421,6 +421,27 @@
         </div><!-- End .row -->
     </div><!-- End .container -->
 
-    <div class="mb-5"></div><!-- margin -->
+    {{-- <div class="mb-5"></div><!-- margin -->
+    @if (session('success'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Thành công',
+                text: '{{ session('success') }}',
+                confirmButtonText: 'OK'
+            });
+        </script>
+    @endif
+
+    @if ($errors->any())
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi!',
+                html: `{!! implode('<br>', $errors->all()) !!}`,
+                confirmButtonText: 'OK'
+            });
+        </script>
+    @endif --}}
 
 @endsection

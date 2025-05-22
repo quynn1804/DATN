@@ -102,14 +102,27 @@
                 @method('PUT')
                 <div class="form-group">
                     <label for="status">Trạng thái đơn hàng:</label>
+                    @php
+                        $currentStatus = $order->status;
+                        $validTransitions = [
+                            'pending' => ['processing', 'cancelled'],
+                            'processing' => ['shipping', 'cancelled'],
+                            'shipping' => ['completed', 'cancelled'],
+                            'completed' => [],
+                            'cancelled' => [],
+                        ];
+                        $allowedStatuses = $validTransitions[$currentStatus] ?? [];
+                    @endphp
+
                     <select name="status" class="form-control w-25">
-                        <option value="pending" {{ $order->status == 'pending' ? 'selected' : '' }}>Chờ xử lý</option>
-                        <option value="processing" {{ $order->status == 'processing' ? 'selected' : '' }}>Đang xử lý
+                        {{-- Luôn có option trạng thái hiện tại (để giữ nguyên) --}}
+                        <option value="{{ $currentStatus }}" selected>{{ $statusNames[$currentStatus] ?? $currentStatus }}
                         </option>
-                        <option value="shipping" {{ $order->status == 'shipping' ? 'selected' : '' }}>Đang giao hàng
-                        </option>
-                        <option value="completed" {{ $order->status == 'completed' ? 'selected' : '' }}>Hoàn thành</option>
-                        <option value="cancelled" {{ $order->status == 'cancelled' ? 'selected' : '' }}>Đã hủy</option>
+
+                        {{-- Các trạng thái được phép chuyển sang --}}
+                        @foreach ($allowedStatuses as $status)
+                            <option value="{{ $status }}">{{ $statusNames[$status] ?? $status }}</option>
+                        @endforeach
                     </select>
                 </div>
                 <button type="submit" class="btn btn-primary mt-2">Cập nhật</button>

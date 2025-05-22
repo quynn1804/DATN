@@ -2,7 +2,25 @@
 @section('title')
 {{ $keyword }}
 @endsection
-
+   @php
+        if (!function_exists('getImageUrl')) {
+            function getImageUrl($path, $default = 'images/default.png')
+            {
+                if ($path && file_exists(public_path('storage/' . $path))) {
+                    return asset('storage/' . $path);
+                }
+                return asset($default);
+            }
+        }
+    @endphp
+    @php
+        if (!function_exists('formatPrice')) {
+            function formatPrice($price)
+            {
+                return number_format($price, 0, ',', '.') . ' VNĐ';
+            }
+        }
+    @endphp
 @section('content')
 <div class="container">
     <nav aria-label="breadcrumb" class="breadcrumb-nav">
@@ -38,112 +56,143 @@
                     <!-- End .toolbox-item -->
                 </div>
             </nav>
-            @if($products->isNotEmpty())
-            <div class="row">
-                @foreach($products as $product)
-                <div class="col-lg-3 col-sm-4 col-md-3">
-                    <div class="product-default">
-                        <figure>
-                            <a href="{{ route('singleProduct', $product->id) }}">
-                                <img src="{{ $product->image && file_exists(public_path('storage/' . $product->image)) ? asset('storage/' . $product->image) : 'https://laravel.com/img/logomark.min.svg' }}" alt="{{ $product->name }}" width="50px" height="50px">
-                            </a>
+       @if ($products->isNotEmpty())
+                    <div class="row">
 
-                            <div class="label-group">
-                                {{-- <div class="product-label label-hot">{{ $product['type'] }}</div> --}}
+                        @foreach ($products as $product)
+                            <div class="col-6 col-sm-4 col-md-3">
+                                <div class="product-default">
+                                    <figure>
+                                        <a href="{{ route('singleProduct', $product->id) }}">
+                                            @php
+                                                $mainImage = null;
 
-                            @if($product->price_sale > 0)
-                            <div class="product-label label-sale">Sale</div>
-                            @endif
-                    </div>
-                    </figure>
+                                                if (is_array($product->images) && count($product->images) > 0) {
+                                                    $mainImage = $product->images[0];
+                                                } elseif ($product->variants && $product->variants->count() > 0) {
+                                                    $firstVariant = $product->variants->first();
+                                                    if (
+                                                        is_array($firstVariant->images) &&
+                                                        count($firstVariant->images) > 0
+                                                    ) {
+                                                        $mainImage = $firstVariant->images[0];
+                                                    }
+                                                }
+                                                $mainImageUrl = getImageUrl($mainImage);
+                                            @endphp
+                                            <img src="{{ $mainImageUrl }}" alt="{{ $product->name }}">
+                                        </a>
 
-                    <div class="product-details">
-                        <div class="category-wrap">
-                            <div class="category-list">
-                                <a href="#" class="product-category">
-                                    {{ $product->category->name }}
-                                </a>
+                                        <div class="label-group">
+                                            {{-- <div class="product-label label-hot">{{ $product['type'] }}</div> --}}
+
+                                            @if ($product->price_sale > 0)
+                                                <div class="product-label label-sale">Sale</div>
+                                            @endif
+                                        </div>
+                                    </figure>
+
+                                    <div class="product-details" >
+                                        <div class="category-wrap" style="">
+                                            <div class="category-list">
+                                                <a href="#" class="product-category">
+                                                    {{ $product->category->name }}
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                        <h3 class="product-title">
+                                            <a href="{{ route('singleProduct', $product->id) }}">
+                                                {{ $product->name }}
+                                            </a>
+                                        </h3>
+
+                                        <div class="ratings-container">
+                                            @php
+                                                $rating = $product->rating ?? 0; // nếu null thì gán 0
+                                                $ratingPercent = ($rating / 5) * 100;
+                                            @endphp
+
+                                            <div class="product-ratings">
+                                                <span class="ratings" style="width: {{ $ratingPercent }}%"></span>
+                                                <span class="tooltiptext tooltip-top">{{ number_format($rating, 1) }} /
+                                                    5</span>
+                                            </div>
+                                            <!-- End .product-ratings -->
+                                        </div>
+                                        <!-- End .product-container -->
+
+                                        <div class="price-box  text-center">
+                                            @if ($product->product_type === 'single')
+                                                {{-- <hr> --}}
+                                                <p><strong>Giá:</strong> <span
+                                                        class="product-price">{{ number_format($product->price, 0, ',', '.') }}
+                                                        VNĐ</span></p>
+                                            @else
+                                                {{-- <hr> --}}
+                                                @php
+                                                    $prices = $product->variants->pluck('price')->sort();
+                                                    $minPrice = $prices->first();
+                                                    $maxPrice = $prices->last();
+                                                @endphp
+                                                <p>
+                                                    <span class="product-price">
+                                                        @if ($minPrice !== $maxPrice)
+                                                            <span class="product-price">
+                                                                {{ formatPrice($minPrice) }}
+                                                            </span>
+                                                        @endif
+
+                                                        <del class="old-price">{{ formatPrice($maxPrice) }}đ</del>
+                                                        {{-- {{ number_format($minPrice, 0, ',', '.') }} VNĐ
+                                @if ($minPrice !== $maxPrice)
+                                    - {{ number_format($maxPrice, 0, ',', '.') }} VNĐ
+                                @endif --}}
+                                                    </span>
+                                                </p>
+                                            @endif
+                                        </div>
+
+                                        <!-- End .price-box -->
+
+                                        <div class="product-action">
+
+                                            <a href="{{ route('singleProduct', $product->id) }}"
+                                                class="btn-icon btn-add-cart">
+                                                <i class="fa fa-arrow-right"></i>
+                                                <span>Chi tiết sản phẩm</span>
+                                            </a>
+
+                                        </div>
+                                    </div>
+                                    <!-- End .product-details -->
+                                </div>
                             </div>
-                        </div>
-
-                        <h3 class="product-title">
-                            <a href="{{ route('singleProduct', $product->id) }}">
-                                {{ $product->name }}
-                            </a>
-                        </h3>
-
-                        <div class="ratings-container">
-                            <div class="product-ratings">
-                                <span class="ratings" style="width:100%"></span>
-                                <!-- End .ratings -->
-                                <span class="tooltiptext tooltip-top"></span>
-                            </div>
-                            <!-- End .product-ratings -->
-                        </div>
-                        <!-- End .product-container -->
-
-                        <div class="price-box">
-
-                            <span class="product-price">{{ number_format($product->price, 0, ',', '.') }}đ</span>
-                            @if ($product->old_price)
-                            <span class="old-price"><del>{{ number_format($product->old_price, 0, ',', '.') }}đ</del></span>
-                            @endif
-
-                        </div>
-                        <!-- End .price-box -->
-
-                        <div class="product-action">
-                            <a href="wishlist.html" class="btn-icon-wish" title="wishlist">
-                                <i class="icon-heart"></i>
-                            </a>
-                            <a href="{{ route('singleProduct', $product->id) }}" class="btn-icon btn-add-cart">
-                                <i class="fa fa-arrow-right"></i>
-                                <span>SELECT OPTIONS</span>
-                            </a>
-                            <a class="btn-quickview" title="Quick View">
-                                <i class="fas fa-external-link-alt"></i>
-                            </a>
-                        </div>
+                        @endforeach
                     </div>
-                    <!-- End .product-details -->
-                </div>
-            </div>
-            @endforeach
-        </div>
-        <!-- End .row -->
+                    <!-- End .row -->
 
-        <nav class="toolbox toolbox-pagination">
-            <div class="toolbox-item toolbox-show">
-                <label>Show:</label>
+                    <nav class="toolbox toolbox-pagination">
+                        <div class="toolbox-item toolbox-show">
+                            <label></label>
 
-                <div class="select-custom">
-                    <select name="count" class="form-control">
-                        <option value="12">12</option>
-                        <option value="24">24</option>
-                        <option value="36">36</option>
-                    </select>
-                </div>
-                <!-- End .select-custom -->
-            </div>
-            <!-- End .toolbox-item -->
+                            <div class="select">
 
-            <ul class="pagination toolbox-item">
-                <li class="page-item disabled">
-                    <a class="page-link page-link-btn" href="category-4col.html#"><i class="icon-angle-left"></i></a>
-                </li>
-                <li class="page-item active">
-                    <a class="page-link" href="category-4col.html#">1 <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="page-item"><a class="page-link" href="category-4col.html#">2</a></li>
-                <li class="page-item"><a class="page-link" href="category-4col.html#">3</a></li>
-                <li class="page-item"><span class="page-link">...</span></li>
-                <li class="page-item">
-                    <a class="page-link page-link-btn" href="category-4col.html#"><i class="icon-angle-right"></i></a>
-                </li>
-            </ul>
-        </nav>
+                                <label></label>
 
-        @else
+                                </select>
+                            </div>
+                            <!-- End .select-custom -->
+                        </div>
+                        <!-- End .toolbox-item -->
+
+                        <ul class="pagination toolbox-item">
+
+                            {{-- {{ $products->links('pagination::bootstrap-5') }} --}}
+
+                        </ul>
+                    </nav>
+                @else
         <div class="align-content-center min-vh-100">
             <h4 class="text-danger text-center align-content-center">Không có sản phẩn nào</h4>
         </div>

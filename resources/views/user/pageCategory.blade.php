@@ -47,7 +47,7 @@
                             <span>Filter</span>
                         </a>
 
-                        <div class="toolbox-item toolbox-sort">
+                        {{-- <div class="toolbox-item toolbox-sort">
                             <label>Sort By:</label>
 
                             <div class="select-custom">
@@ -63,12 +63,12 @@
                             <!-- End .select-custom -->
 
 
-                        </div>
+                        </div> --}}
                         <!-- End .toolbox-item -->
                     </div>
                     <!-- End .toolbox-left -->
 
-                    <div class="toolbox-right">
+                    {{-- <div class="toolbox-right">
                         <div class="toolbox-item toolbox-show">
                             <label>Show:</label>
 
@@ -83,6 +83,7 @@
                         </div>
                         <!-- End .toolbox-item -->
 
+
                         <div class="toolbox-item layout-modes">
                             <a href="category.html" class="layout-btn btn-grid active" title="Grid">
                                 <i class="icon-mode-grid"></i>
@@ -92,10 +93,27 @@
                             </a>
                         </div>
                         <!-- End .layout-modes -->
-                    </div>
+                    </div> --}}
                     <!-- End .toolbox-right -->
                 </nav>
+                @php
+                    if (!function_exists('getImageUrl')) {
+                        function getImageUrl($path, $default = 'images/default.png')
+                        {
+                            if ($path && file_exists(public_path('storage/' . $path))) {
+                                return asset('storage/' . $path);
+                            }
+                            return asset($default);
+                        }
+                    }
 
+                    if (!function_exists('formatPrice')) {
+                        function formatPrice($price)
+                        {
+                            return number_format($price, 0, ',', '.') . ' VNĐ';
+                        }
+                    }
+                @endphp
                 @if ($products->isNotEmpty())
                     <div class="row">
 
@@ -132,8 +150,8 @@
                                         </div>
                                     </figure>
 
-                                    <div class="product-details">
-                                        <div class="category-wrap">
+                                    <div class="product-details" >
+                                        <div class="category-wrap" style="">
                                             <div class="category-list">
                                                 <a href="#" class="product-category">
                                                     {{ $product->category->name }}
@@ -148,35 +166,51 @@
                                         </h3>
 
                                         <div class="ratings-container">
+                                            @php
+                                                $rating = $product->rating ?? 0; // nếu null thì gán 0
+                                                $ratingPercent = ($rating / 5) * 100;
+                                            @endphp
+
                                             <div class="product-ratings">
-                                                <span class="ratings" style="width:100%"></span>
-                                                <!-- End .ratings -->
-                                                <span class="tooltiptext tooltip-top"></span>
+                                                <span class="ratings" style="width: {{ $ratingPercent }}%"></span>
+                                                <span class="tooltiptext tooltip-top">{{ number_format($rating, 1) }} /
+                                                    5</span>
                                             </div>
                                             <!-- End .product-ratings -->
                                         </div>
                                         <!-- End .product-container -->
 
-                                        <div class="price-box">
+                                        <div class="price-box  text-center">
+                                            @if ($product->product_type === 'single')
+                                                {{-- <hr> --}}
+                                                <p><strong>Giá:</strong> <span
+                                                        class="product-price">{{ number_format($product->price, 0, ',', '.') }}
+                                                        VNĐ</span></p>
+                                            @else
+                                                {{-- <hr> --}}
+                                                @php
+                                                    $prices = $product->variants->pluck('price')->sort();
+                                                    $minPrice = $prices->first();
+                                                    $maxPrice = $prices->last();
+                                                @endphp
+                                                <p>
+                                                    <span class="product-price">
+                                                        @if ($minPrice !== $maxPrice)
+                                                            <span class="product-price">
+                                                                {{ formatPrice($minPrice) }}
+                                                            </span>
+                                                        @endif
 
-                                            <span class="product-price">
-                                                @if ($product->product_type === 'single')
-                                                    {{ number_format($product->price, 0, ',', '.') }}₫
-                                                @else
-                                                    @php
-                                                        $minPrice = $product->variants->min('price');
-                                                        $maxPrice = $product->variants->max('price');
-                                                    @endphp
-                                                    {{ number_format($minPrice, 0, ',', '.') }}₫ -
-                                                    {{ number_format($maxPrice, 0, ',', '.') }}₫
-                                                @endif
-                                            </span>
-                                            @if ($product->old_price)
-                                                <span
-                                                    class="old-price"><del>{{ number_format($product->old_price, 0, ',', '.') }}đ</del></span>
+                                                        <del class="old-price">{{ formatPrice($maxPrice) }}đ</del>
+                                                        {{-- {{ number_format($minPrice, 0, ',', '.') }} VNĐ
+                                @if ($minPrice !== $maxPrice)
+                                    - {{ number_format($maxPrice, 0, ',', '.') }} VNĐ
+                                @endif --}}
+                                                    </span>
+                                                </p>
                                             @endif
-
                                         </div>
+
                                         <!-- End .price-box -->
 
                                         <div class="product-action">
@@ -238,7 +272,7 @@
                         <div class="collapse show" id="widget-body-2">
                             <div class="widget-body">
                                 <ul class="cat-list">
-                                    @foreach ($categories->take(5) as $category)
+                                    @foreach ($categories->take(10) as $category)
                                         <li>
                                             <a href="{{ route('products.filter', ['category_id' => $category->id]) }}">
                                                 {{ $category->name }}
@@ -262,7 +296,7 @@
                         <div class="collapse show" id="widget-body-3">
                             <div class="widget-body">
                                 <ul class="cat-list">
-                                    @foreach ($Capacities->take(5) as $Capacity)
+                                    @foreach ($Capacities->take(10) as $Capacity)
                                         <li>
                                             <a
                                                 href="{{ route('products.filter', ['capacity_id' => $Capacity->id]) }}">{{ $Capacity->name }}</a>
@@ -340,4 +374,22 @@
 
     <div class="mb-4"></div>
     <!-- margin -->
+    <style>
+        .product-default {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            /* đảm bảo khối sản phẩm chiếm toàn bộ chiều cao */
+        }
+
+        .product-details {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-action {
+            margin-top: auto;
+        }
+    </style>
 @endsection

@@ -1,16 +1,20 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Models\Comment;
+
 class ProductController extends Controller
 {
     public function show($id)
     {
-        $comments = Comment::where('product_id', $id)->with('user')->get();
-        $product = Product::with('comments.user')->findOrFail($id);
-        return view('products.show', compact('product', 'comments'));
-    }
+        $products = Product::paginate(12);
+        $topProducts = Product::with('category', 'variants') // eager load nếu cần
+            ->orderBy('views', 'desc') // hoặc tiêu chí nào đó để xếp hạng "top"
+            ->paginate(12); // mỗi trang 12 sản phẩm
 
+        return view('products.top', compact('topProducts'));
+    }
 }

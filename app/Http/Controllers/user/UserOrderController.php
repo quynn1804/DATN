@@ -32,4 +32,21 @@ class UserOrderController extends Controller
 
         return redirect()->route('myAccount')->with('success', 'Đơn hàng đã được hủy.');
     }
+    public function confirmReceived($id)
+{
+    $order = Order::where('id', $id)
+        ->where('user_id', auth()->id())
+        ->where('status', 'shipping')
+        ->first();
+
+    if (!$order) {
+        return redirect()->back()->with('error', 'Không thể xác nhận đơn hàng.');
+    }
+
+    $order->status = 'completed';
+    $order->save();
+
+    return redirect()->back()->with('success', 'Bạn đã xác nhận đã nhận hàng. Cảm ơn bạn!');
+}
+
 }

@@ -19,13 +19,13 @@
         </div>
         <div class="card-body bg-light">
             <p><strong>Danh mục:</strong> {{ $product->category->name ?? 'Không có' }}</p>
-            <p><strong>Loại sản phẩm:</strong>
+            {{-- <p><strong>Loại sản phẩm:</strong>
                 @if($product->product_type === 'single')
                     <span class="badge bg-primary">Sản phẩm đơn</span>
                 @else
                     <span class="badge bg-warning text-dark">Có biến thể</span>
                 @endif
-            </p>
+            </p> --}}
             <p><strong>Mô tả:</strong></p>
             <div class=" p-3 rounded border" style="background-color:rgb(222, 213, 213)">{!! nl2br(e($product->description)) !!}</div>
 

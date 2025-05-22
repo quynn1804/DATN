@@ -1,5 +1,5 @@
 @extends('admin.layouts.master')
-@section('title', 'New Product')
+@section('title', 'Edit Product')
 
 @section('style')
 <style>
@@ -10,7 +10,6 @@
     .h-screen {
         height: 100%;
     }
-
 </style>
 @endsection
 
@@ -53,43 +52,15 @@
                     </select>
                 </div>
 
-                <div class="mb-3">
-                    <label class="form-label">Loại sản phẩm</label><br>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="product_type" id="type_single" value="single"
-                            {{ old('product_type', $product->product_type) === 'single' ? 'checked' : '' }}>
-                        <label class="form-check-label" for="type_single">Sản phẩm đơn</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="product_type" id="type_variant" value="variant"
-                            {{ old('product_type', $product->product_type) === 'variant' || count($product->variants) > 0 ? 'checked' : '' }}>
-                        <label class="form-check-label" for="type_variant">Có biến thể</label>
-                    </div>
-                </div>
+                <input type="hidden" name="product_type" value="variant">
+                {{-- Loại sản phẩm bị bỏ rồi, không cần radio chọn loại nữa --}}
+                {{-- <div class="mb-3"> ... </div> --}}
 
-                <div id="single-fields" style="display: {{ old('product_type', $product->product_type) === 'single' ? 'block' : 'none' }};">
-                    <div class="mb-3">
-                        <label for="price" class="form-label">Giá</label>
-                        <input type="number" name="price" id="price" class="form-control" value="{{ old('price', $product->price) }}">
-                    </div>
-                    <div class="mb-3">
-                        <label for="quantity" class="form-label">Số lượng</label>
-                        <input type="number" name="quantity" id="quantity" class="form-control" value="{{ old('quantity', $product->quantity) }}">
-                    </div>
-                    <div class="mb-3">
-                        <label for="images" class="form-label">Hình ảnh sản phẩm</label>
-                        <input type="file" name="images[]" id="images" class="form-control" multiple>
-                        @if ($product->images && is_array($product->images))
-                            <div class="mt-2">
-                                @foreach ($product->images as $image)
-                                    <img src="{{ asset('storage/' . $image) }}" alt="Image" class="img-thumbnail me-2 mb-2" width="100">
-                                @endforeach
-                            </div>
-                        @endif
-                    </div>
-                </div>
+                {{-- Bỏ hẳn phần single-fields --}}
+                {{-- <div id="single-fields"> ... </div> --}}
 
-                <div id="variant-fields" style="display: {{ old('product_type', $product->product_type) === 'variant' ? 'block' : 'none' }};">
+                {{-- Giữ lại phần variant fields --}}
+                <div id="variant-fields">
                     <h5 class="mt-4">Biến thể sản phẩm</h5>
                     <div id="variant-container">
                         @forelse($product->variants as $index => $variant)
@@ -138,7 +109,7 @@
                             </div>
                         </div>
                         @empty
-                            <!-- Trường hợp không có biến thể nào, hiển thị 1 mẫu rỗng -->
+                            {{-- Nếu không có biến thể nào, có thể hiển thị rỗng hoặc thông báo --}}
                         @endforelse
                     </div>
                     <button type="button" id="add-variant" class="btn btn-outline-primary">+ Thêm biến thể</button>
@@ -167,126 +138,14 @@
 @endsection
 
 @section('script')
-<!--tinymce js-->
 <script src="https://themesbrand.com/skote/layouts/assets/libs/tinymce/tinymce.min.js"></script>
 
-{{-- <script>
-    const previewImage = (event) => {
-        const img = document.getElementById("projectlogo-img");
-        img.src = URL.createObjectURL(event.target.files[0]);
-
-        $("#projectlogo-img").addClass("h-screen");
-    }
-
-    $("#elm1") &&
-        tinymce.init({
-            selector: "textarea#elm1"
-            , height: 350
-            , plugins: [
-                "advlist"
-                , "autolink"
-                , "lists"
-                , "link"
-                , "image"
-                , "charmap"
-                , "preview"
-                , "anchor"
-                , "searchreplace"
-                , "visualblocks"
-                , "code"
-                , "fullscreen"
-                , "insertdatetime"
-                , "media"
-                , "table"
-                , "help"
-                , "wordcount"
-            , ]
-            , toolbar: "undo redo | blocks | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help"
-            , content_style: 'body { font-family:"Poppins",sans-serif; font-size:16px }'
-        , });
-
-
-
-    function removeVariant(button) {
-        let variantContainer = button.closest('.border.p-4');
-        if (variantContainer) {
-            variantContainer.remove();
-        }
-    }
-
-    function addVariant() {
-        let variantsContainer = document.getElementById('variants-container');
-        let index = variantsContainer.children.length; // Đếm số biến thể hiện có
-
-        let variantHtml = `
-            <div class="border p-4 relative min-w-[300px]">
-                <button type="button" class="absolute top-2 right-2 text-black hover:text-red-600 font-bold text-xl" onclick="removeVariant(this)">❌</button>
-
-                <div class="space-y-2">
-                    <input type="hidden" name="variants[${index}][id]" value="">
-
-                    <div>
-                        <label class="block text-gray-700">Màu sắc</label>
-                        <select name="variants[${index}][color_id]" class="w-full border rounded p-2">
-                            @foreach($colors as $color)
-                                <option value="{{ $color->id }}">{{ $color->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div>
-                        <label class="block text-gray-700">Dung lượng</label>
-                        <select name="variants[${index}][capacity_id]" class="w-full border rounded p-2">
-                            @foreach($capacities as $capacity)
-                                <option value="{{ $capacity->id }}">{{ $capacity->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div>
-                        <label class="block text-gray-700">Giá biến thể</label>
-                        <input type="text" name="variants[${index}][price]" class="w-full border rounded p-2">
-                    </div>
-
-                    <div>
-                        <label class="block text-gray-700">Số lượng kho</label>
-                        <input type="number" name="variants[${index}][stock]" class="w-full border rounded p-2">
-                    </div>
-                </div>
-            </div>
-        `;
-
-        variantsContainer.insertAdjacentHTML('beforeend', variantHtml);
-    }
-
-    function removeVariant(button) {
-        let variantContainer = button.closest('.border.p-4');
-        if (variantContainer) {
-            variantContainer.remove();
-        }
-    }
-
-</script> --}}
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const typeSingle = document.getElementById('type_single');
-        const typeVariant = document.getElementById('type_variant');
-        const singleFields = document.getElementById('single-fields');
-        const variantFields = document.getElementById('variant-fields');
-
-        function toggleFields() {
-            singleFields.style.display = typeSingle.checked ? 'block' : 'none';
-            variantFields.style.display = typeVariant.checked ? 'block' : 'none';
-        }
-
-        typeSingle.addEventListener('change', toggleFields);
-        typeVariant.addEventListener('change', toggleFields);
-
-        toggleFields();
+        // Không cần toggle loại sản phẩm nữa, vì chỉ có variant
 
         const variantContainer = document.getElementById('variant-container');
         const addVariantBtn = document.getElementById('add-variant');
-        const removeVariantBtns = document.querySelectorAll('.remove-variant');
 
         addVariantBtn.addEventListener('click', function () {
             const index = variantContainer.children.length;
@@ -330,12 +189,14 @@
                 </div>
             `;
             variantContainer.appendChild(newVariant);
+
             newVariant.querySelector('.remove-variant').addEventListener('click', function () {
                 variantContainer.removeChild(newVariant);
             });
         });
 
-        removeVariantBtns.forEach(function (btn) {
+        // Xóa biến thể đã có
+        variantContainer.querySelectorAll('.remove-variant').forEach(function (btn) {
             btn.addEventListener('click', function () {
                 variantContainer.removeChild(btn.closest('.variant-item'));
             });

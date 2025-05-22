@@ -1,5 +1,5 @@
 @extends('admin.layouts.master')
-@section('title', 'Mã giảm giá')
+@section('title', 'Đơn hàng ')
 @section('content')
 @if(session('error'))
     <div id="alert-error" class="alert alert-danger alert-dismissible fade show">

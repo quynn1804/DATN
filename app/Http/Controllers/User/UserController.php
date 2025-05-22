@@ -129,7 +129,7 @@ class UserController extends Controller
 
         // Cập nhật thông tin người dùng
         $user->name = $validated['name'];
-        $user->email = $validated['email'];
+        // $user->email = $validated['email'];
         $user->gender = $validated['gender'];
         $user->phone = $validated['phone'];
 
@@ -143,6 +143,7 @@ class UserController extends Controller
         return redirect()->back()->with('success', 'Cập nhật tài khoản thành công!');
     }
 
+    
 
     public function singleProduct($id)
     {

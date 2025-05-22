@@ -17,7 +17,8 @@ use Illuminate\Support\Facades\Session;
 
 class PaymentController extends Controller
 {
-      private function sendOrderConfirmationEmail($order)
+
+    private function sendOrderConfirmationEmail($order)
     {
         try {
             $userEmail = auth()->user()->email;
@@ -28,6 +29,7 @@ class PaymentController extends Controller
             Log::error("Mail sending failed: " . $e->getMessage());
         }
     }
+
 
     public function execPostRequest($url, $data)
     {
@@ -51,15 +53,16 @@ class PaymentController extends Controller
         curl_close($ch);
         return $result;
     }
-    public function momo_payment(Request $request){
+    public function momo_payment(Request $request)
+    {
         $cart_Total = $request->all();
         $endpoint = "https://test-payment.momo.vn/v2/gateway/api/create";
         $partnerCode = 'MOMOBKUN20180529';
         $accessKey = 'klm05TvNBzhg7h7j';
         $secretKey = 'at67qH6mk8w5Y1nAyMoYKMWACiEi2bsa';
         $orderInfo = "Thanh toán qua MoMo";
-        $amount = $cart_Total['amount'] ;
-        $orderId = time() ."";
+        $amount = $cart_Total['amount'];
+        $orderId = time() . "";
         $redirectUrl = route('momo.callback');
         $ipnUrl = route('momo.callback');
         $extraData = "";
@@ -67,50 +70,11 @@ class PaymentController extends Controller
         $requestType = "payWithATM";
 
 
-    //before sign HMAC SHA256 signature
-    $rawHash = "accessKey=" . $accessKey . "&amount=" . $amount . "&extraData=" . $extraData . "&ipnUrl=" . $ipnUrl . "&orderId=" . $orderId . "&orderInfo=" . $orderInfo . "&partnerCode=" . $partnerCode . "&redirectUrl=" . $redirectUrl . "&requestId=" . $requestId . "&requestType=" . $requestType;
-    $signature = hash_hmac("sha256", $rawHash, $secretKey);
-    $data = array('partnerCode' => $partnerCode,
-        'partnerName' => "Test",
-        "storeId" => "MomoTestStore",
-        'requestId' => $requestId,
-        'amount' => $amount,
-        'orderId' => $orderId,
-        'orderInfo' => $orderInfo,
-        'redirectUrl' => $redirectUrl,
-        'ipnUrl' => $ipnUrl,
-        'lang' => 'vi',
-        'extraData' => $extraData,
-        'requestType' => $requestType,
-        'signature' => $signature);
-    $result = $this->execPostRequest($endpoint, json_encode($data));
-    $jsonResult = json_decode($result, true);
-    if (isset($jsonResult['payUrl'])) {
-        return redirect($jsonResult['payUrl']);
-    } else {
-        return back()->with('error', 'Lỗi khi tạo thanh toán MoMo: ' . json_encode($jsonResult));
-    }
-
-    }
-    public function momoQr_payment(Request $request){
-
-        $cart_Total = $request->all();
-        $endpoint = "https://test-payment.momo.vn/v2/gateway/api/create";
-        $partnerCode = 'MOMOBKUN20180529';
-        $accessKey = 'klm05TvNBzhg7h7j';
-        $secretKey = 'at67qH6mk8w5Y1nAyMoYKMWACiEi2bsa';
-        $orderInfo = "Thanh toán qua MoMo";
-        $amount =  $cart_Total['amount'];
-        $orderId = time() ."";
-        $redirectUrl = route('momo.callback');
-        $ipnUrl = route('momo.callback');
-        $extraData = "";
-        $requestId = time() . "";
-        $requestType = "captureWallet";
         //before sign HMAC SHA256 signature
         $rawHash = "accessKey=" . $accessKey . "&amount=" . $amount . "&extraData=" . $extraData . "&ipnUrl=" . $ipnUrl . "&orderId=" . $orderId . "&orderInfo=" . $orderInfo . "&partnerCode=" . $partnerCode . "&redirectUrl=" . $redirectUrl . "&requestId=" . $requestId . "&requestType=" . $requestType;
-        $signature = hash_hmac("sha256", $rawHash,  $secretKey);
-        $data = array('partnerCode' => $partnerCode,
+        $signature = hash_hmac("sha256", $rawHash, $secretKey);
+        $data = array(
+            'partnerCode' => $partnerCode,
             'partnerName' => "Test",
             "storeId" => "MomoTestStore",
             'requestId' => $requestId,
@@ -122,7 +86,51 @@ class PaymentController extends Controller
             'lang' => 'vi',
             'extraData' => $extraData,
             'requestType' => $requestType,
-            'signature' => $signature);
+            'signature' => $signature
+        );
+        $result = $this->execPostRequest($endpoint, json_encode($data));
+        $jsonResult = json_decode($result, true);
+        if (isset($jsonResult['payUrl'])) {
+            return redirect($jsonResult['payUrl']);
+        } else {
+            return back()->with('error', 'Lỗi khi tạo thanh toán MoMo: ' . json_encode($jsonResult));
+        }
+
+    }
+    public function momoQr_payment(Request $request)
+    {
+
+        $cart_Total = $request->all();
+        $endpoint = "https://test-payment.momo.vn/v2/gateway/api/create";
+        $partnerCode = 'MOMOBKUN20180529';
+        $accessKey = 'klm05TvNBzhg7h7j';
+        $secretKey = 'at67qH6mk8w5Y1nAyMoYKMWACiEi2bsa';
+        $orderInfo = "Thanh toán qua MoMo";
+        $amount = $cart_Total['amount'];
+        $orderId = time() . "";
+        $redirectUrl = route('momo.callback');
+        $ipnUrl = route('momo.callback');
+        $extraData = "";
+        $requestId = time() . "";
+        $requestType = "captureWallet";
+        //before sign HMAC SHA256 signature
+        $rawHash = "accessKey=" . $accessKey . "&amount=" . $amount . "&extraData=" . $extraData . "&ipnUrl=" . $ipnUrl . "&orderId=" . $orderId . "&orderInfo=" . $orderInfo . "&partnerCode=" . $partnerCode . "&redirectUrl=" . $redirectUrl . "&requestId=" . $requestId . "&requestType=" . $requestType;
+        $signature = hash_hmac("sha256", $rawHash, $secretKey);
+        $data = array(
+            'partnerCode' => $partnerCode,
+            'partnerName' => "Test",
+            "storeId" => "MomoTestStore",
+            'requestId' => $requestId,
+            'amount' => $amount,
+            'orderId' => $orderId,
+            'orderInfo' => $orderInfo,
+            'redirectUrl' => $redirectUrl,
+            'ipnUrl' => $ipnUrl,
+            'lang' => 'vi',
+            'extraData' => $extraData,
+            'requestType' => $requestType,
+            'signature' => $signature
+        );
         $result = $this->execPostRequest($endpoint, json_encode($data));
         $jsonResult = json_decode($result, true);  // decode json
 
@@ -133,102 +141,103 @@ class PaymentController extends Controller
         }
     }
     public function momoCallback(Request $request)
-        {
-            $orderId = $request->input('orderId');
-            $resultCode = $request->input('resultCode');
-            $amount = $request->input('amount');
-            $data = $request->all();
+    {
+        $orderId = $request->input('orderId');
+        $resultCode = $request->input('resultCode');
+        $amount = $request->input('amount');
+        $data = $request->all();
 
-            Log::info("MomoPay Response Data: ", $data);
+        Log::info("MomoPay Response Data: ", $data);
 
-            if ($resultCode == 0) {
-                try {
-                    $userId = auth()->id();
+        if ($resultCode == 0) {
+            try {
+                $userId = auth()->id();
 
-                    $cartItems = Cart::where('user_id', $userId)->get();
-                    if ($cartItems->isEmpty()) {
-                        Log::error("Giỏ hàng trống, không thể tiếp tục tạo đơn hàng.");
-                        return redirect()->route('checkout')->with('error', 'Giỏ hàng trống, không thể tạo đơn hàng.');
-                    }
-
-                    // Lấy thông tin đơn hàng từ session
-                    $checkoutInfo = session('checkout_info');
-
-                    if (!$checkoutInfo) {
-                        Log::error("Không tìm thấy thông tin checkout trong session.");
-                        return redirect()->route('checkout')->with('error', 'Không tìm thấy thông tin đơn hàng.');
-                    }
-
-                    // Trích xuất thông tin từ session
-                    $fullname = $checkoutInfo['fullname'] ?? 'Khách hàng chưa nhập';
-                    $phone = $checkoutInfo['phone'] ?? '0000000000';
-                    $address = $checkoutInfo['address'] ?? 'Chưa có địa chỉ';
-                    $note = $checkoutInfo['note'] ?? null;
-
-                    // Kiểm tra nếu đơn hàng đã tồn tại
-                    $order = Order::where('order_code', $orderId)->first();
-
-                    if ($order) {
-                        $order->update([
-                            'status' => 'pending',
-                            'payment_method' => 'MoMo',
-                        ]);
-                    } else {
-                        $order = Order::create([
-                            'order_code' =>  'ORD-' .$orderId,
-                            'user_id' => $userId,
-                            'name' => $fullname,
-                            'phone' => $phone,
-                            'address' => $address,
-                            'total_money' => $amount,
-                            'status' => 'pending',
-                            'payment_method' => 'MoMo',
-                            'note' => $note,
-                        ]);
-                    }
-
-                    foreach ($cartItems as $item) {
-                        OrderDetail::create([
-                            'order_id' => $order->id,
-                            'product_variant_id' => $item->product_variant_id,
-                            'quantity' => $item->quantity,
-                            'price_at_time' => $item->price_at_time,
-                            'total_price' => $item->price_at_time * $item->quantity,
-                        ]);
-                            // Giảm tồn kho
-                            $variant = ProductVariant::find($item->product_variant_id);
-
-                            if ($variant && $variant->stock >= $item->quantity) {
-                                $variant->stock -= $item->quantity;
-                                $variant->save();
-                            } else {
-                                Log::error("Không đủ hàng trong kho cho biến thể ID {$item->product_variant_id}");
-                            // Có thể huỷ đơn và thông báo tùy bạn xử lý
-                                return redirect()->route('checkout')->with('error', 'Một số sản phẩm không đủ số lượng trong kho.');
-                            }
-
-                            // Nếu là sản phẩm đơn thì giảm tồn kho ở bảng products
-                            $product = $variant->product;
-                            if ($product && $product->product_type === 'single' && $product->quantity >= $item->quantity) {
-                                $product->quantity -= $item->quantity;
-                                $product->save();
-                            }
-                    }
-
-                    Cart::where('user_id', $userId)->delete();
-                    session()->forget('checkout_info');
-
-                    Log::info("Đã tạo/ghi nhận đơn hàng MoMo thành công cho user_id: $userId");
-
-                    return redirect()->route('checkout')->with('success', 'Thanh toán thành công! Đơn hàng đã được ghi nhận.');
-                } catch (\Exception $e) {
-                    Log::error("Lỗi khi xử lý đơn hàng sau thanh toán MoMo: " . $e->getMessage());
-                    return redirect()->route('checkout')->with('error', 'Có lỗi xảy ra khi tạo đơn hàng. Vui lòng thử lại.');
+                $cartItems = Cart::where('user_id', $userId)->get();
+                if ($cartItems->isEmpty()) {
+                    Log::error("Giỏ hàng trống, không thể tiếp tục tạo đơn hàng.");
+                    return redirect()->route('checkout')->with('error', 'Giỏ hàng trống, không thể tạo đơn hàng.');
                 }
-            } else {
-                Log::warning("Thanh toán thất bại từ MoMo. Mã phản hồi: $resultCode");
-                return redirect()->route('checkout')->with('error', 'Thanh toán không thành công. Vui lòng thử lại.');
+
+                // Lấy thông tin đơn hàng từ session
+                $checkoutInfo = session('checkout_info');
+
+                if (!$checkoutInfo) {
+                    Log::error("Không tìm thấy thông tin checkout trong session.");
+                    return redirect()->route('checkout')->with('error', 'Không tìm thấy thông tin đơn hàng.');
+                }
+
+                // Trích xuất thông tin từ session
+                $fullname = $checkoutInfo['fullname'] ?? 'Khách hàng chưa nhập';
+                $phone = $checkoutInfo['phone'] ?? '0000000000';
+                $address = $checkoutInfo['address'] ?? 'Chưa có địa chỉ';
+                $note = $checkoutInfo['note'] ?? null;
+
+                // Kiểm tra nếu đơn hàng đã tồn tại
+                $order = Order::where('order_code', $orderId)->first();
+
+                if ($order) {
+                    $order->update([
+                        'status' => 'pending',
+                        'payment_method' => 'MoMo',
+                    ]);
+                } else {
+                    $order = Order::create([
+                        'order_code' => 'ORD-' . $orderId,
+                        'user_id' => $userId,
+                        'name' => $fullname,
+                        'phone' => $phone,
+                        'address' => $address,
+                        'total_money' => $amount,
+                        'status' => 'pending',
+                        'payment_method' => 'MoMo',
+                        'note' => $note,
+                    ]);
+                }
+
+                foreach ($cartItems as $item) {
+                    OrderDetail::create([
+                        'order_id' => $order->id,
+                        'product_variant_id' => $item->product_variant_id,
+                        'quantity' => $item->quantity,
+                        'price_at_time' => $item->price_at_time,
+                        'total_price' => $item->price_at_time * $item->quantity,
+                    ]);
+                    // Giảm tồn kho
+                    $variant = ProductVariant::find($item->product_variant_id);
+
+                    if ($variant && $variant->stock >= $item->quantity) {
+                        $variant->stock -= $item->quantity;
+                        $variant->save();
+                    } else {
+                        Log::error("Không đủ hàng trong kho cho biến thể ID {$item->product_variant_id}");
+                        // Có thể huỷ đơn và thông báo tùy bạn xử lý
+                        return redirect()->route('checkout')->with('error', 'Một số sản phẩm không đủ số lượng trong kho.');
+                    }
+
+                    // Nếu là sản phẩm đơn thì giảm tồn kho ở bảng products
+                    $product = $variant->product;
+                    if ($product && $product->product_type === 'single' && $product->quantity >= $item->quantity) {
+                        $product->quantity -= $item->quantity;
+                        $product->save();
+                    }
+                }
+
+                Cart::where('user_id', $userId)->delete();
+                session()->forget('checkout_info');
+                $this->sendOrderConfirmationEmail($order);
+
+                Log::info("Đã tạo/ghi nhận đơn hàng MoMo thành công cho user_id: $userId");
+
+                return redirect()->to('/user/orders/' . $order->id)->with('success', 'Thanh toán thành công! Đơn hàng đã được ghi nhận.');
+            } catch (\Exception $e) {
+                Log::error("Lỗi khi xử lý đơn hàng sau thanh toán MoMo: " . $e->getMessage());
+                return redirect()->route('checkout')->with('error', 'Có lỗi xảy ra khi tạo đơn hàng. Vui lòng thử lại.');
             }
+        } else {
+            Log::warning("Thanh toán thất bại từ MoMo. Mã phản hồi: $resultCode");
+            return redirect()->route('checkout')->with('error', 'Thanh toán không thành công. Vui lòng thử lại.');
+        }
     }
     public function vnpay_payment(Request $request)
     {
@@ -331,7 +340,7 @@ class PaymentController extends Controller
 
             // Tạo đơn hàng
             $order = Order::create([
-                'order_code' =>  'ORD-' .$vnp_TxnRef,
+                'order_code' => 'ORD-' . $vnp_TxnRef,
                 'user_id' => $userId,
                 'name' => $fullname,
                 'phone' => $phone,
@@ -353,24 +362,24 @@ class PaymentController extends Controller
                     'price_at_time' => $item->price_at_time,
                     'total_price' => $item->price_at_time * $item->quantity,
                 ]);
-                    // Giảm tồn kho
-                    $variant = ProductVariant::find($item->product_variant_id);
+                // Giảm tồn kho
+                $variant = ProductVariant::find($item->product_variant_id);
 
-                    if ($variant && $variant->stock >= $item->quantity) {
-                        $variant->stock -= $item->quantity;
-                        $variant->save();
-                    } else {
-                        Log::error("Không đủ hàng trong kho cho biến thể ID {$item->product_variant_id}");
+                if ($variant && $variant->stock >= $item->quantity) {
+                    $variant->stock -= $item->quantity;
+                    $variant->save();
+                } else {
+                    Log::error("Không đủ hàng trong kho cho biến thể ID {$item->product_variant_id}");
                     // Có thể huỷ đơn và thông báo tùy bạn xử lý
-                        return redirect()->route('checkout')->with('error', 'Một số sản phẩm không đủ số lượng trong kho.');
-                    }
+                    return redirect()->route('checkout')->with('error', 'Một số sản phẩm không đủ số lượng trong kho.');
+                }
 
-                    // Nếu là sản phẩm đơn thì giảm tồn kho ở bảng products
-                    $product = $variant->product;
-                    if ($product && $product->product_type === 'single' && $product->quantity >= $item->quantity) {
-                        $product->quantity -= $item->quantity;
-                        $product->save();
-                    }
+                // Nếu là sản phẩm đơn thì giảm tồn kho ở bảng products
+                $product = $variant->product;
+                if ($product && $product->product_type === 'single' && $product->quantity >= $item->quantity) {
+                    $product->quantity -= $item->quantity;
+                    $product->save();
+                }
             }
 
             // Dọn dẹp giỏ hàng và session
@@ -378,8 +387,9 @@ class PaymentController extends Controller
             session()->forget('checkout_info');
 
             Log::info("Đã xóa giỏ hàng và session cho user_id: $userId");
+            $this->sendOrderConfirmationEmail($order);
 
-            return redirect()->route('checkout')->with('success', 'Thanh toán thành công! Đơn hàng đã được ghi nhận.');
+            return redirect()->to('/user/orders/' . $order->id)->with('success', 'Thanh toán thành công! Đơn hàng đã được ghi nhận.');
         } catch (\Exception $e) {
             Log::error("Lỗi khi xử lý đơn hàng sau thanh toán VNPay: " . $e->getMessage());
             return redirect()->route('checkout')->with('error', 'Có lỗi xảy ra khi tạo đơn hàng. Vui lòng thử lại.');
@@ -400,14 +410,16 @@ class PaymentController extends Controller
     public function processPayment(Request $request)
     {
         $data = $request->all();
-        session(['checkout_info' => [
-            'fullname' => $request->fullname,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'address' => $request->address,
-            'note' => $request->note,
-            'voucher' => $request->input('voucher_code'), // nếu có
-        ]]);
+        session([
+            'checkout_info' => [
+                'fullname' => $request->fullname,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'address' => $request->address,
+                'note' => $request->note,
+                'voucher' => $request->input('voucher_code'), // nếu có
+            ]
+        ]);
 
 
         // Lấy tổng tiền sau khi đã trừ giảm giá từ request
@@ -531,7 +543,11 @@ class PaymentController extends Controller
                 Cart::where('user_id', $userId)->delete();
 
                 DB::commit();
-                return redirect()->route('home')->with('success', 'Đơn hàng của bạn đã được tạo thành công!');
+
+                $this->sendOrderConfirmationEmail($order);
+
+                return redirect()->to('/user/orders/' . $order->id)->with('success', 'Bạn đã đặt hàng thành công!');
+
             } catch (\Exception $e) {
                 DB::rollBack();
                 Log::error('Lỗi khi thanh toán COD: ' . $e->getMessage());

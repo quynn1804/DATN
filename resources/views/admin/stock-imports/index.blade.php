@@ -31,7 +31,7 @@
                 <td>{{ $import->note }}</td>
                 <td>
                     <a href="{{ route('admin.stock-imports.show', $import->id) }}" class="btn btn-sm btn-info">Xem</a>
-                    <a href="{{ route('admin.stock-imports.edit', $import->id) }}" class="btn btn-sm btn-warning">Sửa</a>
+                    {{-- <a href="{{ route('admin.stock-imports.edit', $import->id) }}" class="btn btn-sm btn-warning">Sửa</a> --}}
                     <form action="{{ route('admin.stock-imports.destroy', $import->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Bạn có chắc chắn muốn xóa phiếu nhập này?');">
                         @csrf
                         @method('DELETE')

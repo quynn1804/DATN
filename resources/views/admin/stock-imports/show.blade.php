@@ -9,6 +9,13 @@
     <p><strong>Ngày nhập:</strong> {{ \Carbon\Carbon::parse($import->import_date)->format('d/m/Y') }}</p>
     <p><strong>Người tạo:</strong> {{ $import->user->name ?? '-' }}</p>
     <p><strong>Ghi chú:</strong> {{ $import->note }}</p>
+    <p><strong>Trạng thái:</strong>
+        @if ($import->is_hidden)
+            <span class="badge bg-secondary">Đã ẩn</span>
+        @else
+            <span class="badge bg-success">Hiển thị</span>
+        @endif
+    </p>
 
     <h5>Danh sách sản phẩm nhập</h5>
     <table class="table table-bordered">

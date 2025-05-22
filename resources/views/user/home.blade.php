@@ -35,7 +35,7 @@
                         </h2>
                     </div>
                     <div class="col-md-3 col-sm-4 text-center text-sm-right">
-                        <a class="btn btn-light btn-white btn-lg" href="category.html">Xem Ngay!!</a>
+                        <a class="btn btn-light btn-white btn-lg" href="{{route('pageCategory')}}">Xem Ngay!!</a>
                     </div>
                 </div>
             </div>

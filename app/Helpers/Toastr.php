@@ -66,4 +66,5 @@ class Toastr
     {
         return self::showToastr()->addInfo($message, $title);
     }
+    
 }

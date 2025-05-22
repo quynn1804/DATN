@@ -14,7 +14,9 @@
                         </li>
                         <li>
                             <span class="contact-info-label">Email:</span>
-                            <a href="mailto:support@example.com">support@example.com</a>
+                            <span><a href="https://portotheme.com/cdn-cgi/l/email-protection" class="__cf_email__"
+                                    data-cfemail="bcccd3cec8d3fcccd3cec8d3c8d4d9d1d992dfd3d1">pina@gmail.com</a>
+                            </span>
                         </li>
                         <li>
                             <span class="contact-info-label">Thời gian hoạt động </span> Thứ 2 - Chủ Nhật / 9:00 AM
@@ -81,14 +83,14 @@
             <div class="col-lg-3 col-sm-6">
                 <div class="widget widget-newsletter">
                     <h4 class="widget-title">Đăng ký nhận bản tin</h4>
-                        <p>Nhận tất cả thông tin mới nhất về các sự kiện, chương trình khuyến mại và ưu đãi. Đăng ký
-                            nhận bản tin:
-                        </p>
-                        <form action="demo4.html#" class="mb-0">
-                            <input type="email" class="form-control m-b-3" placeholder="Địa chỉ Email " required>
+                    <p>Nhận tất cả thông tin mới nhất về các sự kiện, chương trình khuyến mại và ưu đãi. Đăng ký
+                        nhận bản tin:
+                    </p>
+                    <form action="demo4.html#" class="mb-0">
+                        <input type="email" class="form-control m-b-3" placeholder="Địa chỉ Email " required>
 
-                            <input type="submit" class="btn btn-primary shadow-none" value="Đăng Ký">
-                        </form>
+                        <input type="submit" class="btn btn-primary shadow-none" value="Đăng Ký">
+                    </form>
                 </div>
                 <!-- End .widget -->
             </div>

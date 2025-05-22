@@ -84,6 +84,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/chats/{userId}/write', [MessageController::class, 'store'])->name('chats.write');
         Route::get('/chats/{userId}/show', [MessageController::class, 'show'])->name('chats.detail');
 
+
         Route::get('/statistical/products', [ProductController::class, 'statisticalProduct'])->name('statistical.products');
         Route::get('/statistical/users', [AccountController::class, 'statisticalAccount'])->name('statistical.users');
     });
@@ -92,40 +93,35 @@ Route::middleware('auth')->group(function () {
 
 
     // Giỏ hàng (yêu cầu đăng nhập)
-    Route::middleware('auth')->group(function () {
-        Route::post('/account/update', [UserController::class, 'updateAccount'])->name('updateAccount');
-        Route::post('/orders/{order}/comment', [CommentController::class, 'store'])
-            ->name('comments.store');
-        Route::post('products/{id}/cart', [CartController::class, 'store'])->name('cart.store');
-        Route::get('/cart', [CartController::class, 'index'])->name('cart');
-        Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
-        Route::put('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
-        Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
-        Route::post('/vnpay_payment', [PaymentController::class, 'vnpay_payment']);
-        Route::get('/vnpay/return', [PaymentController::class, 'vnpayReturn'])->name('vnpay.return');
-        Route::post('/momo_payment', [PaymentController::class, 'momo_payment']);
-        Route::post('/momoQr_payment', [PaymentController::class, 'momoQr_payment']);
-        Route::get('/momo-callback', [PaymentController::class, 'momoCallback'])->name('momo.callback');
-    });
+    // Route::middleware('auth')->group(function () {
+    //     Route::post('/account/update', [UserController::class, 'updateAccount'])->name('updateAccount');
+    //     Route::post('/orders/{order}/comment', [CommentController::class, 'store'])
+    //         ->name('comments.store');
+    //     Route::post('products/{id}/cart', [CartController::class, 'store'])->name('cart.store');
+    //     Route::get('/cart', [CartController::class, 'index'])->name('cart');
+    //     Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
+    //     Route::put('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
+    //     Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
+    //     Route::post('/vnpay_payment', [PaymentController::class, 'vnpay_payment']);
+    //     Route::get('/vnpay/return', [PaymentController::class, 'vnpayReturn'])->name('vnpay.return');
+    //     Route::post('/momo_payment', [PaymentController::class, 'momo_payment']);
+    //     Route::post('/momoQr_payment', [PaymentController::class, 'momoQr_payment']);
+    //     Route::get('/momo-callback', [PaymentController::class, 'momoCallback'])->name('momo.callback');
+    // });
 
-    Route::get('/checkout', [PaymentController::class, 'checkout'])->name('checkout');
-    Route::post('/process-payment', [PaymentController::class, 'processPayment'])->name('payment.process');
-    Route::get('/payment/success', [PaymentController::class, 'paymentSuccess'])->name('payment.success');
-    Route::get('/payment/failure', [PaymentController::class, 'paymentFailure'])->name('payment.failure');
+    // Route::get('/checkout', [PaymentController::class, 'checkout'])->name('checkout');
+    // Route::post('/process-payment', [PaymentController::class, 'processPayment'])->name('payment.process');
+    // Route::get('/payment/success', [PaymentController::class, 'paymentSuccess'])->name('payment.success');
+    // Route::get('/payment/failure', [PaymentController::class, 'paymentFailure'])->name('payment.failure');
 
 
-    Route::post('/checkout/apply-voucher', [CartController::class, 'applyVoucher'])
-        ->name('checkout.applyVoucher');
-    Route::get('user/orders/{order}', [UserOrderController::class, 'show'])
-        ->middleware('auth')
-        ->name('user.order.detail');
-    Route::post('user/orders/{order}/cancel', [UserOrderController::class, 'cancel'])->name('orders.cancel');
 });
 
 
 
 // Giỏ hàng (yêu cầu đăng nhập)
 Route::middleware('auth')->group(function () {
+    Route::post('/account/update', [UserController::class, 'updateAccount'])->name('updateAccount');
     Route::post('products/{id}/comments', [CommentController::class, 'store'])->name('comments.store');
     Route::post('products/{id}/cart', [CartController::class, 'store'])->name('cart.store');
     Route::get('/cart', [CartController::class, 'index'])->name('cart');
@@ -133,6 +129,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
     Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
     Route::post('/vnpay_payment', [PaymentController::class, 'vnpay_payment']);
+    Route::get('/vnpay/return', [PaymentController::class, 'vnpayReturn'])->name('vnpay.return');
     Route::post('/momo_payment', [PaymentController::class, 'momo_payment']);
     Route::post('/momoQr_payment', [PaymentController::class, 'momoQr_payment']);
     Route::get('/test-mail', function () {
@@ -141,6 +138,17 @@ Route::middleware('auth')->group(function () {
         return 'Mail đã gửi, kiểm tra hộp thư!';
     });
     Route::get('/momo-callback', [PaymentController::class, 'momoCallback'])->name('momo.callback');
+    Route::post('/checkout/apply-voucher', [CartController::class, 'applyVoucher'])
+        ->name('checkout.applyVoucher');
+    Route::get('user/orders/{order}', [UserOrderController::class, 'show'])
+        ->middleware('auth')
+        ->name('user.order.detail');
+    Route::post('user/orders/{id}/confirm-received', [UserOrderController::class, 'confirmReceived'])
+        ->middleware('auth')
+        ->name('orders.confirm-received');
+    Route::post('user/orders/{order}/cancel', [UserOrderController::class, 'cancel'])->name('orders.cancel');
+    Route::get('/change-password', [UserController::class, 'showChangePasswordForm'])->name('password.change');
+    Route::post('/change-password', [UserController::class, 'changePassword'])->name('password.update');
 });
 
 Route::get('/checkout', [PaymentController::class, 'checkout'])->name('checkout');
