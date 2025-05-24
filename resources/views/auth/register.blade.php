@@ -1,5 +1,5 @@
 @extends('user.layouts.master')
-@section('title', 'Register')
+@section('title', 'Đăng Ký')
 
 @section('content')
 <div class="page-header">

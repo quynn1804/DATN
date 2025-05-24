@@ -45,6 +45,7 @@
                         'pending' => 'Chờ xử lý',
                         'processing' => 'Đang xử lý',
                         'shipping' => 'Đang giao hàng',
+                        'shipped' => 'Đã giao hàng',
                         'completed' => 'Hoàn thành',
                         'cancelled' => 'Đã hủy',
                         // Thêm trạng thái khác nếu có
@@ -57,6 +58,7 @@
                         'pending' => 'warning',
                         'processing' => 'primary',
                         'shipping' => 'info',
+                        'shipped' => 'orange',
                         'completed' => 'success',
                         'cancelled' => 'danger',
                         default => 'secondary',
@@ -104,10 +106,11 @@
                     <label for="status">Trạng thái đơn hàng:</label>
                     @php
                         $currentStatus = $order->status;
-                        $validTransitions = [
+                     $validTransitions = [
                             'pending' => ['processing', 'cancelled'],
                             'processing' => ['shipping', 'cancelled'],
-                            'shipping' => ['completed', 'cancelled'],
+                            'shipping' => ['shipped', 'cancelled'],
+                            'shipped' => ['completed', 'cancelled'],
                             'completed' => [],
                             'cancelled' => [],
                         ];

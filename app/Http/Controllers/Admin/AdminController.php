@@ -171,6 +171,7 @@ class AdminController extends Controller
             'pending'    => 'Chờ xử lý',
             'processing' => 'Đang xử lý',
             'shipping'   => 'Đang giao hàng',
+            'shipped'   => 'Đã giao hàng',
             'completed'  => 'Hoàn thành',
             'cancelled'  => 'Đã hủy',
         ];
@@ -179,6 +180,7 @@ class AdminController extends Controller
             'pending'    => '#FFD700',
             'processing' => '#4CAF50',
             'shipping'   => '#2196F3',
+            'shipped'   =>  '#FF9800',
             'completed'  => '#9C27B0',
             'cancelled'  => '#F44336',
         ];

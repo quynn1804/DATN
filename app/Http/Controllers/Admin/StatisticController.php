@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use App\Models\ProductVariant;
 
 class StatisticController extends Controller
 {
@@ -41,7 +42,7 @@ class StatisticController extends Controller
             ->whereBetween('created_at', [$startDate, $endDate])
             ->groupBy('status')
             ->pluck('count', 'status');
-            $orderStats = Order::selectRaw('DATE(created_at) as date, COUNT(*) as total')
+        $orderStats = Order::selectRaw('DATE(created_at) as date, COUNT(*) as total')
             ->whereBetween('created_at', [$startDate, $endDate])
             ->groupBy('date')
             ->get()
@@ -57,7 +58,20 @@ class StatisticController extends Controller
             ->limit(5)
             ->get();
 
+        $lowestRevenueProducts = DB::table('order_details')
+            ->join('product_variants', 'order_details.product_variant_id', '=', 'product_variants.id')
+            ->join('products', 'product_variants.product_id', '=', 'products.id')
+            ->select('products.id', 'products.name', DB::raw('SUM(order_details.price * order_details.quantity) as revenue'))
+            ->whereBetween('order_details.created_at', [$startDate, $endDate])
+            ->groupBy('products.id', 'products.name')
+            ->orderBy('revenue', 'asc')
+            ->limit(5)
+            ->get();
 
+
+        $lowStockProducts = ProductVariant::with('product')
+            ->where('stock', '<=', 10)
+            ->get();
 
         return view('admin.statistic.index', compact(
             'totalOrders',
@@ -72,7 +86,9 @@ class StatisticController extends Controller
             'monthlyRevenue',
             'lastMonthRevenue',
             'growth',
-            'orderStats'
+            'orderStats',
+            'lowStockProducts',
+            'lowestRevenueProducts'
         ));
     }
 }

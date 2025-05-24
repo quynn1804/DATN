@@ -1,5 +1,5 @@
 @extends('user.layouts.master')
-@section('title', 'Account Settings')
+@section('title', 'Tài khoản của tôi')
 
 @section('style')
 
@@ -95,6 +95,8 @@
                                     Đang xử lý
                                 @elseif($order->status === 'shipping')
                                     Đang giao hàng
+                                @elseif($order->status === 'shipped')
+                                    Đã giao hàng
                                 @elseif($order->status === 'completed')
                                     Hoàn thành
                                 @elseif($order->status === 'cancelled')
@@ -113,19 +115,42 @@
                                             <th>Giá</th>
                                             <th>Số Lượng</th>
                                             <th>Thành Tiền</th>
+                                            <th>thao tác </th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($order->orderDetails as $detail)
                                             <tr>
-                                                <td>{{ $detail->product->name }}</td>
+                                                <td>
+                                                    {{-- thêm mới để hiện cả biến thể đã mua --}}
+                                                    {{ $detail->product->name }} <br>
+                                                    <small>
+                                                        @if ($detail->productVariant->color)
+                                                            Màu: {{ $detail->productVariant->color->name }}
+                                                        @endif
+
+                                                        @if ($detail->productVariant->capacity)
+                                                            , Dung lượng: {{ $detail->productVariant->capacity->name }}
+                                                        @endif
+                                                    </small>
+                                                </td>
                                                 <td>{{ number_format($detail->price_at_time, 0, ',', '.') }} đ</td>
                                                 <td>{{ $detail->quantity }}</td>
                                                 <td>{{ number_format($detail->total_price, 0, ',', '.') }} đ</td>
+                                                <td>
+                                                    @if ($order->status === 'completed')
+                                                        <button class="btn btn-sm btn-primary btn-show-comment"
+                                                            data-product-id="{{ $detail->product->id }}"
+                                                            data-order-id="{{ $order->id }}"
+                                                            data-product-name="{{ $detail->product->name }}">
+                                                            Đánh Giá Sản Phẩm
+                                                        </button>
+                                                    @endif
+                                                </td>
                                             </tr>
                                         @endforeach
                                     </tbody>
-                                    @if (in_array($order->status, ['pending', 'processing']))
+                                    @if (in_array($order->status, ['pending']))
                                         <form id="cancelOrderForm" action="{{ route('orders.cancel', $order->id) }}"
                                             method="POST">
                                             @csrf
@@ -133,7 +158,7 @@
                                             <button type="submit" class="btn btn-danger">Hủy đơn hàng</button>
                                         </form>
                                     @endif
-                                    @if (Auth::check() && $order->status === 'shipping')
+                                    @if (Auth::check() && $order->status === 'shipped')
                                         <form action="{{ route('orders.confirm-received', $order->id) }}" method="POST"
                                             class="mt-3">
                                             @csrf
@@ -142,6 +167,8 @@
                                                 onclick="return confirm('Bạn xác nhận đã nhận được hàng?')">
                                                 Xác nhận đã nhận hàng
                                             </button>
+                                            <p>Nếu bạn chưa nhận được hàng, vui lòng <a href="{{ route('contact') }}">liên
+                                                    hệ với chúng tôi</a> để được hỗ trợ ngay.</p>
                                         </form>
                                     @endif
                                 </table>
@@ -151,16 +178,15 @@
                         {{-- Form bình luận --}}
                         @if (Auth::check() && $order->status === 'completed')
                             <div class="col-lg-12">
-                                <div id="commentFormContainer">
-                                    <h4>Viết bình luận</h4>
+                                <div id="commentFormContainer" style="display: none;">
+                                    <h4 id="commentFormTitle">Viết bình luận</h4>
                                     <form id="commentForm" method="POST">
                                         @csrf
-                                        <input type="hidden" name="order_id" value="{{ $order->id }}">
-                                        <input type="hidden" name="product_id"
-                                            value="{{ $order->orderDetails->first()->productVariant->product->id ?? '' }}">
+                                        <input type="hidden" name="order_id" id="formOrderId">
+                                        <input type="hidden" name="product_id" id="formProductId">
 
                                         <label>Đánh giá:</label>
-                                        <select name="rating">
+                                        <select name="rating" required>
                                             <option value="1">1 - Kém</option>
                                             <option value="2">2 - Tạm ổn</option>
                                             <option value="3" selected>3 - Bình thường</option>
@@ -169,26 +195,40 @@
                                         </select>
 
                                         <label>Nội dung:</label>
-                                        <textarea name="content" required></textarea>
+                                        <textarea name="content" required placeholder="Viết nội dung bình luận..."></textarea>
 
                                         <button type="submit">Gửi bình luận</button>
                                     </form>
                                 </div>
-
+                                {{-- end thêm mới --}}
                                 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
                                 <script>
+                                    // thêm mới
                                     $(document).ready(function() {
+                                        // Khi click nút "Đánh giá"
+                                        $('.btn-show-comment').click(function() {
+                                            const productId = $(this).data('product-id');
+                                            const orderId = $(this).data('order-id');
+                                            const productName = $(this).data('product-name');
+
+                                            $('#formProductId').val(productId);
+                                            $('#formOrderId').val(orderId);
+                                            $('#commentFormTitle').text("Viết đánh giá cho: " + productName);
+                                            $('#commentFormContainer').slideDown();
+                                        });
+
+                                        // Gửi bình luận
                                         $('#commentForm').submit(function(e) {
                                             e.preventDefault();
 
-                                            var formData = {
-                                                order_id: $('input[name="order_id"]').val(),
-                                                product_id: $('input[name="product_id"]').val(),
+                                            const formData = {
+                                                order_id: $('#formOrderId').val(),
+                                                product_id: $('#formProductId').val(),
                                                 rating: $('select[name="rating"]').val(),
                                                 content: $('textarea[name="content"]').val(),
                                                 _token: "{{ csrf_token() }}"
                                             };
-
+                                            //end thêm mới
                                             $.ajax({
                                                 url: "{{ route('comments.store', ['id' => $order->id]) }}",
                                                 type: "POST",

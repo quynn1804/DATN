@@ -11,15 +11,22 @@ class Product extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'price', 'description', 'images', 'quantity', 'status'
-        ,'category_id','product_type'];
+        'name',
+        'price',
+        'description',
+        'images',
+        'quantity',
+        'status',
+        'category_id',
+        'product_type'
+    ];
 
-        protected $casts = [
-            'images' => 'array',
-        ];
+    protected $casts = [
+        'images' => 'array',
+    ];
     public function thumbnails()
     {
-    return $this->morphMany(Thumbnail::class, 'thumbnailable');
+        return $this->morphMany(Thumbnail::class, 'thumbnailable');
     }
     public function variants()
     {
@@ -35,7 +42,7 @@ class Product extends Model
     }
     public function orderDetails()
     {
-    return $this->hasMany(OrderDetail::class, 'product_variant_id', 'id');
+        return $this->hasMany(OrderDetail::class, 'product_variant_id', 'id');
     }
 
     public static function topFavoriteProducts($limit = 10)
@@ -44,9 +51,8 @@ class Product extends Model
             $query->where('created_at', '>=', Carbon::now()->subDays(30));
         }])
 
-        ->orderByDesc('order_details_count')
-        ->limit($limit)
-        ->get();
+            ->orderByDesc('order_details_count')
+            ->limit($limit)
+            ->get();
     }
-
 }

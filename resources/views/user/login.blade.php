@@ -12,8 +12,8 @@
             <div class="breadcrumb-content">
                 <h2>Shop Related</h2>
                 <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li class="active">Login Or Register</li>
+                    <li><a href="index.html">Trang chủ</a></li>
+                    <li class="active">Đăng nhập hoặc đăng ký</li>
                 </ul>
             </div>
         </div>
@@ -27,29 +27,29 @@
                     <!-- Login Form s-->
                     <form action="#">
                         <div class="login-form">
-                            <h4 class="login-title">Login</h4>
+                            <h4 class="login-title">Đăng Nhập</h4>
                             <div class="row">
                                 <div class="col-md-12 col-12">
-                                    <label>Email Address*</label>
+                                    <label>Địa chỉ Email </label>
                                     <input type="email" placeholder="Email Address">
                                 </div>
                                 <div class="col-12 mb--20">
-                                    <label>Password</label>
+                                    <label>Mật Khẩu</label>
                                     <input type="password" placeholder="Password">
                                 </div>
-                                <div class="col-md-8">
+                                {{-- <div class="col-md-8">
                                     <div class="check-box">
                                         <input type="checkbox" id="remember_me">
                                         <label for="remember_me">Remember me</label>
                                     </div>
-                                </div>
+                                </div> --}}
                                 <div class="col-md-4">
                                     <div class="forgotton-password_info">
-                                        <a href="#"> Forgotten pasward?</a>
+                                        <a href="#"> Quên mật khẩu ?</a>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
-                                    <button class="kenne-login_btn">Login</button>
+                                    <button class="kenne-login_btn">Đăng nhập </button>
                                 </div>
                             </div>
                         </div>
@@ -58,7 +58,7 @@
                 <div class="col-sm-12 col-md-12 col-lg-6 col-xs-12">
                     <form action="#">
                         <div class="login-form">
-                            <h4 class="login-title">Register</h4>
+                            <h4 class="login-title">Đăng ký</h4>
                             <div class="row">
                                 <div class="col-md-6 col-12 mb--20">
                                     <label>First Name</label>

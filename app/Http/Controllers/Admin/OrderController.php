@@ -1,11 +1,15 @@
 <?php
 namespace App\Http\Controllers\Admin;
+use App\Mail\ReviewRequestMail;
 use App\Models\Voucher;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\ProductVariant;
 use App\Models\OrderDetail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail as FacadesMail;
+use Mail;
+
 
 class OrderController extends Controller
 {
@@ -42,7 +46,7 @@ class OrderController extends Controller
         }
 
         $orders = $query->orderBy('created_at', 'desc')->paginate(10);
-        return view('admin.orders.index', ['title' => 'Quản lý đơn hàng'],compact('orders'));
+        return view('admin.orders.index', ['title' => 'Quản lý đơn hàng'], compact('orders'));
     }
 
     /**
@@ -65,7 +69,7 @@ class OrderController extends Controller
             'phone' => 'required|string|max:15',
             'address' => 'required|string',
             'total_money' => 'required|numeric|min:0',
-            'status' => 'required|in:pending,processing,shipping,completed,cancelled',
+            'status' => 'required|in:pending,processing,shipping,shipped,completed,cancelled',
             'payment_method' => 'nullable|string',
             'note' => 'nullable|string',
         ]);
@@ -82,9 +86,9 @@ class OrderController extends Controller
     {
         $order = Order::findOrFail($id);
         // Danh sách trạng thái hợp lệ
-        $validStatuses = ['pending', 'processing', 'shipping', 'completed', 'cancelled'];
+        $validStatuses = ['pending', 'processing', 'shipping','shipped', 'completed', 'cancelled'];
         $request->validate([
-            'status' => 'required|in:pending,processing,shipping,completed,cancelled',
+            'status' => 'required|in:pending,processing,shipping,shipped,completed,cancelled',
         ]);
 
         $newStatus = $request->status;
@@ -124,6 +128,13 @@ class OrderController extends Controller
                         $product->save();
                     }
                 }
+            }
+        }
+        // Gửi mail nếu đơn hàng đã giao (completed)
+        if ($newStatus === 'shipped') {
+            $user = $order->user; // Giả sử bảng orders có quan hệ `user()`
+            if ($user && $user->email) {
+                FacadesMail::to($user->email)->send(new ReviewRequestMail($order));
             }
         }
 

@@ -354,18 +354,27 @@
                 Top 3 Sản Phẩm Doanh Thu Cao Nhất
             </h3>
             <div class="row justify-content-center">
-                @if($topProductSale->isNotEmpty())
+                @if ($topProductSale->isNotEmpty())
                     @foreach ($topProductSale as $index => $item)
                         <div class="col-md-4 col-lg-4 mb-4">
                             <div class="card top6-card shadow-sm h-100">
                                 <div class="position-relative">
-                                    <img src="https://alphacinema.me/storage/movie_images/LyfJghF3fgpYG5aNNK2ndwcOmfPSgVPAMKjtPNG2.png"
-                                        class="card-img-top" style="height: 240px; object-fit: cover;"
+                                    @php
+                                        $images = is_array($item->productVariant->images)
+                                            ? $item->productVariant->images
+                                            : [];
+
+                                        // Kiểm tra xem mảng có phần tử 0 không
+                                        if (!empty($images) && array_key_exists(0, $images)) {
+                                            $firstImage = $images[0];
+                                        } else {
+                                            @dd($images);
+                                        }
+                                    @endphp
+
+                                    <img src="{{ asset('storage/' . $firstImage) }}" class="card-img-top"
+                                        style="height: 300px; object-fit: cover;"
                                         alt="{{ $item->productVariant->product->name }}">
-                                    <span class="top6-rank"
-                                        style="position: absolute; top: 10px; left: 10px; background: #483D8B; color: white; padding: 5px 10px; border-radius: 50%; font-size: 14px; font-weight: bold;">
-                                        #{{ $index + 1 }}
-                                    </span>
                                 </div>
                                 <div class="card-body text-center">
                                     <h5 class="card-title">
@@ -402,19 +411,24 @@
                 Sản phẩm sắp hết hàng (tồn kho ít hơn 10 sản phẩm)
             </h3>
             <div class="row justify-content-center">
-                @if($lowStockProducts->isNotEmpty())
+                @if ($lowStockProducts->isNotEmpty())
                     @foreach ($lowStockProducts as $product)
-                        <div class="col-md-4 col-lg-4 mb-4">
-                            <div class="card top6-card shadow-sm h-100">
-                                <div class="position-relative">
-                                    <img src="https://alphacinema.me/storage/movie_images/LyfJghF3fgpYG5aNNK2ndwcOmfPSgVPAMKjtPNG2.png"
-                                        class="card-img-top" style="height: 240px; object-fit: cover;" alt="{{ $product->name }}">
-                                </div>
+                        @php
+                            $variant = $product->variants->first();
+                            $image =
+                                $variant && $variant->images && count($variant->images) > 0
+                                    ? asset('storage/' . $variant->images[0])
+                                    : 'https://via.placeholder.com/240x240?text=No+Image';
+                        @endphp
+
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100">
+                                <img src="{{ $image }}" class="card-img-top"
+                                    style="height: 240px; object-fit: cover;" alt="{{ $product->name }}">
                                 <div class="card-body text-center">
-                                    <h5 class="card-title">
-                                        {{ $product->name }}
-                                    </h5>
-                                    <a href="{{ route('admin.products.edit', $product) }}" class="btn btn-primary">Xem chi tiết</a>
+                                    <h5 class="card-title">{{ $product->name }}</h5>
+                                    <a href="{{ route('admin.products.edit', $product->id) }}"
+                                        class="btn btn-primary">Xem chi tiết</a>
                                 </div>
                             </div>
                         </div>
@@ -433,6 +447,68 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <h3 class="text-center mb-4" style="color: #2C3E50;">
+                Top 3 Sản Phẩm Không Bán Chạy Nhất
+            </h3>
+            <div class="row justify-content-center">
+                @if ($lowSaleProducts->isNotEmpty())
+                    @foreach ($lowSaleProducts as $item)
+                        <div class="col-md-4 col-lg-4 mb-4">
+                            <div class="card top6-card shadow-sm h-100">
+                                <div class="position-relative">
+
+                                    @php
+                                        $images = is_array($item->images)
+                                            ? $item->images
+                                            : json_decode($item->images, true) ?? [];
+                                        $firstImage = count($images) > 0 ? $images[0] : null;
+                                    @endphp
+
+                                    @if ($firstImage)
+                                        <img src="{{ asset('storage/' . $firstImage) }}" class="card-img-top"
+                                            alt="" style="height: 240px;">
+                                    @endif
+                                </div>
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">
+                                        {{ $item->product->name }}
+                                    </h5>
+                                    <p class="mb-2">
+                                        <strong>Số lượng đã bán:</strong>
+                                        <span style="color: #483D8B;">
+                                            {{ $item->total_sold }}
+                                        </span>
+                                    </p>
+                                </div>
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">{{ $item->name }}</h5>
+                                    <a href="{{ route('admin.products.show', ['product' => $item->product->id]) }}"
+                                        class="btn btn-primary">
+                                        Xem chi tiết
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
+                    @endforeach
+            </div>
+        @else
+            <div class="mb-3">
+                <div class="card top6-card shadow-sm h-100">
+                    <div class="card-body text-center">
+                        <h1 class="text-danger text-center">
+                            Không có dữ liệu
+                        </h1>
+                    </div>
+                </div>
+            </div>
+            @endif
+        </div>
+    </div>
+
+
     <!--end row-->
 @endsection
 
@@ -449,7 +525,7 @@
             window.location.href = `${APP_URL}/admin/statistical/products`;
         }
 
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function() {
             let foodNames = @json($foodNames);
             let foodRevenues = @json($foodRevenues);
             let foodSummaries = @json($foodSummaries);
@@ -480,7 +556,7 @@
                         }
                     },
                     tooltip: {
-                        pointFormatter: function () {
+                        pointFormatter: function() {
                             var index = this.index; // Lấy chỉ số của điểm dữ liệu
                             return `${foodSummaries[index]}`; // Chỉ hiển thị tóm tắt, không lặp tên đồ ăn
                         }
@@ -501,11 +577,12 @@
                     }
                 });
             } else {
-                document.querySelector('#productChart').innerHTML = `<p style="font: 20px Arial; text-align: center; margin-top: 200px;">Không có dữ liệu để hiển thị</p>`
+                document.querySelector('#productChart').innerHTML =
+                    `<p style="font: 20px Arial; text-align: center; margin-top: 200px;">Không có dữ liệu để hiển thị</p>`
             }
 
 
         })
-
     </script>
+
 @endsection

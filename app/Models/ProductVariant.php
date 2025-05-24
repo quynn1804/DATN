@@ -45,4 +45,5 @@ class ProductVariant extends Model
     {
         return $this->hasMany(Cart::class);
     }
+    
 }

@@ -1,5 +1,5 @@
 @extends('user.layouts.master')
-@section('title', 'Login')
+@section('title', 'Đăng nhập')
 
 @section('content')
     <div class="page-header">
@@ -9,7 +9,7 @@
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
                         <li class="breadcrumb-item active" aria-current="page">
-                            Login
+                            Đăng Nhập
                         </li>
                     </ol>
                 </div>
@@ -87,13 +87,14 @@
                                     <a href="{{ route('register') }}" class="text-blue-500 hover:underline">Đăng ký ngay</a>
                                 </p>
                             </div>
+                            <button type="submit" class="btn btn-dark btn-md w-100">
+                                Đăng Nhập
+                            </button>
                             <a href="{{ route('google.login') }}" style="margin-bottom: 10px;"
                                 class="btn btn-block btn-danger">
                                 <i class="fab fa-google-plus mr-2"></i>Đăng Nhập Với Google+
                             </a>
-                            <button type="submit" class="btn btn-dark btn-md w-100">
-                                Đăng Nhập
-                            </button>
+
                         </form>
                     </div>
                 </div>

@@ -36,6 +36,16 @@ class VoucherController extends Controller
             'end' => 'required|date|after_or_equal:start',
             'is_active' => 'boolean',
         ]);
+        if ($request->discount_type === 'fixed') {
+            $discount = (float) $request->discount_value;
+            $minOrder = (float) $request->min_order_value;
+
+            if ($minOrder > 0 && $discount > $minOrder) {
+                return redirect()->back()->withInput()->withErrors([
+                    'discount_value' => 'Giá trị giảm không được lớn hơn giá trị đơn hàng tối thiểu.',
+                ]);
+            }
+        }
 
         // Voucher::create($request->all());
         $voucher = Voucher::create($request->all());

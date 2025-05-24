@@ -143,7 +143,7 @@ class UserController extends Controller
         return redirect()->back()->with('success', 'Cập nhật tài khoản thành công!');
     }
 
-    
+
 
     public function singleProduct($id)
     {

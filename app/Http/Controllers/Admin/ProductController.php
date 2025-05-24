@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Admin;
 
 use App\Helpers\Toastr;
@@ -14,6 +15,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
@@ -25,16 +27,16 @@ class ProductController extends Controller
         if ($request->has('search')) {
             $query->where('name', 'like', '%' . $request->search . '%');
         }
-           // tìm kiếm sp theo danh mục
-           if ($request->has('category_id') && $request->category_id != '') {
+        // tìm kiếm sp theo danh mục
+        if ($request->has('category_id') && $request->category_id != '') {
             $query->where('category_id', $request->category_id);
         }
-          // Lọc theo loại sản phẩm (single hoặc variant)
+        // Lọc theo loại sản phẩm (single hoặc variant)
         if ($request->has('product_type') && in_array($request->product_type, ['single', 'variant'])) {
             $query->where('product_type', $request->product_type);
         }
 
-        $products = $query->with(['category','variants'])->paginate(10);
+        $products = $query->with(['category', 'variants'])->paginate(10);
         $categories = Category::all();
 
         return view('admin.products.index', ['title' => 'Quản lý sản phẩm'], compact('products', 'categories'));
@@ -139,7 +141,7 @@ class ProductController extends Controller
 
         return redirect()->route('admin.products.index')->with('success', 'Sản phẩm đã được tạo thành công!');
     }
-  // sửa lại update nhiều ảnh
+    // sửa lại update nhiều ảnh
     public function edit(Product $product)
     {
         $colors = Color::all();
@@ -149,12 +151,13 @@ class ProductController extends Controller
 
         return view('admin.products.edit', compact('product', 'colors', 'capacities', 'categories'));
     }
+    //
+
     public function update(Request $request, Product $product)
     {
-        // Lấy loại sản phẩm từ request
         $productType = $request->input('product_type');
 
-        // Xác thực dữ liệu
+        // Validate chung
         $validated = $request->validate([
             'product_type' => 'required|in:single,variant',
             'name' => 'required|string|max:255',
@@ -163,55 +166,52 @@ class ProductController extends Controller
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        // Xử lý ảnh sản phẩm
-        $imagePaths = is_array($product->images) ? $product->images : json_decode($product->images, true) ?? [];
-
+        // Xử lý ảnh sản phẩm chính (single)
+        $imagePaths = $product->images ?? [];
 
         if ($request->hasFile('images')) {
             // Xóa ảnh cũ
             foreach ($imagePaths as $oldImg) {
                 Storage::disk('public')->delete($oldImg);
             }
-
-            // Lưu ảnh mới
             $imagePaths = [];
             foreach ($request->file('images') as $image) {
-                $filename = time() . '_' . $image->getClientOriginalName();
+                $filename = Str::random(10) . '_' . $image->getClientOriginalName();
                 $path = $image->storeAs('products', $filename, 'public');
                 $imagePaths[] = $path;
             }
         }
 
-        // Dữ liệu cần cập nhật
         $updateData = [
             'name' => $validated['name'],
             'category_id' => $validated['category_id'],
             'description' => $validated['description'],
-            'images' => $imagePaths, // ảnh mới hoặc giữ nguyên
+            'images' => $imagePaths,
             'product_type' => $productType,
-            'status' => $request->status ?? $product->status, // giữ trạng thái nếu không thay đổi
+            'status' => $request->status ?? $product->status,
         ];
 
-        // Nếu là sản phẩm đơn
         if ($productType === 'single') {
             $request->validate([
                 'price' => 'required|numeric',
                 'quantity' => 'required|integer',
             ]);
+
             $updateData['price'] = $request->price;
             $updateData['quantity'] = $request->quantity;
+
+            // Xóa tất cả biến thể nếu chuyển về single
             $product->variants()->delete();
         }
 
-        // Cập nhật sản phẩm
         $product->update($updateData);
 
-        // Nếu là sản phẩm có biến thể
         if ($productType === 'variant') {
-             // Xóa dữ liệu đơn thể nếu chuyển từ sản phẩm đơn sang biến thể
+            // Xóa price và quantity khi chuyển sang variant
             $product->update([
                 'price' => null,
-                'quantity' => null, ]);
+                'quantity' => null,
+            ]);
 
             $request->validate([
                 'variants.*.id' => 'nullable|exists:product_variants,id',
@@ -223,38 +223,45 @@ class ProductController extends Controller
                 'variants.*.images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             ]);
 
-            // Lấy danh sách biến thể cần giữ lại
-            $variantIdsInRequest = collect($request->variants)->pluck('id')->filter();
+            // Lấy danh sách id biến thể từ request, loại bỏ biến thể đã xóa
+            $variantIdsInRequest = collect($request->variants)->pluck('id')->filter()->all();
             $product->variants()->whereNotIn('id', $variantIdsInRequest)->delete();
 
             foreach ($request->variants as $index => $variantData) {
                 $variantImages = [];
 
+                // Xử lý ảnh mới upload của biến thể
                 if ($request->hasFile("variants.$index.images")) {
                     foreach ($request->file("variants.$index.images") as $imageFile) {
-                        $filename = time() . '_' . $imageFile->getClientOriginalName();
+                        $filename = Str::random(10) . '_' . $imageFile->getClientOriginalName();
                         $path = $imageFile->storeAs('variants', $filename, 'public');
                         $variantImages[] = $path;
                     }
                 }
 
-                // Cập nhật biến thể cũ
+                // Nếu không upload ảnh mới thì giữ ảnh cũ
+                if (empty($variantImages)) {
+                    $variantImages = $variantData['old_images'] ?? [];
+                } else {
+                    // Nếu có ảnh mới, xóa ảnh cũ trên storage
+                    if (!empty($variantData['old_images'])) {
+                        foreach ($variantData['old_images'] as $oldImg) {
+                            Storage::disk('public')->delete($oldImg);
+                        }
+                    }
+                }
+
                 if (!empty($variantData['id'])) {
+                    // Update biến thể cũ
                     $variant = ProductVariant::find($variantData['id']);
                     if ($variant) {
-                        // Nếu không upload ảnh mới, giữ lại ảnh cũ
-                        if (empty($variantImages)) {
-                            $variantImages = $variant->images ?? '[]';
-                        }
-
-                        $variant->update([
-                            'color_id' => $variantData['color_id'],
-                            'capacity_id' => $variantData['capacity_id'],
-                            'price' => $variantData['price'],
-                            'stock' => $variantData['stock'],
-                            'description' => $variantData['description'] ?? null,
-                            'images' => $variantImages,
-                        ]);
+                        $variant->color_id = $variantData['color_id'];
+                        $variant->capacity_id = $variantData['capacity_id'];
+                        $variant->price = $variantData['price'];
+                        $variant->stock = $variantData['stock'];
+                        $variant->description = $variantData['description'] ?? null;
+                        $variant->images = $variantImages;
+                        $variant->save();
                     }
                 } else {
                     // Tạo mới biến thể
@@ -272,6 +279,8 @@ class ProductController extends Controller
 
         return redirect()->route('admin.products.index')->with('success', 'Sản phẩm đã được cập nhật!');
     }
+
+
     // sửa lại update nhiều ảnhảnh
 
 
@@ -342,6 +351,16 @@ class ProductController extends Controller
             ->limit(3)
             ->get();
 
+        $lowSaleProducts = ProductVariant::with('product')
+            ->select('product_variants.*')
+            ->selectSub(function ($query) {
+                $query->from('order_details')
+                    ->selectRaw('COALESCE(SUM(quantity), 0)')
+                    ->whereColumn('order_details.product_variant_id', 'product_variants.id');
+            }, 'total_sold')
+            ->orderBy('total_sold', 'asc')
+            ->limit(3)
+            ->get();
         $productStats = OrderDetail::selectRaw('
         products.name as product_name,
         SUM(order_details.total_price) as total_revenue,
@@ -368,18 +387,23 @@ class ProductController extends Controller
         /**
          * Sản phẩm sắp hết hàng (dưới 10 sản phẩm)
          */
-        $lowStockProducts = Product::where(function ($query) {
-            $query->where('product_type', 'single')
-                ->where('quantity', '<=', 10);
-        })->orWhere(function ($query) {
-            $query->where('product_type', 'variant')
-                ->whereHas('variants', function ($variantQuery) {
-                    $variantQuery->where('stock', '<=', 10);
-                });
-        })->with(['variants' => function ($q) {
-            $q->where('stock', '<=', 10);
-        }])->get();
-
+        // $lowStockProducts = Product::with(['variants' => function ($q) {
+        //     $q->where('stock', '<=', 10);
+        // }])->where(function ($query) {
+        //     $query->where('product_type', 'single')->where('quantity', '<=', 10)
+        //         ->orWhere(function ($q) {
+        //             $q->where('product_type', 'variant')->whereHas('variants', function ($variantQuery) {
+        //                 $variantQuery->where('stock', '<=', 10);
+        //             });
+        //         });
+        // })->get();
+       $lowStockProducts = Product::whereHas('variants', function ($query) {
+        $query->where('stock', '<=', 10);
+    })
+    ->with(['variants' => function ($query) {
+        $query->where('stock', '<=', 10); // nếu muốn chỉ lấy các biến thể sắp hết hàng
+    }])
+    ->get();
 
         /**
          * Tổng số sản phẩm được active
@@ -413,6 +437,6 @@ class ProductController extends Controller
 
         $totalPriceOrder = $totalPriceOrderQuery->sum('total_money');
 
-        return view('admin.statistical.products', compact('startDate', 'endDate', 'topProductSale', 'foodNames', 'foodRevenues', 'foodSummaries', 'lowStockProducts', 'countProduct', 'countCategory', 'countOrderPending', 'countOrderCompleted', 'titleTotalPrice', 'totalPriceOrder'));
+        return view('admin.statistical.products', compact('startDate', 'endDate', 'topProductSale', 'foodNames', 'foodRevenues', 'foodSummaries', 'lowStockProducts', 'countProduct', 'countCategory', 'countOrderPending', 'countOrderCompleted', 'titleTotalPrice', 'totalPriceOrder', 'lowSaleProducts'));
     }
 }

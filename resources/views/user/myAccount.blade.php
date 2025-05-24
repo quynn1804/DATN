@@ -1,5 +1,5 @@
 @extends('user.layouts.master')
-@section('title', 'Account Settings')
+@section('title', 'Tài khoản của Tôi')
 @section('content')
 
 
@@ -119,6 +119,8 @@
                                                         Đang xử lý
                                                     @elseif($order->status === 'shipping')
                                                         Đang giao hàng
+                                                    @elseif($order->status === 'shipped')
+                                                        Đã giao hàng
                                                     @elseif($order->status === 'completed')
                                                         Hoàn thành
                                                     @elseif($order->status === 'cancelled')
@@ -134,6 +136,8 @@
                                         @endforeach
                                     </tbody>
                                 </table>
+                                {{ $orders->links('pagination::bootstrap-4') }}
+
                             @endif
                             <hr class="mt-0 mb-3 pb-2" />
 

@@ -82,21 +82,24 @@
                     @if ($orders->isNotEmpty())
 
                     @php
-                    $statusMapping = [
+                   $statusMapping = [
                     'pending' => 'Đang chờ xử lý',
                     'processing' => 'Đang xử lý',
                     'shipping' => 'Đang giao hàng',
+                    'shipped' => 'Đã giao hàng',
                     'completed' => 'Hoàn thành',
                     'cancelled' => 'Đã hủy',
                     ];
 
                     $statusColor = [
-                    'pending' => 'bg-warning',
+                    'pending' => 'bg-secondary',
                     'processing' => 'bg-primary',
                     'shipping' => 'bg-info',
+                    'shipped' => 'bg-warning',
                     'completed' => 'bg-success',
                     'cancelled' => 'bg-danger',
                     ];
+
                     @endphp
 
                     <div class="min-vh-100">
