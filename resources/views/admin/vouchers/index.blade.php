@@ -63,7 +63,7 @@
                                     <th>Giá trị giảm</th>
                                     <th>Ngày bắt đầu</th>
                                     <th>Ngày kết thúc</th>
-                                    <th>Lượt dùng / Giới hạn</th>
+                                    {{-- <th>Lượt dùng / Giới hạn</th> --}}
                                     <th>Trạng thái</th>
                                     <th>Hành động</th>
                                 </tr>
@@ -94,7 +94,7 @@
 
                                     <td>{{ \Carbon\Carbon::parse($voucher->start)->format('d/m/Y') }}</td>
                                     <td>{{ \Carbon\Carbon::parse($voucher->end)->format('d/m/Y') }}</td>
-                                    <td>{{ $voucher->used_count ?? 0 }} / {{ $voucher->usage_limit ?? '∞' }}</td>
+                                    {{-- <td>{{ $voucher->used_count ?? 0 }} / {{ $voucher->usage_limit ?? '∞' }}</td> --}}
 
                                     <td>
                                         <span class="badge font-size-12 p-2 {{ $voucher->is_active ? 'bg-success' : ' bg-danger' }}">

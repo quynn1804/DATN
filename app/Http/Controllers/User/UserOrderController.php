@@ -58,7 +58,7 @@ class UserOrderController extends Controller
     {
         $order = Order::where('id', $id)
             ->where('user_id', auth()->id())
-            ->where('status', 'shipping')
+            ->where('status', 'shipped')
             ->first();
 
         if (!$order) {
