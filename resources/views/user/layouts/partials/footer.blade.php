@@ -82,14 +82,13 @@
 
             <div class="col-lg-3 col-sm-6">
                 <div class="widget widget-newsletter">
-                    <h4 class="widget-title">Đăng ký nhận bản tin</h4>
-                    <p>Nhận tất cả thông tin mới nhất về các sự kiện, chương trình khuyến mại và ưu đãi. Đăng ký
+                    <h4 class="widget-title">Liên hệ nhận bản tin</h4>
+                    <p>Nhận tất cả thông tin mới nhất về các sự kiện, chương trình khuyến mại và ưu đãi. Liên hệ
                         nhận bản tin:
                     </p>
-                    <form action="demo4.html#" class="mb-0">
-                        <input type="email" class="form-control m-b-3" placeholder="Địa chỉ Email " required>
+                    <form action="{{ route('contact') }}" class="mb-0">
 
-                        <input type="submit" class="btn btn-primary shadow-none" value="Đăng Ký">
+                        <input type="submit" class="btn btn-primary shadow-none" value="Liên hệ ">
                     </form>
                 </div>
                 <!-- End .widget -->
