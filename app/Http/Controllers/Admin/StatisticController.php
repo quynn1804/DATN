@@ -19,6 +19,8 @@ class StatisticController extends Controller
         $endDate = $request->input('end_date', Carbon::now()->format('Y-m-d'));
 
 
+        
+
         $todayRevenue = Order::whereDate('created_at', today())->sum('total_money');
         $monthlyRevenue = Order::whereBetween('created_at', [$startDate, $endDate])->sum('total_money');
         $lastMonthRevenue = Order::whereBetween('created_at', [now()->subMonth()->startOfMonth(), now()->subMonth()->endOfMonth()])->sum('total_money');

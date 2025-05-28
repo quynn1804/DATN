@@ -15,6 +15,8 @@ class ContactController extends Controller
         return view('admin.contact.index', ['title' => 'Quản lý liên hệ'],compact('contacts'));
     }
 
+
+    
     public function store(Request $request)
     {
         $request->validate([
