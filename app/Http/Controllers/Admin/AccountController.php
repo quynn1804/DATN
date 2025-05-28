@@ -39,6 +39,7 @@ class AccountController extends Controller
             'password' => 'required|string|min:6|confirmed',
             'gender' => 'required|in:Nam,Nữ,Khác',
             'phone' => 'nullable|numeric|digits_between:10,15',
+
             'image' => 'required|image|mimes:jpg,png,jpeg,gif,webp,bmp|max:5120',
             'status' => 'required|boolean',
             'role_id' => 'required|exists:roles,id',
@@ -62,6 +63,7 @@ class AccountController extends Controller
             'image' => $imageName,
             'status' => $validated['status'],
             'role_id' => $validated['role_id'] ?? 2,
+            'google_id' => 'admin-' . now()->timestamp, // Thêm dòng này
         ]);
 
         return redirect()->route('admin.account.index')->with('success', 'Người dùng đã được thêm thành công.');

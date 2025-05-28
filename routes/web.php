@@ -18,6 +18,7 @@ use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Admin\StockImportController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Admin\AttributeController;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\OrderConfirmationMail;
 use App\Models\Order;
@@ -64,8 +65,6 @@ Route::middleware('auth')->group(function () {
         // Route::get('/', function () {
         //     return redirect()->route('admin.statistic.index');
         // })->name('dashboard');
-
-
 
         Route::get('/', [AdminController::class, 'index'])->name('dashboard');
 
@@ -169,3 +168,12 @@ Route::post('reset-password', [ResetPasswordController::class, 'ResetPassword'])
 Route::get('/password-sent', function (Request $request) {
     return view('auth.passwordSent', ['email' => $request->email]);
 })->name('password.sent');
+
+Route::prefix('admin')->middleware(['auth'])->group(function () {
+    Route::get('attributes/{type}', [AttributeController::class, 'index'])->name('attributes.index');
+    Route::get('attributes/{type}/create', [AttributeController::class, 'create'])->name('attributes.create');
+    Route::post('attributes/{type}', [AttributeController::class, 'store'])->name('attributes.store');
+    Route::get('attributes/{type}/{id}/edit', [AttributeController::class, 'edit'])->name('attributes.edit');
+    Route::put('attributes/{type}/{id}', [AttributeController::class, 'update'])->name('attributes.update');
+    Route::delete('attributes/{type}/{id}', [AttributeController::class, 'destroy'])->name('attributes.destroy');
+});

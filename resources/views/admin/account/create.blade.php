@@ -165,4 +165,31 @@
     }
 
 </script>
+<script>
+    document.querySelector("form").addEventListener("submit", function (e) {
+        const fileInput = document.getElementById("project-image-input");
+        const file = fileInput.files[0];
+
+        if (!file) {
+            alert("Vui lòng chọn hình ảnh.");
+            e.preventDefault(); // Ngăn submit
+            return;
+        }
+
+        const allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/jpg"];
+        const maxSizeMB = 5;
+
+        if (!allowedTypes.includes(file.type)) {
+            alert("Chỉ cho phép ảnh có định dạng: JPG, JPEG, PNG hoặc GIF.");
+            e.preventDefault();
+            return;
+        }
+
+        if (file.size > maxSizeMB * 1024 * 1024) {
+            alert("Dung lượng ảnh tối đa là 5MB.");
+            e.preventDefault();
+            return;
+        }
+    });
+</script>
 @endsection

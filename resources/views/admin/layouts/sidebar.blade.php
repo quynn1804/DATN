@@ -3,7 +3,8 @@
     <a href="{{ route('admin.dashboard') }}" class="brand-link">
 
 
-        <img src="{{ asset('assets/images/p.png') }}" alt="Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+        <img src="{{ asset('assets/images/p.png') }}" alt="Logo" class="brand-image img-circle elevation-3"
+            style="opacity: .8">
         <span class="brand-text font-weight-light">Pina store</span>
     </a>
 
@@ -12,7 +13,8 @@
         <!-- Sidebar user (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-                <img src="{{ Auth::user()->image ? asset('assets/images/' . Auth::user()->image) : asset('assets/images/default.png') }}" class="img-circle elevation-2" alt="User Image">
+                <img src="{{ Auth::user()->image ? asset('assets/images/' . Auth::user()->image) : asset('assets/images/default.png') }}"
+                    class="img-circle elevation-2" alt="User Image">
             </div>
 
             <div class="info">
@@ -22,7 +24,8 @@
 
         <!-- Sidebar Menu -->
         <nav class="mt-2">
-            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
+                data-accordion="false">
                 <li class="nav-item">
                     <a href="{{ route('admin.statistic.index') }}" class="nav-link">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -36,11 +39,29 @@
                         <p>Danh mục sản phẩm</p>
                     </a>
                 </li>
+                <li>
+                    <a href="javascript:void(0);" class="has-arrow waves-effect">
+                        <i class="bx bx-cog"></i>
+                        <span key="t-attributes">Quản Lý Thuộc Tính</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li>
+                            <a href="{{ route('attributes.index', ['type' => 'colors']) }}">
+                                - Màu Sắc
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('attributes.index', ['type' => 'capacities']) }}">
+                                - Dung Lượng
+                            </a>
+                        </li>
+                    </ul>
+                </li>
 
                 <li class="nav-item">
                     <a href="{{ route('admin.products.index') }}" class="nav-link">
                         <i class="nav-icon fas fa-shoe-prints"></i>
-                        <p>Sản phẩm</p>
+                        <p>Sản phẩm nè</p>
                     </a>
                 </li>
 
