@@ -6,6 +6,7 @@ use App\Http\Controllers\MessageController;
 use App\Http\Controllers\User\CartController;
 use App\Http\Controllers\Admin\AccountController;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\AttributeController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController;
@@ -169,3 +170,13 @@ Route::post('reset-password', [ResetPasswordController::class, 'ResetPassword'])
 Route::get('/password-sent', function (Request $request) {
     return view('auth.passwordSent', ['email' => $request->email]);
 })->name('password.sent');
+
+Route::prefix('admin')->middleware(['auth'])->group(function () {
+    Route::get('attributes/{type}', [AttributeController::class, 'index'])->name('attributes.index');
+    Route::get('attributes/{type}/create', [AttributeController::class, 'create'])->name('attributes.create');
+    Route::post('attributes/{type}', [AttributeController::class, 'store'])->name('attributes.store');
+    Route::get('attributes/{type}/{id}/edit', [AttributeController::class, 'edit'])->name('attributes.edit');
+    Route::put('attributes/{type}/{id}', [AttributeController::class, 'update'])->name('attributes.update');
+    Route::delete('attributes/{type}/{id}', [AttributeController::class, 'destroy'])->name('attributes.destroy');
+});
+

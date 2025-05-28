@@ -66,6 +66,7 @@
                         <h5 class="mt-4">Biến thể sản phẩm</h5>
                         <div id="variant-container">
                             @forelse($product->variants as $index => $variant)
+                            <input type="text" hidden value="{{ $variant->id }}" name="variants[{{ $index }}][id]">
                                 <div class="variant-item border p-3 rounded mb-3 bg-white shadow-sm">
                                     <div class="row g-3">
                                         <div class="col-md-2">

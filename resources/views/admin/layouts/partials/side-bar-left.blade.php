@@ -60,6 +60,25 @@
                 </a>
             </li>
 
+           <li>
+    <a href="javascript:void(0);" class="has-arrow waves-effect">
+        <i class="bx bx-cog"></i>
+        <span key="t-attributes">Quản Lý Thuộc Tính</span>
+    </a>
+    <ul class="sub-menu" aria-expanded="false">
+        <li>
+            <a href="{{ route('attributes.index', ['type' => 'colors']) }}">
+               - Màu Sắc
+            </a>
+        </li>
+        <li>
+            <a href="{{ route('attributes.index', ['type' => 'capacities']) }}">
+               - Dung Lượng
+            </a>
+        </li>
+    </ul>
+</li>
+
             <li>
                 <a href="{{ route('admin.comments.index') }}" class="waves-effect">
                     <i class="bx bx-receipt"></i>

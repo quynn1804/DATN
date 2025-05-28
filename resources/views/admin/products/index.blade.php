@@ -140,11 +140,11 @@
                                         <td>
                                             <a href="{{ route('admin.products.show', $product->id) }}" class="btn btn-info btn-sm">Chi tiết</a>
                                             <a href="{{ route('admin.products.edit', $product->id) }}" class="btn btn-warning btn-sm">Sửa</a>
-                                            <form action="{{ route('admin.products.destroy', $product->id) }}" method="POST" class="d-inline-block" onsubmit="return confirm('Bạn có chắc muốn xóa sản phẩm này?');">
+                                            {{-- <form action="{{ route('admin.products.destroy', $product->id) }}" method="POST" class="d-inline-block" onsubmit="return confirm('Bạn có chắc muốn xóa sản phẩm này?');">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button class="btn btn-danger btn-sm">Xóa</button>
-                                            </form>
+                                            </form> --}}
                                         </td>
                                     </tr>
                                 @empty

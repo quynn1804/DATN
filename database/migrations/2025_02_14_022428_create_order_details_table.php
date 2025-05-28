@@ -12,6 +12,9 @@ class CreateOrderDetailsTable extends Migration
             $table->id();
             $table->foreignId('order_id')->constrained('orders')->onDelete('cascade');
             $table->foreignId('product_variant_id')->constrained('product_variants')->onDelete('cascade');
+            $table->string('product_name');
+            $table->string('color_name');
+            $table->string('capacity_name');
             $table->integer('quantity');
             $table->decimal('price_at_time', 10, 2); // Lưu giá tại thời điểm đặt hàng
             $table->decimal('total_price', 10, 2); // Tính tổng giá = quantity * price_at_time

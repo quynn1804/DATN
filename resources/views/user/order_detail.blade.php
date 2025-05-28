@@ -123,14 +123,14 @@
                                             <tr>
                                                 <td>
                                                     {{-- thêm mới để hiện cả biến thể đã mua --}}
-                                                    {{ $detail->product->name }} <br>
+                                                    {{ $detail->product_name }} <br>
                                                     <small>
-                                                        @if ($detail->productVariant->color)
-                                                            Màu: {{ $detail->productVariant->color->name }}
+                                                        @if ($detail->color_name)
+                                                            Màu: {{ $detail->color_name }}
                                                         @endif
 
-                                                        @if ($detail->productVariant->capacity)
-                                                            , Dung lượng: {{ $detail->productVariant->capacity->name }}
+                                                        @if ($detail->capacity_name)
+                                                            , Dung lượng: {{ $detail->capacity_name }}
                                                         @endif
                                                     </small>
                                                 </td>

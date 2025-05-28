@@ -225,7 +225,17 @@ class ProductController extends Controller
 
             // Lấy danh sách id biến thể từ request, loại bỏ biến thể đã xóa
             $variantIdsInRequest = collect($request->variants)->pluck('id')->filter()->all();
-            $product->variants()->whereNotIn('id', $variantIdsInRequest)->delete();
+
+            // dd($variantIdsInRequest);
+
+            if(!empty($variantIdsInRequest)){
+                $product->variants()->whereNotIn('id', $variantIdsInRequest)->delete();
+            }
+
+                // $product->variants()->whereNotIn('id', $variantIdsInRequest)->delete();
+
+
+            // dd($request->variants);
 
             foreach ($request->variants as $index => $variantData) {
                 $variantImages = [];
