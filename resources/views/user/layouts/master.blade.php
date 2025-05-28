@@ -10,6 +10,9 @@
     <meta name="keywords" content="LuxChill Ecommerce" />
     <meta name="description" content="Website Ecommerce by LuxChill">
     <meta name="author" content="LuxChill">
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+
 
     <script src="https://kit.fontawesome.com/12ffb45aae.js" crossorigin="anonymous"></script>
 
@@ -250,5 +253,8 @@
     @vite(['resources/js/voucher-notification.js'])
     @endif
 </body>
+<!-- Swiper JS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+
 
 </html>

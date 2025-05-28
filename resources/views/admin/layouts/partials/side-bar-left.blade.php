@@ -28,7 +28,6 @@
                         <a href="{{ route('admin.statistical.users') }}" key="t-crypto">Thống kê người dùng</a>
                     </li> --}}
                 </ul>
-
             </li>
 
             <li class="menu-title" key="t-administration">Quản lý</li>
@@ -38,24 +37,6 @@
                     <i class="fas fa-list"></i>
                     <span key="t-categories">Danh mục sản phẩm</span>
                 </a>
-            </li>
-             <li>
-                <a href="javascript:void(0);" class="has-arrow waves-effect">
-                    <i class="bx bx-cog"></i>
-                    <span key="t-attributes">Quản Lý Thuộc Tính</span>
-                </a>
-                <ul class="sub-menu" aria-expanded="false">
-                    <li>
-                        <a href="{{ route('attributes.index', ['type' => 'colors']) }}">
-                            - Màu Sắc
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('attributes.index', ['type' => 'capacities']) }}">
-                            - Dung Lượng
-                        </a>
-                    </li>
-                </ul>
             </li>
 
             <li>
@@ -77,6 +58,25 @@
                     <i class="bx bx-receipt"></i>
                     <span key="t-orders">Đơn hàng</span>
                 </a>
+            </li>
+
+            <li>
+                <a href="javascript:void(0);" class="has-arrow waves-effect">
+                    <i class="bx bx-cog"></i>
+                    <span key="t-attributes">Quản Lý Thuộc Tính</span>
+                </a>
+                <ul class="sub-menu" aria-expanded="false">
+                    <li>
+                        <a href="{{ route('attributes.index', ['type' => 'colors']) }}">
+                            - Màu Sắc
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('attributes.index', ['type' => 'capacities']) }}">
+                            - Dung Lượng
+                        </a>
+                    </li>
+                </ul>
             </li>
 
             <li>

@@ -10,7 +10,7 @@
                 @foreach ($viewData['fields'] as $field => $label)
                     <th>{{ $label }}</th>
                 @endforeach
-                <th>Hành động</th>
+                {{-- <th>Hành động</th> --}}
             </tr>
         </thead>
         <tbody>
@@ -19,14 +19,14 @@
                     @foreach ($viewData['fields'] as $field => $label)
                         <td>{{ $item->$field }}</td>
                     @endforeach
-                    <td>
+                    {{-- <td>
                         <a href="{{ route('attributes.edit', [$type, $item->id]) }}" class="btn btn-sm btn-warning">Sửa</a>
                         <form action="{{ route('attributes.destroy', [$type, $item->id]) }}" method="POST" class="d-inline"
-                              onsubmit="return confirm('Bạn có chắc chắn muốn xóa?')">
+                            onsubmit="return confirm('Bạn có chắc chắn muốn xóa?')">
                             @csrf @method('DELETE')
                             <button class="btn btn-sm btn-danger">Xóa</button>
                         </form>
-                    </td>
+                    </td> --}}
                 </tr>
             @endforeach
         </tbody>

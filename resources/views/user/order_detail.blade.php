@@ -123,14 +123,14 @@
                                             <tr>
                                                 <td>
                                                     {{-- thêm mới để hiện cả biến thể đã mua --}}
-                                                    {{ $detail->product->name }} <br>
+                                                    {{ $detail->product_name }} <br>
                                                     <small>
-                                                        @if ($detail->productVariant->color)
-                                                            Màu: {{ $detail->productVariant->color->name }}
+                                                        @if ($detail->color_name)
+                                                            Màu: {{ $detail->color_name }}
                                                         @endif
 
-                                                        @if ($detail->productVariant->capacity)
-                                                            , Dung lượng: {{ $detail->productVariant->capacity->name }}
+                                                        @if ($detail->capacity_name)
+                                                            , Dung lượng: {{ $detail->capacity_name }}
                                                         @endif
                                                     </small>
                                                 </td>
@@ -204,9 +204,9 @@
                                 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
                                 <script>
                                     // thêm mới
-                                    $(document).ready(function() {
+                                    $(document).ready(function () {
                                         // Khi click nút "Đánh giá"
-                                        $('.btn-show-comment').click(function() {
+                                        $('.btn-show-comment').click(function () {
                                             const productId = $(this).data('product-id');
                                             const orderId = $(this).data('order-id');
                                             const productName = $(this).data('product-name');
@@ -218,7 +218,7 @@
                                         });
 
                                         // Gửi bình luận
-                                        $('#commentForm').submit(function(e) {
+                                        $('#commentForm').submit(function (e) {
                                             e.preventDefault();
 
                                             const formData = {
@@ -234,11 +234,11 @@
                                                 type: "POST",
                                                 data: formData,
                                                 dataType: "json",
-                                                success: function(response) {
+                                                success: function (response) {
                                                     alert(response.message);
                                                     location.reload();
                                                 },
-                                                error: function(xhr) {
+                                                error: function (xhr) {
                                                     var response = JSON.parse(xhr.responseText);
                                                     if (response.message ===
                                                         "Bạn đã bình luận cho sản phẩm này trong đơn hàng này.") {

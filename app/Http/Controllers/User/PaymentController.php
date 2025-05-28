@@ -95,7 +95,6 @@ class PaymentController extends Controller
         } else {
             return back()->with('error', 'Lỗi khi tạo thanh toán MoMo: ' . json_encode($jsonResult));
         }
-
     }
     public function momoQr_payment(Request $request)
     {
@@ -246,7 +245,7 @@ class PaymentController extends Controller
         $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
 
         $vnp_Returnurl = url('/vnpay/return');
-        $vnp_TmnCode = "BTBFJN9W";//Mã website tại VNPAY
+        $vnp_TmnCode = "BTBFJN9W"; //Mã website tại VNPAY
         $vnp_HashSecret = "GGHNNJ0P5F96PLOMSWBVM0N4NVR0RNPY"; //Chuỗi bí mật
 
         $vnp_TxnRef = time() . ""; //Mã đơn hàng. Trong thực tế Merchant cần insert đơn hàng vào DB và gửi mã này
@@ -295,7 +294,7 @@ class PaymentController extends Controller
 
         $vnp_Url = $vnp_Url . "?" . $query;
         if (isset($vnp_HashSecret)) {
-            $vnpSecureHash = hash_hmac('sha512', $hashdata, $vnp_HashSecret);//
+            $vnpSecureHash = hash_hmac('sha512', $hashdata, $vnp_HashSecret); //
             $vnp_Url .= 'vnp_SecureHash=' . $vnpSecureHash;
         }
         return redirect()->away($vnp_Url);
@@ -358,6 +357,7 @@ class PaymentController extends Controller
                 OrderDetail::create([
                     'order_id' => $order->id,
                     'product_variant_id' => $item->product_variant_id,
+                    // 'color_name' =>
                     'quantity' => $item->quantity,
                     'price_at_time' => $item->price_at_time,
                     'total_price' => $item->price_at_time * $item->quantity,
@@ -410,6 +410,7 @@ class PaymentController extends Controller
     public function processPayment(Request $request)
     {
         $data = $request->all();
+
         session([
             'checkout_info' => [
                 'fullname' => $request->fullname,
@@ -495,6 +496,27 @@ class PaymentController extends Controller
                     return back()->with('error', 'Giỏ hàng trống.');
                 }
 
+                $cartItems->load(['productVariant.color', 'productVariant.capacity']);
+
+                /**
+                 *
+                 */
+
+                // $resultVariantsData = [];
+
+                // foreach($cartItems as $cartItem){
+                //     $dataVartiants = [
+                //         'product_name' => $cartItem->productVariant->product->name,
+                //         'color_name' => $cartItem->productVariant->color->name,
+                //         'capacity_name' => $cartItem->productVariant->capacity->name,
+                //     ];
+
+                //     $resultVariantsData[] = $dataVartiants;
+                // }
+
+
+                // dd($resultVariantsData);
+
                 // Tạo mã đơn hàng duy nhất
                 $orderCode = 'ORD-' . strtoupper(uniqid());
 
@@ -509,13 +531,15 @@ class PaymentController extends Controller
                     'payment_method' => 'cash',
                     'note' => $data['voucher'] ?? null,
                 ]);
-
                 // Duyệt từng sản phẩm trong giỏ
                 foreach ($cartItems as $item) {
                     // Tạo dòng chi tiết đơn hàng
                     OrderDetail::create([
                         'order_id' => $order->id,
                         'product_variant_id' => $item->product_variant_id,
+                        'product_name' => $item->productVariant->product->name,
+                        'color_name' => $item->productVariant->color->name,
+                        'capacity_name' => $item->productVariant->capacity->name,
                         'quantity' => $item->quantity,
                         'price_at_time' => $item->price_at_time,
                         'total_price' => $item->price_at_time * $item->quantity,
@@ -547,7 +571,6 @@ class PaymentController extends Controller
                 $this->sendOrderConfirmationEmail($order);
 
                 return redirect()->to('/user/orders/' . $order->id)->with('success', 'Bạn đã đặt hàng thành công!');
-
             } catch (\Exception $e) {
                 DB::rollBack();
                 Log::error('Lỗi khi thanh toán COD: ' . $e->getMessage());
@@ -571,6 +594,4 @@ class PaymentController extends Controller
 
         return back()->with('error', 'Phương thức thanh toán không hợp lệ.');
     }
-
-
 }

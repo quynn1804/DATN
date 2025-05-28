@@ -225,7 +225,17 @@ class ProductController extends Controller
 
             // Lấy danh sách id biến thể từ request, loại bỏ biến thể đã xóa
             $variantIdsInRequest = collect($request->variants)->pluck('id')->filter()->all();
-            $product->variants()->whereNotIn('id', $variantIdsInRequest)->delete();
+
+            // dd($variantIdsInRequest);
+
+            if (!empty($variantIdsInRequest)) {
+                $product->variants()->whereNotIn('id', $variantIdsInRequest)->delete();
+            }
+
+            // $product->variants()->whereNotIn('id', $variantIdsInRequest)->delete();
+
+
+            // dd($request->variants);
 
             foreach ($request->variants as $index => $variantData) {
                 $variantImages = [];
@@ -397,13 +407,13 @@ class ProductController extends Controller
         //             });
         //         });
         // })->get();
-       $lowStockProducts = Product::whereHas('variants', function ($query) {
-        $query->where('stock', '<=', 10);
-    })
-    ->with(['variants' => function ($query) {
-        $query->where('stock', '<=', 10); // nếu muốn chỉ lấy các biến thể sắp hết hàng
-    }])
-    ->get();
+        $lowStockProducts = Product::whereHas('variants', function ($query) {
+            $query->where('stock', '<=', 10);
+        })
+            ->with(['variants' => function ($query) {
+                $query->where('stock', '<=', 10); // nếu muốn chỉ lấy các biến thể sắp hết hàng
+            }])
+            ->get();
 
         /**
          * Tổng số sản phẩm được active

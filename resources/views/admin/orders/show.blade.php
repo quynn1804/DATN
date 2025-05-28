@@ -88,9 +88,13 @@
                 <tbody>
                     @foreach ($order->orderDetails as $detail)
                         <tr>
-                            <td>{{ $detail->productVariant->product->name }}</td>
+                            {{-- <td>{{ $detail->productVariant->product->name }}</td>
                             <td>{{ $detail->productVariant->color->name ?? '' }} /
-                                {{ $detail->productVariant->capacity->name ?? '' }}</td>
+                                {{ $detail->productVariant->capacity->name ?? '' }}</td> --}}
+                            <td>{{ $detail->product_name }}</td>
+                            <td>{{ $detail->color_name ?? '' }} /
+                                {{ $detail->capacity_name ?? '' }}
+                            </td>
                             <td>{{ $detail->quantity }}</td>
                             <td>{{ number_format($detail->price_at_time, 0, ',', '.') }} đ</td>
                             <td>{{ number_format($detail->total_price, 0, ',', '.') }} đ</td>
@@ -106,11 +110,11 @@
                     <label for="status">Trạng thái đơn hàng:</label>
                     @php
                         $currentStatus = $order->status;
-                     $validTransitions = [
+                        $validTransitions = [
                             'pending' => ['processing', 'cancelled'],
-                            'processing' => ['shipping', 'cancelled'],
-                            'shipping' => ['shipped', 'cancelled'],
-                            'shipped' => ['completed', 'cancelled'],
+                            'processing' => ['shipping'],
+                            'shipping' => ['shipped'],
+                            'shipped' => ['completed'],
                             'completed' => [],
                             'cancelled' => [],
                         ];

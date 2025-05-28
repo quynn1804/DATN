@@ -6,6 +6,7 @@ use App\Http\Controllers\MessageController;
 use App\Http\Controllers\User\CartController;
 use App\Http\Controllers\Admin\AccountController;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\AttributeController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController;
@@ -18,7 +19,6 @@ use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Admin\StockImportController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Admin\AttributeController;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\OrderConfirmationMail;
 use App\Models\Order;
@@ -65,6 +65,8 @@ Route::middleware('auth')->group(function () {
         // Route::get('/', function () {
         //     return redirect()->route('admin.statistic.index');
         // })->name('dashboard');
+
+
 
         Route::get('/', [AdminController::class, 'index'])->name('dashboard');
 
@@ -177,3 +179,4 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::put('attributes/{type}/{id}', [AttributeController::class, 'update'])->name('attributes.update');
     Route::delete('attributes/{type}/{id}', [AttributeController::class, 'destroy'])->name('attributes.destroy');
 });
+

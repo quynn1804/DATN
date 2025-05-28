@@ -178,7 +178,7 @@
 
                             <!-- Thumbnails -->
                             <!-- Thumbnails -->
-
+{{--
                             <div class="thumbnail-list" id="thumbnailList"
                                 style="display: flex; gap: 10px; margin-top: 15px;">
                                 @foreach ($product->variants as $variant)
@@ -189,7 +189,74 @@
                                             onclick="changeMainImage(this.src)">
                                     @endforeach
                                 @endforeach
+                            </div> --}}
+                            <style>
+                                .thumbnail-wrapper {
+                                    position: relative;
+                                    overflow: hidden;
+                                    max-width: 100%;
+                                }
+
+                                .thumbnail-list {
+                                    display: flex;
+                                    gap: 10px;
+                                    margin-top: 15px;
+                                    overflow-x: auto;
+                                    scroll-behavior: smooth;
+                                    /* Ẩn thanh trượt */
+                                scrollbar-width: none; /* Firefox */
+                                -ms-overflow-style: none; /* IE 10+ */
+                                }
+
+                            .thumbnail-list::-webkit-scrollbar {
+                                display: none; /* Chrome, Safari */
+                            }
+                                .arrow-btn {
+                                position: absolute;
+                                top: 50%;
+                                transform: translateY(-50%);
+                                background: none; /* bỏ nền */
+                                border: none;     /* bỏ viền */
+                                color: black;     /* màu mũi tên */
+                                font-size: 24px;
+                                width: 30px;
+                                height: 60px;
+                                cursor: pointer;
+                                z-index: 10;
+                            }
+
+                                .arrow-left {
+                                    left: 0;
+                                }
+
+                                .arrow-right {
+                                    right: 0;
+                                }
+                            </style>
+
+                            <div class="thumbnail-wrapper">
+                                <button class="arrow-btn arrow-left" onclick="scrollThumbnails(-100)">‹</button>
+                                <div class="thumbnail-list" id="thumbnailList">
+                                    @foreach ($product->variants as $variant)
+                                        @foreach ($variant->images as $image)
+                                            <img src="{{ getImageUrl($image) }}" class="thumbnail-img"
+                                                data-color-id="{{ $variant->color_id }}"
+                                                data-image-url="{{ getImageUrl($image) }}" style="width: 70px; cursor: pointer;"
+                                                onclick="changeMainImage(this.src)">
+                                        @endforeach
+                                    @endforeach
+                                    </div>
+                                <button class="arrow-btn arrow-right" onclick="scrollThumbnails(100)">›</button>
                             </div>
+
+                            <script>
+                                function scrollThumbnails(distance) {
+                                    document.getElementById('thumbnailList').scrollBy({
+                                        left: distance,
+                                        behavior: 'smooth'
+                                    });
+                                }
+                            </script>
 
 
                             {{-- <div class="thumbnail-list" id="thumbnailList" style="display: flex; gap: 10px; margin-top: 15px;">
@@ -283,9 +350,9 @@
 
                         </div>
 
-                        <span class="prod-full-screen">
+                        {{-- <span class="prod-full-screen">
                             <i class="icon-plus"></i>
-                        </span>
+                        </span> --}}
                     </div>
                 </div>
                 <!-- End .product-single-gallery -->
@@ -416,7 +483,7 @@
                             <a href="product-variable.html#" class="social-icon social-mail icon-mail-alt" target="_blank"
                                 title="Mail"></a>
                         </div>
-                        
+
                         <!-- End .social-icons -->
 
 

@@ -10,7 +10,7 @@
                 <input type="text" name="{{ $field }}" class="form-control" required>
             </div>
         @endforeach
-        <button type="submit" class="btn btn-success">Lưu</button>
+        <button type="submit" class="btn btn-success" onclick="return confirm('Bạn có chắc chắn muốn lưu? Sau khi lưu sẽ không thể thay đổi.')">Lưu</button>
         <a href="{{ route('attributes.index', $type) }}" class="btn btn-secondary">Quay lại</a>
     </form>
 @endsection
